@@ -1,0 +1,73 @@
+h1 input[type="text"] {
+	font-family: neuton-cursive, serif;
+	font-weight: 400;
+	font-size: 1em;
+	height: 1.3em;	
+	line-height: 1.3em;
+	width: 100%;
+	border: none;
+	box-shadow: none;
+}
+
+.chord-font {
+	font-family: overlock, serif;
+	font-weight: 700;
+}
+
+ol#items {
+	padding-left: 0;
+}
+
+#items li {
+	list-style-type: none;
+	width: 160px;
+	height: 56px;
+	float: left;
+	cursor: move;
+	display: block;
+	padding: 6px 4px 4px 28px;
+	margin: 0 4px 16px 0;
+	position: relative;
+	border: 1px solid gray;
+}
+
+#items li.symbol {
+	text-align: center;
+	font-size: 2em;
+	width: 30px;
+	padding-left: 26px;
+}
+
+select.equivalent {
+	font-weight: bold;
+}
+
+#items li.ui-selecting {
+	background: #FECA40;
+}
+
+#items li.ui-selected {
+	background: #F39814;
+}
+
+li .handle {
+	background: #f8f8f8;
+	position: absolute;
+	left: 0;
+	top: 0;
+	bottom: 0;
+	padding: 4px;
+}
+
+#tools #link {
+	font-weight: normal;
+}
+
+#footer {
+	float: none;
+	font-size: 10px;
+	position: absolute;
+	bottom: 4px;
+	right: 4px;
+	z-index: -1;
+}
