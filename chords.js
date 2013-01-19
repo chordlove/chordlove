@@ -106,14 +106,9 @@ $( function()
 
   function prepareCpanel(parent)
   {
-    function bindButton(selector, icon, func)
+    function bindButton(selector, func)
     {
-      return $( selector ).button( {
-        text : false,
-        icons : {
-          primary : "ui-icon-" + icon
-        }
-      } ).click( function()
+      return $( selector ).click( function()
       {
         func();
       } );
@@ -157,12 +152,12 @@ $( function()
       } );
     }
 
-    bindButton( "#add-chord", "document", createChord );
-    bindButton( "#add-bar", "grip-solid-vertical", addBar );
-    bindButton( "#add-dash", "grip-solid-horizontal", addDash );
-    bindButton( "#copy", "copy", copyItems );
-    bindButton( "#paste", "clipboard", pasteItems );
-    bindButton( "#delete", "trash", deleteItems );
+    bindButton( "#add-chord", createChord );
+    bindButton( "#add-bar", addBar );
+    bindButton( "#add-dash", addDash );
+    bindButton( "#copy", copyItems );
+    bindButton( "#paste", pasteItems );
+    bindButton( "#delete", deleteItems );
 
     $( "#sharpflat" ).change( function()
     {
@@ -205,7 +200,7 @@ $( function()
       window.location.assign( hash );
       $( window ).hashchange();
     } );
-    link.focus();
+    link.children().focus();
     link.effect( "highlight", null, 2000 );
   }
 
@@ -245,8 +240,6 @@ $( function()
   } );
 
   $( window ).hashchange();
-
-  $( document ).tooltip();
 
   $( "#title" ).keydown( function(event)
   {
