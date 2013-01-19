@@ -173,12 +173,7 @@ $( function()
       } );
     } );
 
-    $( "#save" ).button( {
-      text : false,
-      icons : {
-        primary : "ui-icon-disk"
-      }
-    } ).click( function()
+    $( "#save" ).click( function()
     {
       var status = "";
       $( "#items li" ).each( function()
@@ -194,6 +189,7 @@ $( function()
       }
       window.history.pushState( status, window.document.title, hash );
       setLink( hash );
+      this.blur();
     } );
   }
 
@@ -209,6 +205,7 @@ $( function()
       window.location.assign( hash );
       $( window ).hashchange();
     } );
+    link.focus();
     link.effect( "highlight", null, 2000 );
   }
 
@@ -250,4 +247,13 @@ $( function()
   $( window ).hashchange();
 
   $( document ).tooltip();
+
+  $( "#title" ).keydown( function(event)
+  {
+    if ( event.which === 13 || event.which === 9 )
+    {
+      event.preventDefault();
+      $( "#save" ).focus();
+    }
+  } );
 } );
