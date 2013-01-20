@@ -19,6 +19,17 @@ h1 input[type="text"] {
   font-weight: 700;
 }
 
+#help .modal-header {
+  font-family: neuton-cursive, serif;
+  font-weight: 400;
+}
+
+#help .modal-body {
+  font-family: overlock, serif;
+  font-weight: 400;
+  font-size: 15px;
+}
+
 ol#items {
   padding-left: 0;
 }
@@ -75,8 +86,8 @@ li .handle {
   font-family: overlock, serif;
   font-weight: 700;
 }
-#tools #help {
-  margin-left: 9px;
+#tools #help-btn {
+  margin-left: 11px;
 }
 
 #footer {

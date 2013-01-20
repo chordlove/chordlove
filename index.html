@@ -15,6 +15,22 @@
 <script type="text/javascript" src="chords.js"></script>
 </head>
 <body>
+  <div id="help" class="modal hide fade" tabindex="-1">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+      <h3>Chords</h3>
+    </div>
+    <div class="modal-body">
+      <p>"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
+        dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+        commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+        pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est
+        laborum. …</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+    </div>
+  </div>
   <div class="navbar">
     <div class="navbar-inner">
       <div id="cpanel" class="btn-toolbar">
@@ -27,6 +43,9 @@
             <button id="add-dash" class="btn" title="Add dash">—</button>
           </span>
           <span id="copypaste" class="btn-group">
+            <button id="cut" class="btn" title="Cut">
+              <i class="icon-cut"></i>
+            </button>
             <button id="copy" class="btn" title="Copy">
               <i class="icon-copy"></i>
             </button>
@@ -40,8 +59,8 @@
             </button>
           </span>
           <span id="sharpflat" class="btn-group" data-toggle="buttons-radio">
-            <button type="button" value="Flat" id="flat" class="btn active chord-font">♭</button>
-            <button type="button" id="sharp" class="btn chord-font">♯</button>
+            <button type="button" title="Use flats" id="flat" class="btn active chord-font">♭</button>
+            <button type="button" title="Use sharps" id="sharp" class="btn chord-font">♯</button>
           </span>
           <span class="btn-group">
             <button id="save" class="btn" title="Update link">
@@ -50,9 +69,7 @@
           </span>
           <span id="link"></span>
           <span class="btn-group">
-            <button id="help" class="btn" title="Help">
-              <i class="icon-info-sign"></i>
-            </button>
+            <a href="#help" id="help-btn" role="button" class="btn" data-toggle="modal"><i class="icon-info-sign"></i></a>
           </span>
         </span>
       </div>

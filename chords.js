@@ -5,6 +5,8 @@ $( function()
       "Mixolydian", "Aeolian", "Locrian" ], modeIntervals = [ 0, 2, 4, 5, 7, 9, 11 ];
   var keys = keysFlat;
 
+  var SHARP = true, FLAT = false;
+
   function setOptions(select, collection, transformer)
   {
     var selected = select[0].selectedIndex;
@@ -135,6 +137,13 @@ $( function()
     }
 
     var copiedItems = [];
+
+    function cutItems()
+    {
+      copyItems();
+      deleteItems();
+    }
+
     function copyItems()
     {
       copiedItems = [];
@@ -155,18 +164,22 @@ $( function()
     bindButton( "#add-chord", createChord );
     bindButton( "#add-bar", addBar );
     bindButton( "#add-dash", addDash );
+    bindButton( "#cut", cutItems );
     bindButton( "#copy", copyItems );
     bindButton( "#paste", pasteItems );
     bindButton( "#delete", deleteItems );
 
-    $( "#sharpflat" ).change( function()
+    function sharpFlatChange(mode)
     {
-      keys = $( "#flat" )[0].checked ? keysFlat : keysSharp;
+      keys = mode.data === FLAT ? keysFlat : keysSharp;
       $( ".item" ).each( function()
       {
         this.update();
       } );
-    } );
+    }
+
+    $( "#sharp" ).click( SHARP, sharpFlatChange );
+    $( "#flat" ).click( FLAT, sharpFlatChange );
 
     $( "#save" ).click( function()
     {
