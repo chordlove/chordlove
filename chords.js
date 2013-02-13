@@ -1,5 +1,8 @@
 $( function()
 {
+  $.ajaxSetup( {
+    cache : true
+  } );
   var keysSharp = [ "C", "C♯", "D", "D♯", "E", "F", "F♯", "G", "G♯", "A", "A♯", "B" ], keysFlat = [ "C", "D♭", "D",
       "E♭", "E", "F", "G♭", "G", "A♭", "A", "B♭", "B" ], modes = [ "Ionian", "Dorian", "Phrygian", "Lydian",
       "Mixolydian", "Aeolian", "Locrian" ], modeIntervals = [ 0, 2, 4, 5, 7, 9, 11 ];
@@ -262,4 +265,64 @@ $( function()
       $( "#save" ).focus();
     }
   } );
+
+  function PluginHandler()
+  {
+    var plugins = {};
+    var loading = {};
+    var undefined;
+
+    function getPlugin(id, func)
+    {
+      // Run from plugin store if possible.
+      if ( plugins[id] )
+      {
+        func( plugins[id] );
+      }
+      else
+      {
+        if ( typeof loading[id] !== "undefined" )
+        {
+          // Store function to execute after load.
+          loading[id].push( func );
+        }
+        else
+        {
+          // Load script from file.
+          loading[id] = [];
+          var fileName = "plugins/" + id + ".js";
+          $.getScript( fileName, function()
+          {
+            var fn = window["chords_" + id];
+            if ( typeof fn === 'function' )
+            {
+              var instance = new fn();
+              plugins[id] = instance;
+              func( instance );
+              for ( var i = 0, len = loading[id].length; i < len; i++ )
+              {
+                loading[id][i]( instance );
+              }
+              loading[id] = undefined;
+            }
+          } );
+        }
+      }
+    }
+
+    function runPluginUsingCallback(id, data)
+    {
+      getPlugin( id, function(plugin)
+      {
+        plugin.run( data );
+      } );
+    }
+    this.runPlugin = runPluginUsingCallback;
+  }
+
+  var pluginHandler = new PluginHandler();
+  pluginHandler.runPlugin( 0, 1 );
+  pluginHandler.runPlugin( 0, 2 );
+  pluginHandler.runPlugin( 0, 3 );
+  pluginHandler.runPlugin( 0, 4 );
 } );
