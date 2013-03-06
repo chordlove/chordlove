@@ -1,117 +1,60 @@
+window.chords = ( typeof window.chords !== 'undefined' ) ? window.chords : {};
+
 $( function()
 {
   $.ajaxSetup( {
     cache : true
   } );
-  var keysSharp = [ "C", "C♯", "D", "D♯", "E", "F", "F♯", "G", "G♯", "A", "A♯", "B" ], keysFlat = [ "C", "D♭", "D",
-      "E♭", "E", "F", "G♭", "G", "A♭", "A", "B♭", "B" ], modes = [ "Ionian", "Dorian", "Phrygian", "Lydian",
-      "Mixolydian", "Aeolian", "Locrian" ], modeIntervals = [ 0, 2, 4, 5, 7, 9, 11 ];
-  var keys = keysFlat;
+  // var SHARP = true, FLAT = false;
 
-  var SHARP = true, FLAT = false;
+  var CHARACTERS = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-.!~*'()?", CHARACTERS_LEN = CHARACTERS.length;
 
-  function setOptions(select, collection, transformer)
+  var pluginHandler = new PluginHandler();
+
+  function getNumberFromCharacters( characters )
   {
-    var selected = select[0].selectedIndex;
-    if ( selected === -1 )
+    var sum = 0, len = characters.length;
+    for ( var i = 0; character = characters.charAt( i ), i < len; i++ )
     {
-      selected = 0;
-    }
-    select.empty();
-    $( collection ).each( function(index, value)
-    {
-      if ( typeof ( transformer ) === "function" )
+      var pos = CHARACTERS.indexOf( character );
+      if ( pos === -1 )
       {
-        value = transformer( index, value );
+        throw "Can't parse this character: " + character;
       }
-      $( "<option />" ).attr( "value", index ).text( value ).appendTo( select );
-    } );
-    select.val( selected );
-  }
-
-  function setEquivalentOptions(select, keyIndex, modeIndex)
-  {
-    setOptions( select, modes, function(index, value)
-    {
-      var interval = modeIntervals[index] - modeIntervals[modeIndex] + keyIndex + 12;
-      interval %= 12;
-      return value + " " + keys[interval];
-    } );
-  }
-
-  function createItem(status)
-  {
-    if ( status.length === 3 )
-    {
-      createChord( status );
-    }
-    else
-    {
-      var wrapper = createWrapper( "symbol" ).append( status );
-      var getStatus = function()
+      if ( len - i === 1 )
       {
-        return status;
-      };
-      wrapper[0]["getStatus"] = getStatus;
+        sum += pos;
+      }
+      else
+      {
+        sum += ( len - i - 1 ) * CHARACTERS_LEN * pos;
+      }
     }
+    return sum;
   }
+  window.chords.getNumberFromChars = getNumberFromCharacters;
 
-  function createWrapper(className)
+  function getCharactersFromNumber( number, charNo )
   {
-    var parent = $( "#items" );
-    var wrapper = $( "<li class='ui-corner-all ui-widget-content'/>" ).addClass( className ).append(
-        "<div class='handle ui-corner-tl ui-corner-bl'><span class='ui-icon ui-icon-arrow-4'></span></div>" );
-    wrapper.appendTo( parent );
-    return wrapper;
-  }
-
-  function createChord(status)
-  {
-    var wrapper = createWrapper( "item" );
-    var key = $( "<select class='key'/>" );
-    key.appendTo( wrapper );
-    var mode = $( "<select class='mode'/>" );
-    mode.appendTo( wrapper );
-    setOptions( mode, modes );
-    var equivalent = $( "<select class='equivalent'/>" );
-    equivalent.appendTo( wrapper );
-
-    function update()
+    var characters = '';
+    var num = number;
+    for ( var i = 0; i < charNo; i++ )
     {
-      setOptions( key, keys );
-      setEquivalentOptions( equivalent, $( key )[0].selectedIndex, $( mode )[0].selectedIndex );
+      var reminder = num % CHARACTERS_LEN;
+      characters = CHARACTERS.charAt( reminder ) + characters;
+      num = ( num - reminder ) / CHARACTERS_LEN;
     }
-    update();
-    key.change( update );
-    mode.change( update );
-
-    var getStatus = function()
+    if ( num != 0 )
     {
-      return Number( $( key )[0].selectedIndex ).toString( 16 ) + $( mode )[0].selectedIndex
-          + $( equivalent )[0].selectedIndex;
-    };
-
-    var setStatus = function(status)
-    {
-      $( key ).val( parseInt( status.charAt( 0 ), 16 ) );
-      $( mode ).val( status.charAt( 1 ) );
-      update();
-      $( equivalent ).val( status.charAt( 2 ) );
-    };
-
-    if ( typeof ( status ) === "string" && status.length === 3 )
-    {
-      setStatus( status );
+      throw "Couldn't encode " + number + " using only " + charNo + " characters .";
     }
-
-    wrapper[0]["update"] = update;
-    wrapper[0]["getStatus"] = getStatus;
-    wrapper[0]["setStatus"] = setStatus;
+    return characters;
   }
+  window.chords.getCharsFromNumber = getCharactersFromNumber;
 
-  function prepareCpanel(parent)
+  function prepareCpanel()
   {
-    function bindButton(selector, func)
+    function bindButton( selector, func )
     {
       return $( selector ).click( function()
       {
@@ -119,15 +62,7 @@ $( function()
       } );
     }
 
-    function addBar()
-    {
-      createItem( "|" );
-    }
-
-    function addDash()
-    {
-      createItem( "—" );
-    }
+    window.chords.bindButton = bindButton;
 
     function getSelectedItems()
     {
@@ -158,92 +93,35 @@ $( function()
 
     function pasteItems()
     {
-      $( copiedItems ).each( function(ix, value)
+      $( copiedItems ).each( function( ix, value )
       {
         createItem( value );
       } );
     }
 
-    bindButton( "#add-chord", createChord );
-    bindButton( "#add-bar", addBar );
-    bindButton( "#add-dash", addDash );
+    function editMode()
+    {
+      var currentState = $( '#edit' ).hasClass( 'active' );
+      if ( currentState === true )
+      {
+        $( 'body' ).removeClass( 'edit-mode' );
+        $( '#edit' ).removeClass( 'active' );
+      }
+      else
+      {
+        $( 'body' ).addClass( 'edit-mode' );
+        $( '#edit' ).addClass( 'active' );
+      }
+    }
+
     bindButton( "#cut", cutItems );
     bindButton( "#copy", copyItems );
     bindButton( "#paste", pasteItems );
     bindButton( "#delete", deleteItems );
-
-    function sharpFlatChange(mode)
-    {
-      keys = mode.data === FLAT ? keysFlat : keysSharp;
-      $( ".item" ).each( function()
-      {
-        this.update();
-      } );
-    }
-
-    $( "#sharp" ).click( SHARP, sharpFlatChange );
-    $( "#flat" ).click( FLAT, sharpFlatChange );
-
-    $( "#save" ).click( function()
-    {
-      var status = "";
-      $( "#items li" ).each( function()
-      {
-        status += this.getStatus();
-      } );
-      var hash = "#" + encodeURIComponent( status );
-      var title = $( "#title" ).val();
-      if ( title.length > 0 )
-      {
-        hash += "?" + encodeURIComponent( title );
-        window.document.title = title;
-      }
-      window.history.pushState( status, window.document.title, hash );
-      setLink( hash );
-      this.blur();
-    } );
+    bindButton( "#edit", editMode );
   }
 
-  function setLink(hash)
-  {
-    var link = $( "#link" ).empty();
-    $( '<a>', {
-      text : 'link',
-      title : 'Copy the link address to share this page.',
-      href : hash.replace( "|", "%7C" ).replace( "—", "%E2%80%94" )
-    } ).appendTo( link ).click( function()
-    {
-      window.location.assign( hash );
-      $( window ).hashchange();
-    } );
-    link.children().focus();
-    link.effect( "highlight", null, 2000 );
-  }
-
-  function initializeState()
-  {
-    $( "#items" ).empty();
-    if ( window.location.hash.length <= 2 )
-    {
-      return;
-    }
-    var hash = decodeURIComponent( window.location.hash.substring( 1 ) );
-    setLink( "#" + encodeURIComponent( hash ) );
-    var pos = hash.indexOf( "?" );
-    if ( pos !== -1 )
-    {
-      window.document.title = hash.substring( pos + 1 );
-      $( "#title" ).val( window.document.title );
-      hash = hash.substring( 0, pos );
-    }
-    var states = hash.match( /(\w{1,3}|\W)/g );
-    $( states ).each( function()
-    {
-      createItem( this.toString() );
-    } );
-  }
-
-  prepareCpanel( $( "#cpanel" ) );
+  prepareCpanel();
 
   $( "#items" ).sortable( {
     "revert" : true,
@@ -252,18 +130,7 @@ $( function()
 
   $( window ).hashchange( function()
   {
-    initializeState();
-  } );
-
-  $( window ).hashchange();
-
-  $( "#title" ).keydown( function(event)
-  {
-    if ( event.which === 13 || event.which === 9 )
-    {
-      event.preventDefault();
-      $( "#save" ).focus();
-    }
+    pluginHandler.initialize();
   } );
 
   function PluginHandler()
@@ -271,8 +138,134 @@ $( function()
     var plugins = {};
     var loading = {};
     var undefined;
+    var PRIO_PLUGINS = [ 0, 1 ];
+    var activePlugins = [];
 
-    function getPlugin(id, func)
+    $( PRIO_PLUGINS ).each( function()
+    {
+      getPlugin( this, function()
+      {
+      } );
+    } );
+
+    function getActivePlugins()
+    {
+      return activePlugins.slice( 0 );
+    }
+
+    function addActivePlugin( plugin )
+    {
+      var newId = plugin.id;
+      for ( var i = 0; i < activePlugins.length; i++ )
+      {
+        if ( activePlugins[i].id === newId )
+        {
+          return false;
+        }
+      }
+      activePlugins.push( plugin );
+      return true;
+    }
+
+    function parseHash()
+    {
+      var PLUGIN_END_MARKER = "_";
+      var hash = window.location.hash;
+      var topLevelFormat = hash.charAt( 2 );
+      if ( topLevelFormat !== "0" )
+      {
+        // we'll handle this better when we're actually at format version 1.
+        throw "Unknown URL format.";
+      }
+      var plugins = decodeURIComponent( hash.substring( 3 ) ).split( PLUGIN_END_MARKER );
+      var pluginsWithData = [];
+      for ( var i = 0; i < plugins.length; i++ )
+      {
+        var plugin = plugins[i];
+        var pluginId = getNumberFromCharacters( plugin.substr( 0, 2 ) );
+        var pluginFormat = getNumberFromCharacters( plugin.substr( 2, 1 ) );
+        var pluginData = plugin.substr( 3 );
+        var pluginWithData = new PluginData( pluginId, pluginFormat, pluginData );
+        pluginsWithData.push( pluginWithData );
+        addActivePlugin( pluginWithData );
+      }
+      // add prio plugins even though they aren't in the hash.
+      for ( var i = 0; i < PRIO_PLUGINS.length; i++ )
+      {
+        addActivePlugin( new PluginData( PRIO_PLUGINS[i] ) );
+      }
+
+      var result = separatePrioPlugins( getActivePlugins() );
+      var prioPlugins = result.prio;
+      pluginsWithData = result.other;
+
+      executePlugins( prioPlugins );
+      executePlugins( pluginsWithData );
+    }
+    this.initialize = function()
+    {
+      parseHash();
+    };
+
+    function separatePrioPlugins( pluginsWithData )
+    {
+      var prioPlugins = [];
+      for ( var j = 0; j < PRIO_PLUGINS.length; j++ )
+      {
+        var prioPlugin = PRIO_PLUGINS[j];
+        for ( var i = 0; i < pluginsWithData.length; i++ )
+        {
+          var pluginWithData = pluginsWithData[i];
+          if ( pluginWithData.id === prioPlugin )
+          {
+            prioPlugins.push( pluginWithData );
+            pluginsWithData.splice( i, 1 );
+            i--;
+          }
+        }
+      }
+      return {
+        "prio" : prioPlugins,
+        "other" : pluginsWithData
+      };
+    }
+
+    function executePlugins( plugins )
+    {
+      for ( var i = 0; i < plugins.length; i++ )
+      {
+        plugins[i].run();
+      }
+    }
+
+    function getDataFromPlugins( pluginArray, data )
+    {
+      for ( var i = 0; i < pluginArray.length; i++ )
+      {
+        var serialized = plugins[pluginArray[i].id].serialize();
+        if ( serialized )
+        {
+          data.push( serialized );
+        }
+      }
+    }
+
+    function PluginData( id, format, data )
+    {
+      this.id = id;
+
+      function exec()
+      {
+        runPluginUsingCallback( id, format, data );
+      }
+      this.run = exec;
+    }
+    this.createPluginData = function( id, format, data )
+    {
+      return new PluginData( id, format, data );
+    };
+
+    function getPlugin( id, func )
     {
       // Run from plugin store if possible.
       if ( plugins[id] )
@@ -290,10 +283,11 @@ $( function()
         {
           // Load script from file.
           loading[id] = [];
-          var fileName = "plugins/" + id + ".js";
+          var pluginName = window.chords.pluginlist[id];
+          var fileName = "plugins/" + pluginName + ".js";
           $.getScript( fileName, function()
           {
-            var fn = window["chords_" + id];
+            var fn = window["chords_" + pluginName];
             if ( typeof fn === 'function' )
             {
               var instance = new fn();
@@ -310,19 +304,28 @@ $( function()
       }
     }
 
-    function runPluginUsingCallback(id, data)
+    function runPluginUsingCallback( id, format, data )
     {
-      getPlugin( id, function(plugin)
+      getPlugin( id, function( plugin )
       {
-        plugin.run( data );
+        plugin.run( format, data );
       } );
     }
-    this.runPlugin = runPluginUsingCallback;
+
+    function getPluginData()
+    {
+      var FORMAT = "0";
+      var PLUGIN_END_MARKER = "_";
+
+      var plugins = separatePrioPlugins( getActivePlugins() );
+      var data = [];
+      getDataFromPlugins( plugins.prio, data );
+      getDataFromPlugins( plugins.other, data );
+      return "!" + FORMAT + data.join( PLUGIN_END_MARKER );
+    }
+    this.hash = getPluginData;
   }
 
-  var pluginHandler = new PluginHandler();
-  pluginHandler.runPlugin( 0, 1 );
-  pluginHandler.runPlugin( 0, 2 );
-  pluginHandler.runPlugin( 0, 3 );
-  pluginHandler.runPlugin( 0, 4 );
+  pluginHandler.initialize();
+  window.chords.getHash = pluginHandler.hash;
 } );

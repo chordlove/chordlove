@@ -1,24 +1,66 @@
+@font-face {
+  font-family: 'DejaVuSerifBook';
+  src: url('DejaVuSerif-webfont.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
 body {
   padding: 8px;
-  font-family: overlock, serif;
+  font-family: serif;
   font-weight: 400;
 }
 
-h1 input[type="text"] {
+.navbar {
+  width: 10.7em;
+}
+
+body.edit-mode .navbar {
+  width: 100%
+}
+
+h1 input[type="text"],input[type="text"].chord-text,input[type="text"].song-text {
   font-family: neuton-cursive, serif;
   font-weight: 400;
   font-size: 1em;
-  height: 1.3em;
   line-height: 1.3em;
+  height: 1.3em;
   width: 99%;
   border: none;
   box-shadow: none;
   position: relative;
+  background: transparent;
 }
 
-.chord-font {
-  font-family: overlock, serif;
-  font-weight: 700;
+input[type="text"].chord-text,#help .modal-body {
+  font-family: 'DejaVuSerifBook', 'DejaVu Serif', 'DejaVu Sans', 'Lucida Sans Unicode',
+    'Arial Unicode MS', serif;
+  font-weight: 400;
+}
+
+input[type="text"].chord-text,input[type="text"].song-text {
+  font-size: 24px;
+  padding: 6px 0 1px 0;
+  line-height: 40px;
+  height: 40px;
+  margin-bottom: 0;
+}
+
+input[type="text"].chord-text {
+  width: 98%;
+  margin-left: 4px;
+  position: static;
+}
+
+input[type="text"].song-text {
+  font-size: 14px;
+  height: 28px;
+  line-height: 28px;
+  padding: 3px 0 1px 0;
+  margin-left: 4px;
+  position: relative;
+  top: -12px;
+  position: relative;
 }
 
 #help .modal-header {
@@ -27,8 +69,6 @@ h1 input[type="text"] {
 }
 
 #help .modal-body {
-  font-family: overlock, serif;
-  font-weight: 400;
   font-size: 15px;
 }
 
@@ -38,22 +78,35 @@ ol#items {
 
 #items li {
   list-style-type: none;
-  width: 160px;
-  height: 56px;
+  width: 107px;
+  height: 46px;
   float: left;
-  cursor: move;
+  cursor: default;
   display: block;
-  padding: 6px 4px 4px 28px;
+  padding: 2px 3px 2px 18px;
   margin: 0 4px 16px 0;
   position: relative;
   border: 1px solid gray;
+  border-radius: 4px;
 }
 
-#items li.symbol {
-  text-align: center;
-  font-size: 2em;
-  width: 30px;
-  padding-left: 26px;
+#items.has-text li {
+  height: 66px;
+}
+
+#items li i.icon-double-angle-down {
+  display: none;
+}
+
+body.edit-mode #items li i.icon-double-angle-down {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  display: inline-block;
+}
+
+#items.has-text li i.icon-double-angle-down {
+  display: none;
 }
 
 select.equivalent {
@@ -68,28 +121,54 @@ select.equivalent {
   background: #F39814;
 }
 
-li .handle {
+body li .handle {
+  display: none;
+}
+
+body.edit-mode li .handle {
   background: #f8f8f8;
   position: absolute;
   left: 0;
   top: 0;
   bottom: 0;
-  padding: 4px;
+  padding: 2px;
+  font-size: 12px;
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+  cursor: move;
+  display: block;
 }
 
-#tools #link {
-  font-weight: normal;
-  font-size: 16px;
-  padding: 4px;
-  position: relative;
-  top: 7px;
-  left: 5px;
-  border-radius: 4px;
-  font-family: overlock, serif;
-  font-weight: 700;
+li i {
+  color: #666666;
 }
+
+li .handle .icon-pushpin {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  padding: 2px;
+  cursor: default;
+}
+
+li.ui-selected .handle .icon-pushpin {
+  color: #F39814;
+}
+
 #tools #help-btn {
   margin-left: 11px;
+}
+
+#tools span.btn-group {
+  display: none;
+}
+
+#tools span.always-visible {
+  display: inline-block;
+}
+
+body.edit-mode #tools span.btn-group {
+  display: inline-block;
 }
 
 #footer {
