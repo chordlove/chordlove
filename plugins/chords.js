@@ -7,11 +7,10 @@ function chords_chords()
   var CHORD_DELIMITER = '.';
   var CHORD_ITEMS_DELIMITER = '!';
 
-  var ESCAPES = {
-    '♭' : 'b',
-    '♯' : 's'
-  };
+  var ESCAPES = {};
   ESCAPES[ESCAPE_CHARACTER] = ESCAPE_CHARACTER;
+  ESCAPES['♭'] = 'b';
+  ESCAPES['♯'] = 's';
 
   var MIN_WIDTH = 100;
   var MAX_WIDTH = 1000;
@@ -49,7 +48,6 @@ function chords_chords()
   {
     var result = PLUGIN_ID + DEFAULT_FORMAT;
     var state = this.data();
-    console.log( state );
     var chords = state.chords;
     var chordItems = state.chordItems;
     for ( var i = 0; i < chords.length; i++ )
@@ -195,7 +193,8 @@ function chords_chords()
 
     function handleBlurEvent( event )
     {
-      console.log( 'blur event!' );
+      // TODO
+      //console.log( 'blur event!' );
     }
 
     function handleKeyEvent( event )
@@ -229,11 +228,11 @@ function chords_chords()
     }
     return str.substr( 0, index ) + chr + str.substr( index + 1 );
   }
-  
-  function transformChordString(string)
+
+  function transformChordString( string )
   {
     var inputContent = $.trim( string );
-    //var newContent = '';
+    // var newContent = '';
     if ( inputContent.length > 1 )
     {
       var secondChar = inputContent.charAt( 1 );
