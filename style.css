@@ -88,6 +88,7 @@ ol#items {
   position: relative;
   border: 1px solid gray;
   border-radius: 4px;
+  background: #ffffff;
 }
 
 #items.has-text li {
