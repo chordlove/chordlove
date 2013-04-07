@@ -1,13 +1,13 @@
 function chords_chords()
 {
-  var PLUGIN_ID = "01";
-  var DEFAULT_FORMAT = "0";
+  var PLUGIN_ID = "01", DEFAULT_FORMAT = "0";
 
-  var ESCAPE_CHARACTER = '~';
-  var CHORD_DELIMITER = '.';
-  var CHORD_ITEMS_DELIMITER = '!';
+  var CONFIG = {
+    CHORDS_COUNT_LENGTH : 1,
+    CHORDITEMS_COUNT_LENGTH : 1
+  };
 
-  var ESCAPES = {};
+  var ESCAPE_CHARACTER = '~', ESCAPES = {};
   ESCAPES[ESCAPE_CHARACTER] = ESCAPE_CHARACTER;
   ESCAPES['♭'] = 'b';
   ESCAPES['♯'] = 's';
@@ -26,22 +26,43 @@ function chords_chords()
     {
       return;
     }
-    var state = data.split( CHORD_ITEMS_DELIMITER );
-    if ( state.length < 2 )
-    {
-      throw "Incomplete data for chords: " + data;
-    }
-    var chords = state[0].split( CHORD_DELIMITER );
-    for ( var i = 0; i < chords.length; i++ )
-    {
-      chords[i] = deserializeChord( chords[i] );
-    }
-    var chordItems = state[1];
+    var chordItems = this.deserialize( data ).chordItems;
     for ( var i = 0; i < chordItems.length; i++ )
     {
-      var chordText = chords[window.chords.getNumberFromChars( chordItems.charAt( i ) )];
-      createItem( chordText );
+      createItem( chordItems[i] );
     }
+  };
+
+  this.deserialize = function( data )
+  {
+    var chords = [];
+    var chordItems = [];
+    try
+    {
+      var currentPos = 0;
+      var numberOfChords = window.chords.getNumberFromChars( data.substr( currentPos++, CONFIG.CHORDS_COUNT_LENGTH ) );
+      for ( var i = 0; i < numberOfChords; i++ )
+      {
+        var length = window.chords.getNumberFromChars( data.charAt( currentPos++ ) );
+        chords.push( deserializeChord( data.substr( currentPos, length ) ) );
+        currentPos += length;
+      }
+      var numberOfChordItems = window.chords.getNumberFromChars( data.substr( currentPos++,
+          CONFIG.CHORDITEMS_COUNT_LENGTH ) );
+      for ( var i = 0; i < numberOfChordItems; i++ )
+      {
+        var chordText = chords[window.chords.getNumberFromChars( data.charAt( currentPos++ ) )];
+        chordItems.push( chordText );
+      }
+    }
+    catch ( err )
+    {
+      console.log( err );
+    }
+    return {
+      "chords" : chords,
+      "chordItems" : chordItems
+    };
   };
 
   this.serialize = function()
@@ -50,17 +71,20 @@ function chords_chords()
     var state = this.data();
     var chords = state.chords;
     var chordItems = state.chordItems;
+
+    result += window.chords.getCharsFromNumber( chords.length, CONFIG.CHORDS_COUNT_LENGTH );
     for ( var i = 0; i < chords.length; i++ )
     {
-      chords[i] = serializeChord( chords[i] );
+      var serializedChord = serializeChord( chords[i] );
+      result += window.chords.getCharsFromNumber( serializedChord.length, 1 );
+      result += serializedChord;
     }
+
+    result += window.chords.getCharsFromNumber( chordItems.length, CONFIG.CHORDITEMS_COUNT_LENGTH );
     for ( var i = 0; i < chordItems.length; i++ )
     {
-      chordItems[i] = window.chords.getCharsFromNumber( chordItems[i], 1 );
+      result += window.chords.getCharsFromNumber( chordItems[i], 1 );
     }
-    result += chords.join( CHORD_DELIMITER );
-    result += CHORD_ITEMS_DELIMITER;
-    result += chordItems.join( '' );
     return result.length > 3 ? result : '';
   };
 
@@ -194,7 +218,7 @@ function chords_chords()
     function handleBlurEvent( event )
     {
       // TODO
-      //console.log( 'blur event!' );
+      // console.log( 'blur event!' );
     }
 
     function handleKeyEvent( event )
