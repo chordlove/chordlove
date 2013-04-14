@@ -1,5 +1,9 @@
 window.chords = ( typeof window.chords !== 'undefined' ) ? window.chords : {};
 
+//console.log( "soon!" );
+//var dummy = require( "dummy" ).dummy;
+//console.log( "the dummy", dummy() );
+
 $( function()
 {
   $.ajaxSetup( {
@@ -171,23 +175,26 @@ $( function()
     {
       var PLUGIN_END_MARKER = "_";
       var hash = window.location.hash;
-      var topLevelFormat = hash.charAt( 2 );
-      if ( topLevelFormat !== "0" )
+      if ( hash.length > 0 )
       {
-        // we'll handle this better when we're actually at format version 1.
-        throw "Unknown URL format.";
-      }
-      var plugins = decodeURIComponent( hash.substring( 3 ) ).split( PLUGIN_END_MARKER );
-      var pluginsWithData = [];
-      for ( var i = 0; i < plugins.length; i++ )
-      {
-        var plugin = plugins[i];
-        var pluginId = getNumberFromCharacters( plugin.substr( 0, 2 ) );
-        var pluginFormat = getNumberFromCharacters( plugin.substr( 2, 1 ) );
-        var pluginData = plugin.substr( 3 );
-        var pluginWithData = new PluginData( pluginId, pluginFormat, pluginData );
-        pluginsWithData.push( pluginWithData );
-        addActivePlugin( pluginWithData );
+        var topLevelFormat = hash.charAt( 2 );
+        if ( topLevelFormat !== "0" )
+        {
+          // we'll handle this better when we're actually at format version 1.
+          throw "Unknown URL format.";
+        }
+        var plugins = decodeURIComponent( hash.substring( 3 ) ).split( PLUGIN_END_MARKER );
+        var pluginsWithData = [];
+        for ( var i = 0; i < plugins.length; i++ )
+        {
+          var plugin = plugins[i];
+          var pluginId = getNumberFromCharacters( plugin.substr( 0, 2 ) );
+          var pluginFormat = getNumberFromCharacters( plugin.substr( 2, 1 ) );
+          var pluginData = plugin.substr( 3 );
+          var pluginWithData = new PluginData( pluginId, pluginFormat, pluginData );
+          pluginsWithData.push( pluginWithData );
+          addActivePlugin( pluginWithData );
+        }
       }
       // add prio plugins even though they aren't in the hash.
       for ( var i = 0; i < PRIO_PLUGINS.length; i++ )
@@ -284,7 +291,7 @@ $( function()
           // Load script from file.
           loading[id] = [];
           var pluginName = window.chords.pluginlist[id];
-          var fileName = "plugins/" + pluginName + ".js";
+          var fileName = "modules/" + pluginName + ".js";
           $.getScript( fileName, function()
           {
             var fn = window["chords_" + pluginName];
