@@ -1,3 +1,4 @@
+//define("chords", ["jquery"], 
 function chords_chords()
 {
   var PLUGIN_ID = "01", DEFAULT_FORMAT = "0";
