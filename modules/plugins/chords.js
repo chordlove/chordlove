@@ -33,16 +33,8 @@ function Chords( $, functions )
     data = inputData;
   }
 
-  function update( inputFormat, inputData )
+  function update()
   {
-    if ( inputFormat )
-    {
-      format = inputFormat;
-    }
-    if ( inputData )
-    {
-      data = inputData;
-    }
     $( '#items' ).empty();
     if ( !data )
     {
@@ -69,8 +61,7 @@ function Chords( $, functions )
         chords.push( deserializeChord( data.substr( currentPos, length ) ) );
         currentPos += length;
       }
-      var numberOfChordItems = functions.getNumber( data.substr( currentPos++,
-          CONFIG.CHORDITEMS_COUNT_LENGTH ) );
+      var numberOfChordItems = functions.getNumber( data.substr( currentPos++, CONFIG.CHORDITEMS_COUNT_LENGTH ) );
       for ( var i = 0; i < numberOfChordItems; i++ )
       {
         var chordText = chords[functions.getNumber( data.charAt( currentPos++ ) )];
