@@ -56,7 +56,6 @@ function Title( $, plugins )
     window.history.pushState( status, window.document.title, hash );
     setLink( hash );
     this.blur();
-    console.log(plugins.serialize());
   } );
 
   function setLink( hash )
