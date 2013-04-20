@@ -62,18 +62,18 @@ function Chords( $, functions )
     try
     {
       var currentPos = 0;
-      var numberOfChords = window.chords.getNumberFromChars( data.substr( currentPos++, CONFIG.CHORDS_COUNT_LENGTH ) );
+      var numberOfChords = functions.getNumber( data.substr( currentPos++, CONFIG.CHORDS_COUNT_LENGTH ) );
       for ( var i = 0; i < numberOfChords; i++ )
       {
-        var length = window.chords.getNumberFromChars( data.charAt( currentPos++ ) );
+        var length = functions.getNumber( data.charAt( currentPos++ ) );
         chords.push( deserializeChord( data.substr( currentPos, length ) ) );
         currentPos += length;
       }
-      var numberOfChordItems = window.chords.getNumberFromChars( data.substr( currentPos++,
+      var numberOfChordItems = functions.getNumber( data.substr( currentPos++,
           CONFIG.CHORDITEMS_COUNT_LENGTH ) );
       for ( var i = 0; i < numberOfChordItems; i++ )
       {
-        var chordText = chords[window.chords.getNumberFromChars( data.charAt( currentPos++ ) )];
+        var chordText = chords[functions.getNumber( data.charAt( currentPos++ ) )];
         chordItems.push( chordText );
       }
     }
@@ -95,18 +95,18 @@ function Chords( $, functions )
     var chords = state.chords;
     var chordItems = state.chordItems;
 
-    result += window.chords.getCharsFromNumber( chords.length, CONFIG.CHORDS_COUNT_LENGTH );
+    result += functions.getCharacters( chords.length, CONFIG.CHORDS_COUNT_LENGTH );
     for ( var i = 0; i < chords.length; i++ )
     {
       var serializedChord = serializeChord( chords[i] );
-      result += window.chords.getCharsFromNumber( serializedChord.length, 1 );
+      result += functions.getCharacters( serializedChord.length, 1 );
       result += serializedChord;
     }
 
-    result += window.chords.getCharsFromNumber( chordItems.length, CONFIG.CHORDITEMS_COUNT_LENGTH );
+    result += functions.getCharacters( chordItems.length, CONFIG.CHORDITEMS_COUNT_LENGTH );
     for ( var i = 0; i < chordItems.length; i++ )
     {
-      result += window.chords.getCharsFromNumber( chordItems[i], 1 );
+      result += functions.getCharacters( chordItems[i], 1 );
     }
     return result.length > 3 ? result : '';
   }

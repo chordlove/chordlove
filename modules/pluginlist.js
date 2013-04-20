@@ -1,3 +1,24 @@
-window.chords = ( typeof window.chords !== 'undefined' ) ? window.chords : {};
+function PluginList()
+{
+  if ( PluginList.prototype._instance )
+  {
+    return PluginList.prototype._instance;
+  }
+  PluginList.prototype._instance = this;
 
-window.chords.pluginlist = [ "title", "chords" ];
+  var list = [ "title", "chords" ];
+
+  function getNameFromId( id )
+  {
+    return list[id];
+  }
+
+  return {
+    "idToName" : getNameFromId
+  };
+}
+
+define( "pluginlist", [], function()
+{
+  return new PluginList();
+} );

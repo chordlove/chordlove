@@ -14,10 +14,6 @@ require( [ "jquery", "functions", "plugins", "plugins/title", "plugins/chords" ]
     } );
     // var SHARP = true, FLAT = false;
 
-    // TODO this is a backwards compat hack.
-    window.chords.getNumberFromChars = functions.getNumber;
-    window.chords.getCharsFromNumber = functions.getCharacters;
-
     var pluginHandler = new PluginHandler();
 
     function prepareCpanel()
@@ -81,6 +77,34 @@ require( [ "jquery", "functions", "plugins", "plugins/title", "plugins/chords" ]
       bindButton( "#paste", pasteItems );
       bindButton( "#delete", deleteItems );
       bindButton( "#edit", editMode );
+
+      $( "#save" ).click( function()
+      {
+        var status = pluginHandler.hash();
+        var hash = "#" + encodeURIComponent( status );
+        window.history.pushState( status, window.document.title, hash );
+        setLink( hash );
+        this.blur();
+      } );
+
+      function setLink( hash )
+      {
+        var href = hash.replace( "|", "%7C" ).replace( "—", "%E2%80%94" );
+        var link = $( "#link" ).empty();
+        var a = $( '<a>', {
+          'title' : 'Copy the link address to share this page.',
+          'href' : href,
+          'class' : 'btn'
+        } );
+        a.append( '<i class="icon-link"> </i>' );
+        a.appendTo( link ).click( function()
+        {
+          window.location.assign( hash );
+          $( window ).hashchange();
+        } );
+        link.children().focus();
+        a.effect( "highlight", null, 2000 );
+      }
     }
 
     prepareCpanel();
@@ -117,7 +141,7 @@ require( [ "jquery", "functions", "plugins", "plugins/title", "plugins/chords" ]
             var pluginId = functions.getNumber( plugin.substr( 0, 2 ) );
             var pluginFormat = functions.getNumber( plugin.substr( 2, 1 ) );
             var pluginData = plugin.substr( 3 );
-            thePlugins.setData(pluginId, pluginFormat, pluginData);
+            thePlugins.setData( pluginId, pluginFormat, pluginData );
           }
         }
         thePlugins.updateAll();
@@ -136,6 +160,5 @@ require( [ "jquery", "functions", "plugins", "plugins/title", "plugins/chords" ]
     }
 
     pluginHandler.initialize();
-    window.chords.getHash = pluginHandler.hash;
   } );
 } );

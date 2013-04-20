@@ -1,4 +1,4 @@
-function Plugins( $ )
+function Plugins( $, pluginlist )
 {
   if ( Plugins.prototype._instance )
   {
@@ -28,11 +28,6 @@ function Plugins( $ )
     this.instance = info.instance;
     this.alwaysRun = info.alwaysRun;
     this.serialize = info.serialize;
-  }
-
-  function idToName( id )
-  {
-    return window.chords.pluginlist[id];
   }
 
   function executeByName( name, func )
@@ -83,7 +78,7 @@ function Plugins( $ )
 
   function setData( id, format, data )
   {
-    executeByName( idToName( id ), function( instance )
+    executeByName( pluginlist.idToName( id ), function( instance )
     {
       instance.setData( format, data );
     } );
@@ -117,7 +112,7 @@ function Plugins( $ )
   };
 }
 
-define( "plugins", [ "jquery" ], function( $ )
+define( "plugins", [ "jquery", "pluginlist" ], function( $, pluginlist )
 {
-  return new Plugins( $ );
+  return new Plugins( $, pluginlist );
 } );
