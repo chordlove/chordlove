@@ -1,16 +1,38 @@
-function chords_title()
+function Title( $, plugins )
 {
+  if ( Title.prototype._instance )
+  {
+    return Title.prototype._instance;
+  }
+  Title.prototype._instance = this;
+
   var PLUGIN_ID = "00";
   var DEFAULT_FORMAT = "0";
-  this.name = "Title plugin";
 
-  this.run = function run( format, data )
+  var format = DEFAULT_FORMAT;
+  var data = null;
+
+  function setData( inputFormat, inputData )
   {
+    format = inputFormat;
+    data = inputData;
+  }
+
+  function update( inputFormat, inputData )
+  {
+    if ( inputFormat )
+    {
+      format = inputFormat;
+    }
+    if ( inputData )
+    {
+      data = inputData;
+    }
     window.document.title = data;
     $( "#title" ).val( data );
-  };
+  }
 
-  this.serialize = function()
+  function serialize()
   {
     return PLUGIN_ID + DEFAULT_FORMAT + sanitizedTitle();
   };
@@ -34,6 +56,7 @@ function chords_title()
     window.history.pushState( status, window.document.title, hash );
     setLink( hash );
     this.blur();
+    console.log(plugins.serialize());
   } );
 
   function setLink( hash )
@@ -64,4 +87,20 @@ function chords_title()
       $( "#save" ).focus();
     }
   } );
+
+  return {
+    "update" : update,
+    "serialize" : serialize,
+    "setData" : setData
+  };
 }
+
+define( "title", [ "plugins", "jquery" ], function( plugins, $ )
+{
+  plugins.register( new plugins.PluginInfo( {
+    "name" : "title",
+    "instance" : new Title( $, plugins ),
+    "alwaysRun" : true,
+    "serialize" : true
+  } ) );
+} );

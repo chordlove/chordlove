@@ -15,10 +15,17 @@
 <script type="text/javascript" src="inject.min.js"></script>
 <script type="text/javascript">
   Inject.setModuleRoot( "modules" );
-  Inject.setExpires(-1);
+  if ( window.location.hostname == "localhost" )
+  {
+    Inject.setExpires( -1 );
+  }
+  else
+  {
+    Inject.setExpires( 180 );
+  }
   require.run( "main" );
 </script>
-<script type="text/javascript" src="modules/-pluginlist.js"></script>
+<script type="text/javascript" src="modules/pluginlist.js"></script>
 </head>
 <body>
   <div id="help" class="modal hide fade" tabindex="-1">
@@ -47,7 +54,7 @@
               <i class="icon-music"></i>
             </button>
           </span>
-          <span class="btn-group">
+          <span class="btn-group NIY">
             <button id="key-up" class="btn" title="Change key upwards">
               <i class="icon-arrow-up"></i>
             </button>
@@ -55,7 +62,7 @@
               <i class="icon-arrow-down"></i>
             </button>
           </span>
-          <span id="sharpflat" class="btn-group" data-toggle="buttons-radio">
+          <span id="sharpflat" class="btn-group NIY" data-toggle="buttons-radio">
             <button type="button" title="Use flats" id="flat" class="btn active chord-font">♭</button>
             <button type="button" title="Use sharps" id="sharp" class="btn chord-font">♯</button>
           </span>

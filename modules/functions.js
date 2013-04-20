@@ -1,7 +1,7 @@
 define(
     "functions",
-    [],
-    function()
+    [ "jquery" ],
+    function( $ )
     {
       var CHARACTERS = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-.!~*'()?", CHARACTERS_LEN = CHARACTERS.length;
 
@@ -44,8 +44,17 @@ define(
         return characters;
       }
 
+      function bindButton( selector, func )
+      {
+        return $( selector ).click( function()
+        {
+          func();
+        } );
+      }
+
       return {
         "getNumber" : getNumberFromCharacters,
-        "getCharacters" : getCharactersFromNumber
+        "getCharacters" : getCharactersFromNumber,
+        "bindButton" : bindButton
       };
     } );

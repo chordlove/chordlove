@@ -1,6 +1,11 @@
-//define("chords", ["jquery"], 
-function chords_chords()
+function Chords( $, functions )
 {
+  if ( Chords.prototype._instance )
+  {
+    return Chords.prototype._instance;
+  }
+  Chords.prototype._instance = this;
+
   var PLUGIN_ID = "01", DEFAULT_FORMAT = "0";
 
   var CONFIG = {
@@ -17,24 +22,40 @@ function chords_chords()
   var MAX_WIDTH = 1000;
   var WRAPPER_MARGIN = 7;
 
-  window.chords.bindButton( "#add-chord", createItem );
+  functions.bindButton( "#add-chord", createItem );
 
-  this.name = "Chords plugin";
-  this.run = function run( format, data )
+  var format = DEFAULT_FORMAT;
+  var data = null;
+
+  function setData( inputFormat, inputData )
   {
+    format = inputFormat;
+    data = inputData;
+  }
+
+  function update( inputFormat, inputData )
+  {
+    if ( inputFormat )
+    {
+      format = inputFormat;
+    }
+    if ( inputData )
+    {
+      data = inputData;
+    }
     $( '#items' ).empty();
     if ( !data )
     {
       return;
     }
-    var chordItems = this.deserialize( data ).chordItems;
+    var chordItems = deserialize( data ).chordItems;
     for ( var i = 0; i < chordItems.length; i++ )
     {
       createItem( chordItems[i] );
     }
-  };
+  }
 
-  this.deserialize = function( data )
+  function deserialize( data )
   {
     var chords = [];
     var chordItems = [];
@@ -64,12 +85,13 @@ function chords_chords()
       "chords" : chords,
       "chordItems" : chordItems
     };
-  };
+  }
+  ;
 
-  this.serialize = function()
+  function serialize()
   {
     var result = PLUGIN_ID + DEFAULT_FORMAT;
-    var state = this.data();
+    var state = getData();
     var chords = state.chords;
     var chordItems = state.chordItems;
 
@@ -87,9 +109,9 @@ function chords_chords()
       result += window.chords.getCharsFromNumber( chordItems[i], 1 );
     }
     return result.length > 3 ? result : '';
-  };
+  }
 
-  this.data = function( selector )
+  function getData( selector )
   {
     var sel = selector || '';
     var query = '#items ' + sel + ' input.chord-text';
@@ -115,7 +137,8 @@ function chords_chords()
       'chords' : chordValues,
       'chordItems' : chordItems
     };
-  };
+  }
+  ;
 
   function serializeChord( chord )
   {
@@ -344,4 +367,20 @@ function chords_chords()
 
     return newWidth;
   }
+
+  return {
+    "update" : update,
+    "serialize" : serialize,
+    "setData" : setData
+  };
 }
+
+define( "chords", [ "plugins", "jquery", "functions" ], function( plugins, $, functions )
+{
+  plugins.register( new plugins.PluginInfo( {
+    "name" : "chords",
+    "instance" : new Chords( $, functions ),
+    "alwaysRun" : true,
+    "serialize" : true
+  } ) );
+} );

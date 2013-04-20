@@ -19,6 +19,10 @@ body.edit-mode .navbar {
   width: 100%
 }
 
+body .NIY {
+  display: none !important;
+}
+
 h1 input[type="text"],input[type="text"].chord-text,input[type="text"].song-text {
   font-family: neuton-cursive, serif;
   font-weight: 400;
