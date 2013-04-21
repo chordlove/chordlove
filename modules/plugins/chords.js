@@ -1,4 +1,4 @@
-function Chords( $, functions )
+function Chords( $, functions, save )
 {
   if ( Chords.prototype._instance )
   {
@@ -175,6 +175,9 @@ function Chords( $, functions )
     }, function( event )
     {
       handleKeyEvent( event );
+    } ).change( function()
+    {
+      save.changed();
     } );
 
     $( more ).mousedown( function( event )
@@ -225,6 +228,9 @@ function Chords( $, functions )
                 } ).blur( function( event )
                 {
                   handleBlurEvent( event );
+                } ).change( function()
+                {
+                  save.changed()
                 } );
                 prepareResize( textInput, wrapper );
               } );
@@ -366,11 +372,11 @@ function Chords( $, functions )
   };
 }
 
-define( "chords", [ "plugins", "jquery", "functions" ], function( plugins, $, functions )
+define( "chords", [ "plugins", "jquery", "functions", "save" ], function( plugins, $, functions, save )
 {
   plugins.register( new plugins.PluginInfo( {
     "name" : "chords",
-    "instance" : new Chords( $, functions ),
+    "instance" : new Chords( $, functions, save ),
     "alwaysRun" : true,
     "serialize" : true
   } ) );

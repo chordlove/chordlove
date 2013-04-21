@@ -12,11 +12,16 @@ body {
 }
 
 .navbar {
-  width: 10.7em;
+  width: 13em;
 }
 
 body.edit-mode .navbar {
   width: 100%
+}
+
+#cpanel {
+  margin-top: 6px;
+  margin-bottom: 10px;
 }
 
 body .NIY {

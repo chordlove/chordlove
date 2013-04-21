@@ -1,4 +1,4 @@
-function Title( $, plugins )
+function Title( $, plugins, save )
 {
   if ( Title.prototype._instance )
   {
@@ -46,6 +46,9 @@ function Title( $, plugins )
       var title = sanitizedTitle();
       setPageTitle( title );
     }
+  } ).change( function()
+  {
+    save.changed();
   } );
 
   function setPageTitle( title )
@@ -67,11 +70,11 @@ function Title( $, plugins )
   };
 }
 
-define( "title", [ "plugins", "jquery" ], function( plugins, $ )
+define( "title", [ "plugins", "jquery", "save" ], function( plugins, $, save )
 {
   plugins.register( new plugins.PluginInfo( {
     "name" : "title",
-    "instance" : new Title( $, plugins ),
+    "instance" : new Title( $, plugins, save ),
     "alwaysRun" : true,
     "serialize" : true
   } ) );

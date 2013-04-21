@@ -5,7 +5,8 @@ define( "jquery", [], function()
   return jQuery;
 } );
 
-require( [ "jquery", "functions", "plugins", "plugins/title", "plugins/chords" ], function( $, functions, thePlugins )
+require( [ "jquery", "functions", "plugins", "save", "plugins/title", "plugins/chords" ], function( $, functions,
+    thePlugins, save )
 {
   $( function()
   {
@@ -68,34 +69,6 @@ require( [ "jquery", "functions", "plugins", "plugins/title", "plugins/chords" ]
       bindButton( "#paste", pasteItems );
       bindButton( "#delete", deleteItems );
       bindButton( "#edit", editMode );
-
-      $( "#save" ).click( function()
-      {
-        var status = thePlugins.serialize();
-        var hash = "#" + encodeURIComponent( status );
-        window.history.pushState( status, window.document.title, hash );
-        setLink( hash );
-        this.blur();
-      } );
-
-      function setLink( hash )
-      {
-        var href = hash.replace( "|", "%7C" ).replace( "—", "%E2%80%94" );
-        var link = $( "#link" ).empty();
-        var a = $( '<a>', {
-          'title' : 'Copy the link address to share this page.',
-          'href' : href,
-          'class' : 'btn'
-        } );
-        a.append( '<i class="icon-link"> </i>' );
-        a.appendTo( link ).click( function()
-        {
-          window.location.assign( hash );
-          $( window ).hashchange();
-        } );
-        link.children().focus();
-        a.effect( "highlight", null, 2000 );
-      }
     }
 
     prepareCpanel();
@@ -116,7 +89,11 @@ require( [ "jquery", "functions", "plugins", "plugins/title", "plugins/chords" ]
 
     $( "#items" ).sortable( {
       "revert" : true,
-      handle : ".handle"
+      "handle" : ".handle",
+      "stop" : function()
+      {
+        save.changed();
+      }
     } ).selectable();
 
     $( window ).hashchange( function()

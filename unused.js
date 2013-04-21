@@ -137,3 +137,22 @@
 
   prepareCpanel( $( "#cpanel" ) );
 
+  function setLink( hash )
+  {
+    var href = hash.replace( "|", "%7C" ).replace( "—", "%E2%80%94" );
+    var link = $( "#link" ).empty();
+    var a = $( '<a>', {
+      'title' : 'Copy the link address to share this page.',
+      'href' : href,
+      'class' : 'btn'
+    } );
+    a.append( '<i class="icon-link"> </i>' );
+    a.appendTo( link ).click( function()
+    {
+      window.location.assign( hash );
+      $( window ).hashchange();
+    } );
+    link.children().focus();
+    a.effect( "highlight", null, 2000 );
+  }
+
