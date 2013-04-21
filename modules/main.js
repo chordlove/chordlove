@@ -80,7 +80,7 @@ require( [ "jquery", "functions", "plugins", "plugins/title", "plugins/chords" ]
 
       $( "#save" ).click( function()
       {
-        var status = pluginHandler.hash();
+        var status = thePlugins.serialize();
         var hash = "#" + encodeURIComponent( status );
         window.history.pushState( status, window.document.title, hash );
         setLink( hash );
@@ -144,6 +144,10 @@ require( [ "jquery", "functions", "plugins", "plugins/title", "plugins/chords" ]
             thePlugins.setData( pluginId, pluginFormat, pluginData );
           }
         }
+        else
+        {
+          $("#help").modal();
+        }
         thePlugins.updateAll();
       }
 
@@ -151,12 +155,6 @@ require( [ "jquery", "functions", "plugins", "plugins/title", "plugins/chords" ]
       {
         parseHash();
       };
-
-      function getPluginData()
-      {
-        return thePlugins.serialize();
-      }
-      this.hash = getPluginData;
     }
 
     pluginHandler.initialize();
