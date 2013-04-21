@@ -60,16 +60,7 @@ require( [ "jquery", "functions", "plugins", "plugins/title", "plugins/chords" ]
       function editMode()
       {
         var currentState = $( '#edit' ).hasClass( 'active' );
-        if ( currentState === true )
-        {
-          $( 'body' ).removeClass( 'edit-mode' );
-          $( '#edit' ).removeClass( 'active' );
-        }
-        else
-        {
-          $( 'body' ).addClass( 'edit-mode' );
-          $( '#edit' ).addClass( 'active' );
-        }
+        setEditMode( !currentState );
       }
 
       bindButton( "#cut", cutItems );
@@ -109,6 +100,20 @@ require( [ "jquery", "functions", "plugins", "plugins/title", "plugins/chords" ]
 
     prepareCpanel();
 
+    function setEditMode( mode )
+    {
+      if ( mode === true )
+      {
+        $( 'body' ).addClass( 'edit-mode' );
+        $( '#edit' ).addClass( 'active' );
+      }
+      else
+      {
+        $( 'body' ).removeClass( 'edit-mode' );
+        $( '#edit' ).removeClass( 'active' );
+      }
+    }
+
     $( "#items" ).sortable( {
       "revert" : true,
       handle : ".handle"
@@ -146,7 +151,8 @@ require( [ "jquery", "functions", "plugins", "plugins/title", "plugins/chords" ]
         }
         else
         {
-          $("#help").modal();
+          setEditMode( true );
+          $( "#help" ).modal();
         }
         thePlugins.updateAll();
       }
