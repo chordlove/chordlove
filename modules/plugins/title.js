@@ -29,7 +29,6 @@ function Title( $, plugins, save )
   {
     return PLUGIN_ID + DEFAULT_FORMAT + sanitizedTitle();
   }
-  ;
 
   function sanitizedTitle()
   {

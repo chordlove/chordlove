@@ -10,7 +10,8 @@ function Chords( $, functions, save )
 
   var CONFIG = {
     CHORDS_COUNT_LENGTH : 1,
-    CHORDITEMS_COUNT_LENGTH : 1
+    CHORDITEMS_COUNT_LENGTH : 1,
+    TEXTITEMS_COUNT_LENGTH : 1
   };
 
   var ESCAPE_CHARACTER = '~', ESCAPES = {};
@@ -77,7 +78,6 @@ function Chords( $, functions, save )
       "chordItems" : chordItems
     };
   }
-  ;
 
   function serialize()
   {
@@ -85,6 +85,7 @@ function Chords( $, functions, save )
     var state = getData();
     var chords = state.chords;
     var chordItems = state.chordItems;
+    var textItems = state.textItems;
 
     result += functions.getCharacters( chords.length, CONFIG.CHORDS_COUNT_LENGTH );
     for ( var i = 0; i < chords.length; i++ )
@@ -99,6 +100,12 @@ function Chords( $, functions, save )
     {
       result += functions.getCharacters( chordItems[i], 1 );
     }
+    result += functions.getCharacters( textItems.length, CONFIG.TEXTITEMS_COUNT_LENGTH );
+    for ( var i = 0; i < textItems.length; i++ )
+    {
+      result += functions.getCharacters( textItems[i].length, 1 );
+      result += textItems[i];
+    }
     return result.length > 3 ? result : '';
   }
 
@@ -106,9 +113,13 @@ function Chords( $, functions, save )
   {
     var sel = selector || '';
     var query = '#items ' + sel + ' input.chord-text';
+    var textQuery = '#items ' + sel + ' input.song-text';
     var chords = {}, chordNo = 0;
     var chordValues = [];
-    $( query ).each( function()
+    var chordItems = [];
+    var textItems = [];
+    var textElements = $( textQuery );
+    $( query ).each( function( index )
     {
       var val = $( this ).val();
       if ( typeof ( chords[val] ) === 'undefined' )
@@ -117,19 +128,18 @@ function Chords( $, functions, save )
         chordNo++;
         chordValues.push( val );
       }
-    } );
-    var chordItems = [];
-    $( query ).each( function()
-    {
-      var val = $( this ).val();
       chordItems.push( chords[val] );
+      if ( textElements && textElements.get( index ) )
+      {
+        textItems[index] = $( textElements.get( index ) ).val() || "";
+      }
     } );
     return {
       'chords' : chordValues,
-      'chordItems' : chordItems
+      'chordItems' : chordItems,
+      'textItems' : textItems
     };
   }
-  ;
 
   function serializeChord( chord )
   {
@@ -175,9 +185,6 @@ function Chords( $, functions, save )
     }, function( event )
     {
       handleKeyEvent( event );
-    } ).change( function()
-    {
-      save.changed();
     } );
 
     $( more ).mousedown( function( event )
@@ -230,7 +237,7 @@ function Chords( $, functions, save )
                   handleBlurEvent( event );
                 } ).change( function()
                 {
-                  save.changed()
+                  save.changed();
                 } );
                 prepareResize( textInput, wrapper );
               } );
@@ -318,6 +325,8 @@ function Chords( $, functions, save )
       }
     }
     wrapper.width( minWidth + WRAPPER_MARGIN );
+    // save changes
+    save.changed();
   }
 
   function checkAbsentKey( key )
