@@ -100,11 +100,14 @@ function Chords( $, functions, save )
     {
       result += functions.getCharacters( chordItems[i], 1 );
     }
-    result += functions.getCharacters( textItems.length, CONFIG.TEXTITEMS_COUNT_LENGTH );
-    for ( var i = 0; i < textItems.length; i++ )
+    if ( textItems.length > 0 )
     {
-      result += functions.getCharacters( textItems[i].length, 1 );
-      result += textItems[i];
+      result += functions.getCharacters( textItems.length, CONFIG.TEXTITEMS_COUNT_LENGTH );
+      for ( var i = 0; i < textItems.length; i++ )
+      {
+        result += functions.getCharacters( textItems[i].length, 1 );
+        result += textItems[i];
+      }
     }
     return result.length > 3 ? result : '';
   }
@@ -119,6 +122,7 @@ function Chords( $, functions, save )
     var chordItems = [];
     var textItems = [];
     var textElements = $( textQuery );
+    var hasTextItems = false;
     $( query ).each( function( index )
     {
       var val = $( this ).val();
@@ -131,9 +135,18 @@ function Chords( $, functions, save )
       chordItems.push( chords[val] );
       if ( textElements && textElements.get( index ) )
       {
-        textItems[index] = $( textElements.get( index ) ).val() || "";
+        var textItem = $( textElements.get( index ) ).val() || "";
+        if ( textItem != "" )
+        {
+          hasTextItems = true;
+        }
+        textItems[index] = textItem;
       }
     } );
+    if ( !hasTextItems )
+    {
+      textItems = [];
+    }
     return {
       'chords' : chordValues,
       'chordItems' : chordItems,
