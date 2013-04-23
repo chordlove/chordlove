@@ -41,7 +41,9 @@ function Chords( $, functions, save )
     {
       return;
     }
-    var chordItems = deserialize( data ).chordItems;
+    var deserializedData = deserialize( data );
+    var chordItems = deserializedData.chordItems;
+    var textItems = deserializedData.textItems;
     for ( var i = 0; i < chordItems.length; i++ )
     {
       createItem( chordItems[i] );
@@ -52,6 +54,7 @@ function Chords( $, functions, save )
   {
     var chords = [];
     var chordItems = [];
+    var textItems = [];
     try
     {
       var currentPos = 0;
