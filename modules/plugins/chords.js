@@ -44,9 +44,14 @@ function Chords( $, functions, save )
     var deserializedData = deserialize( data );
     var chordItems = deserializedData.chordItems;
     var textItems = deserializedData.textItems;
+    var hasText = textItems.length > 0;
+    if ( hasText )
+    {
+      $( '#items' ).addClass( 'has-text' );
+    }
     for ( var i = 0; i < chordItems.length; i++ )
     {
-      createItem( chordItems[i] );
+      createItem( chordItems[i], hasText ? textItems[i] : undefined );
     }
   }
 
@@ -71,6 +76,15 @@ function Chords( $, functions, save )
         var chordText = chords[functions.getNumber( data.charAt( currentPos++ ) )];
         chordItems.push( chordText );
       }
+      if ( data.length > currentPos )
+      {
+        for ( var i = 0; i < numberOfChordItems; i++ )
+        {
+          var length = functions.getNumber( data.charAt( currentPos++ ) );
+          textItems.push( data.substr( currentPos, length ) );
+          currentPos += length;
+        }
+      }
     }
     catch ( err )
     {
@@ -78,7 +92,8 @@ function Chords( $, functions, save )
     }
     return {
       "chords" : chords,
-      "chordItems" : chordItems
+      "chordItems" : chordItems,
+      "textItems" : textItems
     };
   }
 
@@ -105,7 +120,6 @@ function Chords( $, functions, save )
     }
     if ( textItems.length > 0 )
     {
-      result += functions.getCharacters( textItems.length, CONFIG.TEXTITEMS_COUNT_LENGTH );
       for ( var i = 0; i < textItems.length; i++ )
       {
         result += functions.getCharacters( textItems[i].length, 1 );
@@ -177,7 +191,7 @@ function Chords( $, functions, save )
     return string;
   }
 
-  function createItem( chordText )
+  function createItem( chordText, lyrics )
   {
     var parent = $( "#items" );
     var wrapper = $( "<li />" )
@@ -229,6 +243,12 @@ function Chords( $, functions, save )
       addTextInput();
       textInput = input.siblings( 'input.song-text' ).first();
     }
+
+    if ( lyrics !== undefined )
+    {
+      textInput.val( lyrics );
+    }
+
     prepareResize( input, wrapper );
     performResize( input, textInput, wrapper );
 
