@@ -21,7 +21,6 @@ require( [ "jquery", "functions", "plugins", "save", "plugins/title", "plugins/c
     {
       // TODO this is a backwards compat hack.
       var bindButton = functions.bindButton;
-      window.chords.bindButton = functions.bindButton;
 
       function getSelectedItems()
       {
