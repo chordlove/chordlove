@@ -252,6 +252,12 @@ function Chords( $, functions, save )
     prepareResize( input, wrapper );
     performResize( input, textInput, wrapper );
 
+    if ( chordText === undefined && lyrics === undefined )
+    {
+      // create a blank item
+      input.focus();
+    }
+
     function addTextInput()
     {
       $( 'div.chord input.chord-text' )
