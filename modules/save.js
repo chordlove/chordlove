@@ -13,11 +13,20 @@ function Save( plugins )
     writeUri();
   }
 
+  $( "#share-url" ).click( function()
+  {
+    this.select();
+  } );
+
   $( "#share" ).click( function()
   {
     var href = window.location.href.replace( "|", "%7C" ).replace( "—", "%E2%80%94" );
     this.blur();
-    alert( href );
+    $( "#share-url" ).val( href );
+    $( "#share-form" ).modal().on( 'shown', function()
+    {
+      $( "#share-url" ).select();
+    } );
   } );
 
   function writeUri()

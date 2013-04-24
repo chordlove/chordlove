@@ -41,7 +41,7 @@ h1 input[type="text"],input[type="text"].chord-text,input[type="text"].song-text
   background: transparent;
 }
 
-input[type="text"].chord-text,#help .modal-body {
+input[type="text"].chord-text,#help .modal-body,#share-form .modal-body {
   font-family: 'DejaVuSerifBook', 'DejaVu Serif', 'DejaVu Sans', 'Lucida Sans Unicode',
     'Arial Unicode MS', serif;
   font-weight: 400;
@@ -72,7 +72,11 @@ input[type="text"].song-text {
   position: relative;
 }
 
-#help .modal-header {
+#share-url {
+  width: 97%;
+}
+
+#help .modal-header,#share-form .modal-header {
   font-family: neuton-cursive, serif;
   font-weight: 400;
 }
