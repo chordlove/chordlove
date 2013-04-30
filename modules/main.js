@@ -93,7 +93,7 @@ require( [ "jquery", "functions", "plugins", "save", "plugins/title", "plugins/c
       {
         save.changed();
       }
-    } ).selectable();
+    } );
 
     $( window ).hashchange( function()
     {

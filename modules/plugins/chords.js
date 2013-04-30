@@ -6,18 +6,24 @@ function Chords( $, functions, save )
   }
   Chords.prototype._instance = this;
 
-  var PLUGIN_ID = "01", DEFAULT_FORMAT = "0";
+  var PLUGIN_ID = "01", DEFAULT_FORMAT = 0;
 
   var CONFIG = {
     CHORDS_COUNT_LENGTH : 1,
+    CHORD_BEAT_COUNT_LENGTH : 1,
     CHORDITEMS_COUNT_LENGTH : 1,
-    TEXTITEMS_COUNT_LENGTH : 1
+    TEXTITEMS_COUNT_LENGTH : 1,
+    TIME_SIGNATURE_LENGTH : 1,
+    DEFAULT_TIME_SIGNATURE : 4
   };
 
   var ESCAPE_CHARACTER = '~', ESCAPES = {};
   ESCAPES[ESCAPE_CHARACTER] = ESCAPE_CHARACTER;
   ESCAPES['♭'] = 'b';
   ESCAPES['♯'] = 's';
+  ESCAPES['_'] = '-';
+
+  var BULLETS = '••••••••••••••••';
 
   var MIN_WIDTH = 100;
   var MAX_WIDTH = 1000;
@@ -41,48 +47,74 @@ function Chords( $, functions, save )
     {
       return;
     }
+    if ( format !== DEFAULT_FORMAT )
+    {
+      throw "Unknown chords data format.";
+    }
     var deserializedData = deserialize( data );
     var chordItems = deserializedData.chordItems;
-    var textItems = deserializedData.textItems;
-    var hasText = textItems.length > 0;
+    var hasText = chordItems && chordItems[0] && chordItems[0].lyrics !== undefined;
     if ( hasText )
     {
       $( '#items' ).addClass( 'has-text' );
     }
     for ( var i = 0; i < chordItems.length; i++ )
     {
-      createItem( chordItems[i], hasText ? textItems[i] : undefined );
+      var chordItem = chordItems[i];
+      createItem( chordItem.chord, hasText ? chordItem.lyrics : undefined, chordItem.beats );
     }
+    $( '#time-signature' ).val( "" + deserializedData.timeSignature );
   }
 
   function deserialize( data )
   {
     var chords = [];
+    var chordBeats = [];
     var chordItems = [];
-    var textItems = [];
+    var timeSignature = CONFIG.DEFAULT_TIME_SIGNATURE;
     try
     {
       var currentPos = 0;
-      var numberOfChords = functions.getNumber( data.substr( currentPos++, CONFIG.CHORDS_COUNT_LENGTH ) );
-      for ( var i = 0; i < numberOfChords; i++ )
+
+      timeSignature = functions.getNumber( data.substr( currentPos++, CONFIG.TIME_SIGNATURE_LENGTH ) );
+
+      var read = functions.readStringArray( {
+        'data' : data,
+        'currentPos' : currentPos,
+        'countSize' : CONFIG.CHORDS_COUNT_LENGTH,
+        'transformer' : deserializeChord
+      } );
+      chords = read.array;
+      currentPos = read.position;
+
+      var numberOfChordBeats = functions.getNumber( data.substr( currentPos++, CONFIG.CHORD_BEAT_COUNT_LENGTH ) );
+      for ( var i = 0; i < numberOfChordBeats; i++ )
       {
-        var length = functions.getNumber( data.charAt( currentPos++ ) );
-        chords.push( deserializeChord( data.substr( currentPos, length ) ) );
-        currentPos += length;
+        var chord = functions.getNumber( data.charAt( currentPos++ ) );
+        var beats = functions.getNumber( data.charAt( currentPos++ ) );
+        chordBeats.push( new ChordBeat( chord, beats ) );
       }
+
       var numberOfChordItems = functions.getNumber( data.substr( currentPos++, CONFIG.CHORDITEMS_COUNT_LENGTH ) );
       for ( var i = 0; i < numberOfChordItems; i++ )
       {
-        var chordText = chords[functions.getNumber( data.charAt( currentPos++ ) )];
-        chordItems.push( chordText );
+        var chordBeat = chordBeats[functions.getNumber( data.charAt( currentPos++ ) )];
+        var chordText = chords[chordBeat.chord];
+        chordItems.push( new ChordData( chordText, chordBeat.beats ) );
       }
+
       if ( data.length > currentPos )
       {
+        var read = functions.readStringArray( {
+          'data' : data,
+          'currentPos' : currentPos,
+          'size' : numberOfChordItems
+        } );
+        var items = read.array;
+
         for ( var i = 0; i < numberOfChordItems; i++ )
         {
-          var length = functions.getNumber( data.charAt( currentPos++ ) );
-          textItems.push( data.substr( currentPos, length ) );
-          currentPos += length;
+          chordItems[i].lyrics = items[i];
         }
       }
     }
@@ -91,33 +123,57 @@ function Chords( $, functions, save )
       console.log( err );
     }
     return {
-      "chords" : chords,
       "chordItems" : chordItems,
-      "textItems" : textItems
+      "timeSignature" : timeSignature
     };
+  }
+
+  function ChordBeat( chord, beats )
+  {
+    this.chord = chord;
+    this.beats = beats;
+  }
+
+  function ChordData( chord, beats, lyrics )
+  {
+    this.chord = chord;
+    this.beats = beats;
+    this.lyrics = lyrics;
   }
 
   function serialize()
   {
     var result = PLUGIN_ID + DEFAULT_FORMAT;
     var state = getData();
-    var chords = state.chords;
     var chordItems = state.chordItems;
+    var chordBeatsItems = state.chordBeatsItems;
+    var chordBeatsCollection = state.chordBeatsCollection;
     var textItems = state.textItems;
 
-    result += functions.getCharacters( chords.length, CONFIG.CHORDS_COUNT_LENGTH );
-    for ( var i = 0; i < chords.length; i++ )
+    result += functions.getCharacters( state.timeSignature, CONFIG.TIME_SIGNATURE_LENGTH );
+
+    result += functions.getCharacters( chordItems.length, CONFIG.CHORDS_COUNT_LENGTH );
+    for ( var i = 0; i < chordItems.length; i++ )
     {
-      var serializedChord = serializeChord( chords[i] );
+      var serializedChord = serializeChord( chordItems[i] );
       result += functions.getCharacters( serializedChord.length, 1 );
       result += serializedChord;
     }
 
-    result += functions.getCharacters( chordItems.length, CONFIG.CHORDITEMS_COUNT_LENGTH );
-    for ( var i = 0; i < chordItems.length; i++ )
+    result += functions.getCharacters( chordBeatsItems.length, CONFIG.CHORDITEMS_COUNT_LENGTH );
+    for ( var i = 0; i < chordBeatsItems.length; i++ )
     {
-      result += functions.getCharacters( chordItems[i], 1 );
+      var chordBeatsItem = chordBeatsItems[i];
+      result += functions.getCharacters( chordBeatsItem.chord, 1 );
+      result += functions.getCharacters( chordBeatsItem.beats, 1 );
     }
+
+    result += functions.getCharacters( chordBeatsCollection.length, CONFIG.CHORDITEMS_COUNT_LENGTH );
+    for ( var i = 0; i < chordBeatsCollection.length; i++ )
+    {
+      result += functions.getCharacters( chordBeatsCollection[i], 1 );
+    }
+
     if ( textItems.length > 0 )
     {
       for ( var i = 0; i < textItems.length; i++ )
@@ -129,27 +185,38 @@ function Chords( $, functions, save )
     return result.length > 3 ? result : '';
   }
 
-  function getData( selector )
+  function getData()
   {
-    var sel = selector || '';
-    var query = '#items ' + sel + ' input.chord-text';
-    var textQuery = '#items ' + sel + ' input.song-text';
     var chords = {}, chordNo = 0;
     var chordValues = [];
-    var chordItems = [];
+    var chordBeatsKeys = {}, chordBeatsNo = 0;
+    var chordBeatsValues = [];
+    var chordBeatsCollection = [];
     var textItems = [];
-    var textElements = $( textQuery );
+    var textElements = $( '#items input.song-text' );
     var hasTextItems = false;
-    $( query ).each( function( index )
+    var timeSignature = $( '#time-signature' ).val();
+    $( '#items > li' ).each( function( index )
     {
-      var val = $( this ).val();
+      var wrapper = $( this );
+      var chord = $( 'input.chord-text', wrapper ).get( 0 );
+      var beats = $( 'div.duration > a', wrapper ).get( 0 );
+      var val = $( chord ).val();
       if ( typeof ( chords[val] ) === 'undefined' )
       {
         chords[val] = chordNo;
         chordNo++;
         chordValues.push( val );
       }
-      chordItems.push( chords[val] );
+      var beatsVal = $( beats ).text().length;
+      var chordBeatsLookup = "" + chords[val] + "=" + beatsVal;
+      if ( typeof ( chordBeatsKeys[chordBeatsLookup] ) === 'undefined' )
+      {
+        chordBeatsKeys[chordBeatsLookup] = chordBeatsNo;
+        chordBeatsNo++;
+        chordBeatsValues.push( new ChordBeat( chords[val], beatsVal ) );
+      }
+      chordBeatsCollection.push( chordBeatsKeys[chordBeatsLookup] );
       if ( textElements && textElements.get( index ) )
       {
         var textItem = $( textElements.get( index ) ).val() || "";
@@ -165,9 +232,11 @@ function Chords( $, functions, save )
       textItems = [];
     }
     return {
-      'chords' : chordValues,
-      'chordItems' : chordItems,
-      'textItems' : textItems
+      'chordItems' : chordValues,
+      'chordBeatsItems' : chordBeatsValues,
+      'chordBeatsCollection' : chordBeatsCollection,
+      'textItems' : textItems,
+      'timeSignature' : timeSignature
     };
   }
 
@@ -176,7 +245,7 @@ function Chords( $, functions, save )
     var string = chord;
     $.each( ESCAPES, function( index, value )
     {
-      string = string.replace( index, ESCAPE_CHARACTER + value );
+      string = string.split( index ).join( ESCAPE_CHARACTER + value );
     } );
     return string;
   }
@@ -186,12 +255,12 @@ function Chords( $, functions, save )
     var string = chord;
     $.each( ESCAPES, function( index, value )
     {
-      string = string.replace( ESCAPE_CHARACTER + value, index );
+      string = string.split( ESCAPE_CHARACTER + value ).join( index );
     } );
     return string;
   }
 
-  function createItem( chordText, lyrics )
+  function createItem( chordText, lyrics, beats )
   {
     var parent = $( "#items" );
     var wrapper = $( "<li />" )
@@ -210,6 +279,8 @@ function Chords( $, functions, save )
     wrapper.append( more );
     wrapper.appendTo( parent );
 
+    createBeats( beats, wrapper );
+
     $( input ).keydown( {
       "next" : true
     }, function( event )
@@ -225,18 +296,7 @@ function Chords( $, functions, save )
       textInput = $( this ).siblings( 'div.chord' ).children( 'input.song-text' ).first();
     } );
 
-    $( '.icon-pushpin', wrapper ).mousedown( function( event )
-    {
-      event.stopImmediatePropagation();
-      if ( wrapper.hasClass( 'ui-selected' ) )
-      {
-        wrapper.removeClass( 'ui-selected' );
-      }
-      else
-      {
-        wrapper.addClass( 'ui-selected' );
-      }
-    } );
+    addPinEvents( wrapper );
 
     if ( parent.hasClass( 'has-text' ) )
     {
@@ -256,6 +316,62 @@ function Chords( $, functions, save )
     {
       // create a blank item
       input.focus();
+    }
+
+    function createBeats( beats, wrapper )
+    {
+      var defaultBeats = parseInt( $( '#time-signature' ).val() );
+      var num = defaultBeats;
+      if ( typeof beats !== 'undefined' )
+      {
+        num = beats;
+      }
+      var beatsWrapper = $( '<div class="btn-group duration">' );
+      var currentBeats = $( '<a class="btn dropdown-toggle" data-toggle="dropdown" href="#" title="Beats for this chord"/>' );
+      currentBeats.appendTo( beatsWrapper );
+      currentBeats.text( beatsToString( num ) );
+      currentBeats.dropdown();
+      var list = $( '<ul class="dropdown-menu"/>' );
+      list.appendTo( beatsWrapper );
+
+      for ( var i = defaultBeats; i > 0; i-- )
+      {
+        var beatString = beatsToString( i );
+        var option = $( '<li><a href="#">' + beatString + '</a></li>' );
+        option.appendTo( list );
+        option.click( function( event )
+        {
+          currentBeats.dropdown( 'toggle' );
+          // TODO check if there is actually a change
+          currentBeats.text( $( 'a', this ).text() );
+          save.changed();
+          return false;
+        } );
+      }
+
+      beatsWrapper.appendTo( wrapper );
+
+      function beatsToString( num )
+      {
+        return BULLETS.substr( 0, num );
+      }
+    }
+
+    function addPinEvents( wrapper )
+    {
+      $( '.icon-pushpin', wrapper ).mousedown( function( event )
+      {
+        event.stopImmediatePropagation();
+        if ( wrapper.hasClass( 'ui-selected' ) )
+        {
+          wrapper.removeClass( 'ui-selected' );
+        }
+        else
+        {
+          wrapper.addClass( 'ui-selected' );
+        }
+        return false;
+      } );
     }
 
     function addTextInput()
@@ -303,6 +419,7 @@ function Chords( $, functions, save )
           target.siblings( 'input' ).focus();
         }
         performResize( input, textInput, wrapper );
+        save.changed();
       }
       else if ( event.which === 189 && event.shiftKey === true && checkAbsentKey( event.altKey )
           && checkAbsentKey( event.ctrlKey ) && checkAbsentKey( event.metaKey ) )
@@ -367,8 +484,6 @@ function Chords( $, functions, save )
       }
     }
     wrapper.width( minWidth + WRAPPER_MARGIN );
-    // save changes
-    save.changed();
   }
 
   function checkAbsentKey( key )

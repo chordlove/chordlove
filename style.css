@@ -12,16 +12,26 @@ body {
 }
 
 .navbar {
-  width: 13em;
+  width: 11.5em;
 }
 
 body.edit-mode .navbar {
   width: 100%
 }
 
+div.navbar-inner {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
 #cpanel {
-  margin-top: 6px;
-  margin-bottom: 10px;
+  margin-top: 3px;
+  margin-bottom: 7px;
+}
+
+#time-signature {
+  width: 3.5em;
+  margin-bottom: 0;
 }
 
 body .NIY {
@@ -72,6 +82,41 @@ input[type="text"].song-text {
   position: relative;
 }
 
+div.duration {
+  position: absolute;
+  top: 1px;
+  right: 3px;
+  line-height: 10px;
+}
+
+.duration a {
+  padding: 2px 0 0 0;
+  height: 6px;
+  font-size: 10px;
+  font-family: 'DejaVuSerifBook', 'DejaVu Serif', 'DejaVu Sans', 'Lucida Sans Unicode',
+    'Arial Unicode MS', serif;
+}
+
+.btn-group.duration>.btn,.btn-group.duration>.dropdown-menu,.btn-group.duration>.popover {
+  font-size: 10px;
+  line-height: 6px;
+}
+
+.btn-group.duration>.btn,.btn-group.duration>.popover,.duration.btn-group.open .btn.dropdown-toggle {
+  background: none;
+  border: none;
+  box-shadow: none;
+}
+
+div.duration .dropdown-menu {
+  min-width: 50px;
+}
+
+div.duration ul>li>a {
+  padding-left: 8px;
+  height: 12px;
+}
+
 #share-url {
   width: 97%;
 }
@@ -85,11 +130,11 @@ input[type="text"].song-text {
   font-size: 15px;
 }
 
-ol#items {
+#items {
   padding-left: 0;
 }
 
-#items li {
+#items>li {
   list-style-type: none;
   width: 107px;
   height: 46px;
@@ -104,22 +149,22 @@ ol#items {
   background: #ffffff;
 }
 
-#items.has-text li {
+#items.has-text>li {
   height: 66px;
 }
 
-#items li i.icon-double-angle-down {
+#items>li i.icon-double-angle-down {
   display: none;
 }
 
-body.edit-mode #items li i.icon-double-angle-down {
+body.edit-mode #items>li i.icon-double-angle-down {
   position: absolute;
   bottom: 0;
   right: 0;
   display: inline-block;
 }
 
-#items.has-text li i.icon-double-angle-down {
+#items.has-text>li i.icon-double-angle-down {
   display: none;
 }
 
@@ -127,11 +172,11 @@ select.equivalent {
   font-weight: bold;
 }
 
-#items li.ui-selecting {
+#items>li.ui-selecting {
   background: #FECA40;
 }
 
-#items li.ui-selected {
+#items>li.ui-selected {
   background: #F39814;
 }
 
@@ -139,7 +184,7 @@ body li .handle {
   display: none;
 }
 
-body.edit-mode li .handle {
+body.edit-mode #items>li .handle {
   background: #f8f8f8;
   position: absolute;
   left: 0;
@@ -209,7 +254,7 @@ body.edit-mode #tools span.btn-group {
   #footer a[href]:after {
     content: "";
   }
-  .hide-in-print, .navbar {
+  .hide-in-print,.navbar {
     display: none;
   }
 }

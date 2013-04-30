@@ -39,7 +39,7 @@ define(
         }
         if ( num != 0 )
         {
-          throw "Couldn't encode " + number + " using only " + charNo + " characters .";
+          throw "Couldn't encode " + number + " using only " + charNo + " characters.";
         }
         return characters;
       }
@@ -52,9 +52,56 @@ define(
         } );
       }
 
+      function readStringArray( input )
+      {
+        var data = input.data, currentPos = input.currentPos;
+        var transformer = false;
+        if ( typeof input.transformer === 'function' )
+        {
+          transformer = input.transformer;
+        }
+        var numberOfItems;
+        if ( typeof input.size !== 'undefined' )
+        {
+          numberOfItems = input.size;
+        }
+        else if ( typeof input.countSize !== 'undefined' )
+        {
+          numberOfItems = getNumberFromCharacters( data.substr( currentPos++, input.countSize ) );
+        }
+        else
+        {
+          throw "Can't load string array size due to missing configuration.";
+        }
+        var array = [];
+        for ( var i = 0; i < numberOfItems; i++ )
+        {
+          var length = getNumberFromCharacters( data.charAt( currentPos++ ) );
+          if ( length > 0 )
+          {
+            var string = data.substr( currentPos, length );
+            if ( transformer )
+            {
+              string = transformer( string );
+            }
+            array.push( string );
+            currentPos += length;
+          }
+          else
+          {
+            array.push( '' );
+          }
+        }
+        return {
+          'array' : array,
+          'position' : currentPos
+        };
+      }
+
       return {
         "getNumber" : getNumberFromCharacters,
         "getCharacters" : getCharactersFromNumber,
-        "bindButton" : bindButton
+        "bindButton" : bindButton,
+        "readStringArray" : readStringArray
       };
     } );
