@@ -68,7 +68,8 @@ input[type="text"].chord-text,input[type="text"].song-text {
 input[type="text"].chord-text {
   width: 98%;
   margin-left: 4px;
-  position: static;
+  position: relative;
+  top: 2px;
 }
 
 input[type="text"].song-text {
@@ -78,8 +79,7 @@ input[type="text"].song-text {
   padding: 3px 0 1px 0;
   margin-left: 4px;
   position: relative;
-  top: -12px;
-  position: relative;
+  top: -9px;
 }
 
 div.duration {
@@ -102,7 +102,8 @@ div.duration {
   line-height: 6px;
 }
 
-.btn-group.duration>.btn,.btn-group.duration>.popover,.duration.btn-group.open .btn.dropdown-toggle {
+.btn-group.duration>.btn,.btn-group.duration>.popover,.duration.btn-group.open .btn.dropdown-toggle
+  {
   background: none;
   border: none;
   box-shadow: none;
@@ -137,20 +138,20 @@ div.duration ul>li>a {
 #items>li {
   list-style-type: none;
   width: 107px;
-  height: 46px;
+  height: 48px;
   float: left;
   cursor: default;
   display: block;
   padding: 2px 3px 2px 18px;
   margin: 0 4px 16px 0;
   position: relative;
-  border: 1px solid gray;
+  border: 1px solid #cccccc;
   border-radius: 4px;
   background: #ffffff;
 }
 
 #items.has-text>li {
-  height: 66px;
+  height: 68px;
 }
 
 #items>li i.icon-double-angle-down {
