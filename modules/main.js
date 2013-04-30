@@ -78,12 +78,30 @@ require( [ "jquery", "functions", "plugins", "save", "plugins/title", "plugins/c
       {
         $( 'body' ).addClass( 'edit-mode' );
         $( '#edit' ).addClass( 'active' );
+        hideOrShow( "show" );
       }
       else
       {
         $( 'body' ).removeClass( 'edit-mode' );
         $( '#edit' ).removeClass( 'active' );
+        hideOrShow( "hide" );
       }
+    }
+
+    function hideOrShow( action )
+    {
+      $( '#items input' ).each( function()
+      {
+        var element = $( this );
+        if ( element.val() === "" )
+        {
+          element[action]();
+        }
+        else
+        {
+          element.prop( 'readonly', action === "hide" );
+        }
+      } );
     }
 
     $( "#items" ).sortable( {
@@ -106,6 +124,7 @@ require( [ "jquery", "functions", "plugins", "save", "plugins/title", "plugins/c
       {
         var PLUGIN_END_MARKER = "_";
         var hash = window.location.hash;
+        var readMode = false;
         if ( hash.length > 0 )
         {
           var topLevelFormat = hash.charAt( 2 );
@@ -124,6 +143,7 @@ require( [ "jquery", "functions", "plugins", "save", "plugins/title", "plugins/c
             var pluginData = plugin.substr( 3 );
             thePlugins.setData( pluginId, pluginFormat, pluginData );
           }
+          readMode = true;
         }
         else
         {
@@ -131,6 +151,10 @@ require( [ "jquery", "functions", "plugins", "save", "plugins/title", "plugins/c
           $( "#help" ).modal();
         }
         thePlugins.updateAll();
+        if ( readMode )
+        {
+          hideOrShow( "hide" );
+        }
       }
 
       this.initialize = function()
