@@ -1,8 +1,18 @@
 @font-face {
   font-family: 'DejaVuSerifBook';
-  src: url('DejaVuSerif-webfont.woff') format('woff');
+  src: url('fonts/DejaVuSerifBook.eot');
+  src: url('fonts/DejaVuSerifBook.eot?#iefix') format('eot'), url('fonts/DejaVuSerifBook.woff')
+    format('woff'), url('fonts/DejaVuSerifBook.ttf') format('truetype'),
+    url('fonts/DejaVuSerifBook.svg') format('svg');
   font-weight: normal;
   font-style: normal;
+}
+
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+  @font-face {
+    font-family: 'DejaVuSerifBook';
+    src: url('fonts/DejaVuSerifBook.svg') format('svg');
+  }
 }
 
 body {
