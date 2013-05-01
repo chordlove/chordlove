@@ -59,6 +59,7 @@ h1 input[type="text"],input[type="text"].chord-text,input[type="text"].song-text
   box-shadow: none;
   position: relative;
   background: transparent;
+  color: #222222;
 }
 
 input[type="text"].chord-text,#help .modal-body,#share-form .modal-body {
@@ -73,6 +74,7 @@ input[type="text"].chord-text,input[type="text"].song-text {
   line-height: 40px;
   height: 40px;
   margin-bottom: 0;
+  color: #111111;
 }
 
 input[type="text"].chord-text {
@@ -161,6 +163,21 @@ div.duration ul>li>a {
 }
 
 #items.has-text>li {
+  height: 68px;
+}
+
+#items>li.symbol {
+  width: 12px;
+  border: none;
+  padding: 3px 0 0 0;
+  text-align: center;
+}
+
+img.barline {
+  height: 48px;
+}
+
+#items.has-text img.barline {
   height: 68px;
 }
 

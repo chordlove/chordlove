@@ -25,9 +25,13 @@ function Chords( $, functions, save )
 
   var BULLETS = '••••••••••••••••';
 
+  var SINGLE_BARLINE = $( '<li class="symbol"><img class="barline" src="images/single-barline.svg"  alt="|"></li>' );
+
   var MIN_WIDTH = 100;
   var MAX_WIDTH = 1000;
   var WRAPPER_MARGIN = 7;
+
+  var PARENT = $( '#items' );
 
   functions.bindButton( "#add-chord", createItem );
 
@@ -53,19 +57,26 @@ function Chords( $, functions, save )
     }
     var deserializedData = deserialize( data );
     var chordItems = deserializedData.chordItems;
+    var timeSignature = deserializedData.timeSignature;
     var hasText = chordItems && chordItems[0] && chordItems[0].lyrics !== undefined;
     if ( hasText )
     {
       $( '#items' ).addClass( 'has-text' );
     }
+    var beatsSum = 0;
     for ( var i = 0; i < chordItems.length; i++ )
     {
       var chordItem = chordItems[i];
       createItem( chordItem.chord, hasText ? chordItem.lyrics : undefined, chordItem.beats );
+      beatsSum += chordItem.beats;
+      if ( beatsSum % timeSignature === 0 )
+      {
+        SINGLE_BARLINE.clone().appendTo( PARENT );
+      }
     }
     $( '#time-signature' ).val( "" + deserializedData.timeSignature );
   }
-
+  
   function deserialize( data )
   {
     var chords = [];
@@ -262,7 +273,6 @@ function Chords( $, functions, save )
 
   function createItem( chordText, lyrics, beats )
   {
-    var parent = $( "#items" );
     var wrapper = $( "<li />" )
         .append(
             '<div class="handle"><i class="icon-move" title="move"></i><i class="icon-pushpin" title="select/unselect"></i></div>' );
@@ -277,7 +287,7 @@ function Chords( $, functions, save )
     input.appendTo( div );
     wrapper.append( div );
     wrapper.append( more );
-    wrapper.appendTo( parent );
+    wrapper.appendTo( PARENT );
 
     createBeats( beats, wrapper );
 
@@ -291,14 +301,14 @@ function Chords( $, functions, save )
     $( more ).mousedown( function( event )
     {
       event.stopImmediatePropagation();
-      parent.addClass( 'has-text' );
+      PARENT.addClass( 'has-text' );
       addTextInput();
       textInput = $( this ).siblings( 'div.chord' ).children( 'input.song-text' ).first();
     } );
 
     addPinEvents( wrapper );
 
-    if ( parent.hasClass( 'has-text' ) )
+    if ( PARENT.hasClass( 'has-text' ) )
     {
       addTextInput();
       textInput = input.siblings( 'input.song-text' ).first();

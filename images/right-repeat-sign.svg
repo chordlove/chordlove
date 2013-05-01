@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   version="1.2"
+   width="31.01074"
+   height="68.563477"
+   id="svg2">
+  <defs
+     id="defs4" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     transform="translate(-186.06641,-459.64858)"
+     id="layer1">
+    <g
+       id="flowRoot2985"
+       style="font-size:87px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Denemo;-inkscape-font-specification:Denemo">
+      <path
+         d="m 193.96777,505.86733 c -0.90624,0.79299 -2.01073,1.18947 -3.31347,1.18945 -1.35937,2e-5 -2.46386,-0.42478 -3.31348,-1.27441 -0.8496,-0.90623 -1.2744,-2.01072 -1.27441,-3.31348 1e-5,-1.13279 0.45313,-2.18064 1.35937,-3.14355 0.84962,-0.96287 1.89747,-1.44431 3.14356,-1.44434 1.13282,3e-5 2.20899,0.45315 3.22851,1.35938 0.9629,0.90627 1.44434,1.98244 1.44434,3.22851 0,1.41604 -0.4248,2.54885 -1.27442,3.39844 m 0,-17.07715 c -0.90624,0.79301 -2.01073,1.18949 -3.31347,1.18946 -1.35937,3e-5 -2.46386,-0.42478 -3.31348,-1.27442 -0.8496,-0.90621 -1.2744,-1.98238 -1.27441,-3.22851 1e-5,-1.13278 0.45313,-2.18063 1.35937,-3.14356 0.84962,-1.01949 1.89747,-1.52925 3.14356,-1.5293 1.13282,5e-5 2.20899,0.45317 3.22851,1.35938 0.9629,0.90629 1.44434,2.01078 1.44434,3.31348 0,1.35941 -0.4248,2.4639 -1.27442,3.31347 m 23.10938,39.42188 -10.53516,0 0,-68.56348 10.53516,0 0,68.56348 m -13.76367,0 -3.31348,0 0,-68.56348 3.31348,0 0,68.56348"
+         id="path2994" />
+    </g>
+  </g>
+</svg>

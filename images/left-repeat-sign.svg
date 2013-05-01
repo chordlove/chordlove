@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   version="1.2"
+   width="31.01074"
+   height="68.563477"
+   id="svg2">
+  <defs
+     id="defs4" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     transform="translate(-208.5625,-425.45229)"
+     id="layer1">
+    <g
+       id="flowRoot2985"
+       style="font-size:87px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Denemo;-inkscape-font-specification:Denemo">
+      <path
+         d="m 231.67187,447.88198 c 0.90623,-0.84957 2.01072,-1.27437 3.31348,-1.27441 1.35935,4e-5 2.46384,0.45316 3.31348,1.35937 0.84958,0.84965 1.27438,1.92582 1.27441,3.22852 -3e-5,1.13285 -0.45315,2.1807 -1.35937,3.14355 -0.84964,0.96293 -1.89749,1.44437 -3.14356,1.44434 -1.13284,3e-5 -2.20901,-0.45309 -3.22851,-1.35938 -0.96292,-0.90621 -1.44436,-1.98238 -1.44434,-3.22851 -2e-5,-1.41598 0.42478,-2.52047 1.27441,-3.31348 m 0,17.07715 c 0.90623,-0.84959 2.01072,-1.27439 3.31348,-1.27442 1.35935,3e-5 2.46384,0.45315 3.31348,1.35938 0.84958,0.84963 1.27438,1.89748 1.27441,3.14355 -3e-5,1.13284 -0.45315,2.20901 -1.35937,3.22852 -0.84964,0.96291 -1.89749,1.44435 -3.14356,1.44434 -1.13284,10e-6 -2.20901,-0.45311 -3.22851,-1.35938 -0.96292,-0.90623 -1.44436,-2.01072 -1.44434,-3.31348 -2e-5,-1.35935 0.42478,-2.43552 1.27441,-3.22851 m -23.10937,-39.50684 10.53516,0 0,68.56348 -10.53516,0 0,-68.56348 m 13.76367,0 3.31348,0 0,68.56348 -3.31348,0 0,-68.56348"
+         id="path2994" />
+    </g>
+  </g>
+</svg>
