@@ -63,11 +63,20 @@ require( [ "jquery", "functions", "plugins", "save", "plugins/title", "plugins/c
         setEditMode( !currentState );
       }
 
+      function clearAll()
+      {
+        $( '#items' ).empty();
+        $( '#title' ).val( '' );
+        save.changed();
+        return false;
+      }
+
       bindButton( "#cut", cutItems );
       bindButton( "#copy", copyItems );
       bindButton( "#paste", pasteItems );
       bindButton( "#delete", deleteItems );
       bindButton( "#edit", editMode );
+      bindButton( "#clear", clearAll );
     }
 
     prepareCpanel();
