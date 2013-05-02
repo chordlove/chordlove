@@ -207,7 +207,7 @@ function Chords( $, functions, save )
     var textElements = $( '#items input.song-text' );
     var hasTextItems = false;
     var timeSignature = $( '#time-signature' ).val();
-    $( '#items > li' ).each( function( index )
+    $( '#items > li.item' ).each( function( index )
     {
       var wrapper = $( this );
       var chord = $( 'input.chord-text', wrapper ).get( 0 );
@@ -273,7 +273,7 @@ function Chords( $, functions, save )
 
   function createItem( chordText, lyrics, beats )
   {
-    var wrapper = $( "<li />" )
+    var wrapper = $( '<li class="item" />' )
         .append(
             '<div class="handle"><i class="icon-move" title="move"></i><i class="icon-pushpin" title="select/unselect"></i></div>' );
     var input = $( '<input class="chord-text" type="text" title="Add a chord" placeholder="Chord…" />' );
