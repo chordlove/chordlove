@@ -5,8 +5,8 @@ define( "jquery", [], function()
   return jQuery;
 } );
 
-require( [ "jquery", "functions", "plugins", "save", "plugins/title", "plugins/chords" ], function( $, functions,
-    thePlugins, save )
+require( [ "jquery", "functions", "plugins", "save", "toolbar", "plugins/title", "plugins/chords" ], function( $,
+    functions, thePlugins, save, toolbar )
 {
   $( function()
   {
@@ -15,105 +15,10 @@ require( [ "jquery", "functions", "plugins", "save", "plugins/title", "plugins/c
     } );
     // var SHARP = true, FLAT = false;
 
+    var PARENT = $( '#items' );
     var pluginHandler = new PluginHandler();
 
-    function prepareCpanel()
-    {
-      // TODO this is a backwards compat hack.
-      var bindButton = functions.bindButton;
-
-      function getSelectedItems()
-      {
-        return $( "#items li.ui-selected" );
-      }
-
-      function deleteItems()
-      {
-        getSelectedItems().remove();
-      }
-
-      var copiedItems = [];
-
-      function cutItems()
-      {
-        copyItems();
-        deleteItems();
-      }
-
-      function copyItems()
-      {
-        copiedItems = [];
-        getSelectedItems().each( function()
-        {
-          copiedItems.push( this.getStatus() );
-        } );
-      }
-
-      function pasteItems()
-      {
-        $( copiedItems ).each( function( ix, value )
-        {
-          createItem( value );
-        } );
-      }
-
-      function editMode()
-      {
-        var currentState = $( '#edit' ).hasClass( 'active' );
-        setEditMode( !currentState );
-      }
-
-      function clearAll()
-      {
-        $( '#items' ).empty();
-        $( '#title' ).val( '' );
-        save.changed();
-        return false;
-      }
-
-      bindButton( "#cut", cutItems );
-      bindButton( "#copy", copyItems );
-      bindButton( "#paste", pasteItems );
-      bindButton( "#delete", deleteItems );
-      bindButton( "#edit", editMode );
-      bindButton( "#clear", clearAll );
-    }
-
-    prepareCpanel();
-
-    function setEditMode( mode )
-    {
-      if ( mode === true )
-      {
-        $( 'body' ).addClass( 'edit-mode' );
-        $( '#edit' ).addClass( 'active' );
-        hideOrShow( "show" );
-      }
-      else
-      {
-        $( 'body' ).removeClass( 'edit-mode' );
-        $( '#edit' ).removeClass( 'active' );
-        hideOrShow( "hide" );
-      }
-    }
-
-    function hideOrShow( action )
-    {
-      $( '#items input' ).each( function()
-      {
-        var element = $( this );
-        if ( element.val() === "" )
-        {
-          element[action]();
-        }
-        else
-        {
-          element.prop( 'readonly', action === "hide" );
-        }
-      } );
-    }
-
-    $( "#items" ).sortable( {
+    PARENT.sortable( {
       "revert" : true,
       "handle" : ".handle",
       "stop" : function()
@@ -156,13 +61,13 @@ require( [ "jquery", "functions", "plugins", "save", "plugins/title", "plugins/c
         }
         else
         {
-          setEditMode( true );
+          toolbar.setEditMode( true );
           $( "#help" ).modal();
         }
         thePlugins.updateAll();
         if ( readMode )
         {
-          hideOrShow( "hide" );
+          toolbar.hideOrShow( "hide" );
         }
       }
 

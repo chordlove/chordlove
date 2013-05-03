@@ -1,4 +1,4 @@
-function Chords( $, functions, save )
+function Chords( $, functions, save, toolbar )
 {
   if ( Chords.prototype._instance )
   {
@@ -33,6 +33,11 @@ function Chords( $, functions, save )
 
   var PARENT = $( '#items' );
 
+  toolbar.registerChordsModule( {
+    'getChordData' : getChordData,
+    'createItem' : createItem
+  } );
+
   functions.bindButton( "#add-chord", createItem );
 
   var format = DEFAULT_FORMAT;
@@ -46,7 +51,7 @@ function Chords( $, functions, save )
 
   function update()
   {
-    $( '#items' ).empty();
+    PARENT.empty();
     if ( !data )
     {
       return;
@@ -61,13 +66,13 @@ function Chords( $, functions, save )
     var hasText = chordItems && chordItems[0] && chordItems[0].lyrics !== undefined;
     if ( hasText )
     {
-      $( '#items' ).addClass( 'has-text' );
+      PARENT.addClass( 'has-text' );
     }
     var beatsSum = 0;
     for ( var i = 0; i < chordItems.length; i++ )
     {
       var chordItem = chordItems[i];
-      createItem( chordItem.chord, hasText ? chordItem.lyrics : undefined, chordItem.beats );
+      createItem( chordItem );
       beatsSum += chordItem.beats;
       if ( beatsSum % timeSignature === 0 )
       {
@@ -76,7 +81,7 @@ function Chords( $, functions, save )
     }
     $( '#time-signature' ).val( "" + deserializedData.timeSignature );
   }
-  
+
   function deserialize( data )
   {
     var chords = [];
@@ -199,27 +204,26 @@ function Chords( $, functions, save )
   function getData()
   {
     var chords = {}, chordNo = 0;
+    var chordDataItems = [];
     var chordValues = [];
     var chordBeatsKeys = {}, chordBeatsNo = 0;
     var chordBeatsValues = [];
     var chordBeatsCollection = [];
     var textItems = [];
-    var textElements = $( '#items input.song-text' );
     var hasTextItems = false;
     var timeSignature = $( '#time-signature' ).val();
     $( '#items > li.item' ).each( function( index )
     {
-      var wrapper = $( this );
-      var chord = $( 'input.chord-text', wrapper ).get( 0 );
-      var beats = $( 'div.duration > a', wrapper ).get( 0 );
-      var val = $( chord ).val();
+      var chordData = getChordData( this );
+      chordDataItems.push( chordData );
+      var val = chordData.chord;
       if ( typeof ( chords[val] ) === 'undefined' )
       {
         chords[val] = chordNo;
         chordNo++;
         chordValues.push( val );
       }
-      var beatsVal = $( beats ).text().length;
+      var beatsVal = chordData.beats;
       var chordBeatsLookup = "" + chords[val] + "=" + beatsVal;
       if ( typeof ( chordBeatsKeys[chordBeatsLookup] ) === 'undefined' )
       {
@@ -228,19 +232,17 @@ function Chords( $, functions, save )
         chordBeatsValues.push( new ChordBeat( chords[val], beatsVal ) );
       }
       chordBeatsCollection.push( chordBeatsKeys[chordBeatsLookup] );
-      if ( textElements && textElements.get( index ) )
+      if ( chordData.lyrics != "" )
       {
-        var textItem = $( textElements.get( index ) ).val() || "";
-        if ( textItem != "" )
-        {
-          hasTextItems = true;
-        }
-        textItems[index] = textItem;
+        hasTextItems = true;
       }
     } );
-    if ( !hasTextItems )
+    if ( hasTextItems )
     {
-      textItems = [];
+      $( chordDataItems ).each( function()
+      {
+        textItems.push( this.lyrics );
+      } );
     }
     return {
       'chordItems' : chordValues,
@@ -249,6 +251,21 @@ function Chords( $, functions, save )
       'textItems' : textItems,
       'timeSignature' : timeSignature
     };
+  }
+
+  function getChordData( li )
+  {
+    var wrapper = $( li );
+    var chord = $( 'input.chord-text', wrapper ).get( 0 );
+    var beats = $( 'div.duration > a', wrapper ).get( 0 );
+    var chordText = $( chord ).val();
+    var beatCount = $( beats ).text().length;
+    var lyrics = undefined;
+    if ( PARENT.hasClass( 'has-text' ) )
+    {
+      lyrics = $( $( 'input.song-text', wrapper ).get( 0 ) ).val() || '';
+    }
+    return new ChordData( chordText, beatCount, lyrics );
   }
 
   function serializeChord( chord )
@@ -271,8 +288,17 @@ function Chords( $, functions, save )
     return string;
   }
 
-  function createItem( chordText, lyrics, beats )
+  function createItem( chordData )
   {
+    var chordText = undefined;
+    var lyrics = undefined;
+    var beats = undefined;
+    if ( typeof chordData !== 'undefined' )
+    {
+      chordText = chordData.chord;
+      lyrics = chordData.lyrics;
+      beats = chordData.beats;
+    }
     var wrapper = $( '<li class="item" />' )
         .append(
             '<div class="handle"><i class="icon-move" title="move"></i><i class="icon-pushpin" title="select/unselect"></i></div>' );
@@ -544,15 +570,17 @@ function Chords( $, functions, save )
   return {
     "update" : update,
     "serialize" : serialize,
-    "setData" : setData
+    "setData" : setData,
+    "ChordData" : ChordData
   };
 }
 
-define( "chords", [ "plugins", "jquery", "functions", "save" ], function( plugins, $, functions, save )
+define( "chords", [ "plugins", "jquery", "functions", "save", "toolbar" ], function( plugins, $, functions, save,
+    toolbar )
 {
   plugins.register( new plugins.PluginInfo( {
     "name" : "chords",
-    "instance" : new Chords( $, functions, save ),
+    "instance" : new Chords( $, functions, save, toolbar ),
     "alwaysRun" : true,
     "serialize" : true
   } ) );
