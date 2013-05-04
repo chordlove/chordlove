@@ -66,6 +66,7 @@ function Toolbar( $, functions, save )
     function clearAll()
     {
       PARENT.empty();
+      PARENT.removeClass('has-text');
       $( '#title' ).val( '' ).focus();
       save.changed();
       return false;

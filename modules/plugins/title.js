@@ -41,7 +41,7 @@ function Title( $, plugins, save )
     {
       event.preventDefault();
       $( this ).blur();
-      $( "#save" ).focus();
+      $( "#share" ).focus();
       var title = sanitizedTitle();
       setPageTitle( title );
     }

@@ -13,7 +13,6 @@ require( [ "jquery", "functions", "plugins", "save", "toolbar", "plugins/title",
     $.ajaxSetup( {
       cache : true
     } );
-    // var SHARP = true, FLAT = false;
 
     var PARENT = $( '#items' );
     var pluginHandler = new PluginHandler();

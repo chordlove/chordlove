@@ -232,7 +232,7 @@ function Chords( $, functions, save, toolbar )
         chordBeatsValues.push( new ChordBeat( chords[val], beatsVal ) );
       }
       chordBeatsCollection.push( chordBeatsKeys[chordBeatsLookup] );
-      if ( chordData.lyrics != "" )
+      if ( typeof chordData.lyrics !== 'undefined' && chordData.lyrics != '' )
       {
         hasTextItems = true;
       }
@@ -243,6 +243,10 @@ function Chords( $, functions, save, toolbar )
       {
         textItems.push( this.lyrics );
       } );
+    }
+    else
+    {
+      textItems = [];
     }
     return {
       'chordItems' : chordValues,
@@ -322,6 +326,9 @@ function Chords( $, functions, save, toolbar )
     }, function( event )
     {
       handleKeyEvent( event );
+    } ).blur( function( event )
+    {
+      handleBlurEvent( event );
     } );
 
     $( more ).mousedown( function( event )
@@ -346,12 +353,15 @@ function Chords( $, functions, save, toolbar )
     }
 
     prepareResize( input, wrapper );
-    performResize( input, textInput, wrapper );
-
     if ( chordText === undefined && lyrics === undefined )
     {
       // create a blank item
       input.focus();
+      save.changed();
+    }
+    else
+    {
+      performResize( input, textInput, wrapper );
     }
 
     function createBeats( beats, wrapper )
@@ -439,8 +449,7 @@ function Chords( $, functions, save, toolbar )
 
     function handleBlurEvent( event )
     {
-      // TODO
-      // console.log( 'blur event!' );
+      performResize( input, textInput, wrapper );
     }
 
     function handleKeyEvent( event )
@@ -454,8 +463,6 @@ function Chords( $, functions, save, toolbar )
         {
           target.siblings( 'input' ).focus();
         }
-        performResize( input, textInput, wrapper );
-        save.changed();
       }
       else if ( event.which === 189 && event.shiftKey === true && checkAbsentKey( event.altKey )
           && checkAbsentKey( event.ctrlKey ) && checkAbsentKey( event.metaKey ) )
@@ -479,7 +486,6 @@ function Chords( $, functions, save, toolbar )
   function transformChordString( string )
   {
     var inputContent = $.trim( string );
-    // var newContent = '';
     if ( inputContent.length > 1 )
     {
       var secondChar = inputContent.charAt( 1 );
@@ -492,24 +498,13 @@ function Chords( $, functions, save, toolbar )
         inputContent = setCharAt( inputContent, 1, '♯' );
       }
     }
+    return inputContent;
   }
 
   function performResize( input, textInput, wrapper )
   {
-    var inputContent = $.trim( input.val() );
-    if ( inputContent.length > 1 )
-    {
-      var secondChar = inputContent.charAt( 1 );
-      if ( secondChar === 'b' )
-      {
-        inputContent = setCharAt( inputContent, 1, '♭' );
-      }
-      else if ( secondChar === '#' )
-      {
-        inputContent = setCharAt( inputContent, 1, '♯' );
-      }
-    }
-    input.val( inputContent );
+    input.val( transformChordString( input.val() ) );
+    save.changed();
     var minWidth = calculateResize( input );
     if ( textInput )
     {
