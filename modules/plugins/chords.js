@@ -376,7 +376,7 @@ function Chords( $, functions, save, toolbar )
     }
 
     prepareResize( input, wrapper );
-    if ( chordText === undefined && lyrics === undefined )
+    if ( chordData === undefined )
     {
       // create a blank item
       input.focus();
@@ -385,6 +385,7 @@ function Chords( $, functions, save, toolbar )
     else
     {
       performResize( input, textInput, wrapper );
+      //save.changedText( "chords/create" );
     }
 
     function createBeats( beats, wrapper )
@@ -474,6 +475,7 @@ function Chords( $, functions, save, toolbar )
     function handleChangeEvent( event )
     {
       performResize( input, textInput, wrapper );
+      save.changedText( "chords/blur" );
     }
 
     function handleKeyEvent( event )
@@ -488,14 +490,7 @@ function Chords( $, functions, save, toolbar )
           target.siblings( 'input' ).focus();
         }
       }
-      else if ( event.which === 189 && event.shiftKey === true && checkAbsentKey( event.altKey )
-          && checkAbsentKey( event.ctrlKey ) && checkAbsentKey( event.metaKey ) )
-      {
-        // TODO: error dialog or workaround
-        event.preventDefault();
-      }
     }
-
   }
 
   function setCharAt( str, index, chr )
@@ -529,7 +524,6 @@ function Chords( $, functions, save, toolbar )
   {
     input.val( transformChordString( input.val() ) );
     // TODO don't send a change event if we're just updating from the url.
-    save.changedText( "chords" );
     var minWidth = calculateResize( input );
     if ( textInput )
     {
