@@ -47,7 +47,7 @@ function Title( $, plugins, save )
     }
   } ).change( function()
   {
-    save.changed();
+    save.changedText( "title" );
   } );
 
   function setPageTitle( title )

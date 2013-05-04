@@ -20,9 +20,9 @@ require( [ "jquery", "functions", "plugins", "save", "toolbar", "plugins/title",
     PARENT.sortable( {
       "revert" : true,
       "handle" : ".handle",
-      "stop" : function()
+      "stop" : function( event )
       {
-        save.changed();
+        save.changedStructure( event );
       }
     } );
 

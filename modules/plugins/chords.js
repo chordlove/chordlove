@@ -25,7 +25,7 @@ function Chords( $, functions, save, toolbar )
 
   var BULLETS = '••••••••••••••••';
 
-  var SINGLE_BARLINE = $( '<li class="symbol"><img class="barline" src="images/single-barline.svg"  alt="|"></li>' );
+  var SINGLE_BARLINE = $( '<li class="symbol item-barline"><img class="barline" src="images/single-barline.svg"  alt="|"></li>' );
 
   var MIN_WIDTH = 100;
   var MAX_WIDTH = 1000;
@@ -39,6 +39,8 @@ function Chords( $, functions, save, toolbar )
   } );
 
   functions.bindButton( "#add-chord", createItem );
+
+  save.addStructureChangeListener( handleStructureChange );
 
   var format = DEFAULT_FORMAT;
   var data = null;
@@ -201,6 +203,11 @@ function Chords( $, functions, save, toolbar )
     return result.length > 3 ? result : '';
   }
 
+  function handleStructureChange( event )
+  {
+    updateBarlines();
+  }
+
   function getData()
   {
     var chords = {}, chordNo = 0;
@@ -255,6 +262,22 @@ function Chords( $, functions, save, toolbar )
       'textItems' : textItems,
       'timeSignature' : timeSignature
     };
+  }
+
+  function updateBarlines()
+  {
+    $( 'li.item-barline', PARENT ).remove();
+    var timeSignature = $( '#time-signature' ).val();
+    var beatsSum = 0;
+    $( '#items > li.item' ).each( function( index )
+    {
+      var chordData = getChordData( this );
+      beatsSum += chordData.beats;
+      if ( beatsSum % timeSignature === 0 )
+      {
+        SINGLE_BARLINE.clone().insertAfter( this );
+      }
+    } );
   }
 
   function getChordData( li )
@@ -328,7 +351,7 @@ function Chords( $, functions, save, toolbar )
       handleKeyEvent( event );
     } ).blur( function( event )
     {
-      handleBlurEvent( event );
+      handleChangeEvent( event );
     } );
 
     $( more ).mousedown( function( event )
@@ -357,7 +380,7 @@ function Chords( $, functions, save, toolbar )
     {
       // create a blank item
       input.focus();
-      save.changed();
+      save.changedStructure( 'chords/new' );
     }
     else
     {
@@ -385,12 +408,16 @@ function Chords( $, functions, save, toolbar )
         var beatString = beatsToString( i );
         var option = $( '<li><a href="#">' + beatString + '</a></li>' );
         option.appendTo( list );
-        option.click( function( event )
+        option.click( {
+          'beatString' : beatString
+        }, function( event )
         {
           currentBeats.dropdown( 'toggle' );
-          // TODO check if there is actually a change
-          currentBeats.text( $( 'a', this ).text() );
-          save.changed();
+          if ( currentBeats.text() !== event.data.beatString )
+          {
+            currentBeats.text( event.data.beatString );
+            save.changedStructure( "chords/beats" );
+          }
           return false;
         } );
       }
@@ -438,16 +465,13 @@ function Chords( $, functions, save, toolbar )
                   handleKeyEvent( event );
                 } ).blur( function( event )
                 {
-                  handleBlurEvent( event );
-                } ).change( function()
-                {
-                  save.changed();
+                  handleChangeEvent( event );
                 } );
                 prepareResize( textInput, wrapper );
               } );
     }
 
-    function handleBlurEvent( event )
+    function handleChangeEvent( event )
     {
       performResize( input, textInput, wrapper );
     }
@@ -504,7 +528,8 @@ function Chords( $, functions, save, toolbar )
   function performResize( input, textInput, wrapper )
   {
     input.val( transformChordString( input.val() ) );
-    save.changed();
+    // TODO don't send a change event if we're just updating from the url.
+    save.changedText( "chords" );
     var minWidth = calculateResize( input );
     if ( textInput )
     {

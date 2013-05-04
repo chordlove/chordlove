@@ -27,7 +27,7 @@ function Toolbar( $, functions, save )
     function deleteItems()
     {
       getSelectedItems().remove();
-      save.changed();
+      save.changedStructure( "toolbar/delete" );
     }
 
     var copiedItems = [];
@@ -35,8 +35,8 @@ function Toolbar( $, functions, save )
     function cutItems()
     {
       copyItems();
-      deleteItems();
-      save.changed();
+      getSelectedItems().remove();
+      save.changedStructure( "toolbar/cut" );
     }
 
     function copyItems()
@@ -54,7 +54,7 @@ function Toolbar( $, functions, save )
       {
         chords.createItem( this );
       } );
-      save.changed();
+      save.changedStructure( "toolbar/paste" );
     }
 
     function editMode()
@@ -63,12 +63,12 @@ function Toolbar( $, functions, save )
       setEditMode( !currentState );
     }
 
-    function clearAll()
+    function clear()
     {
       PARENT.empty();
-      PARENT.removeClass('has-text');
+      PARENT.removeClass( 'has-text' );
       $( '#title' ).val( '' ).focus();
-      save.changed();
+      save.changedStructure( "toolbar/clear" );
       return false;
     }
 
@@ -77,7 +77,12 @@ function Toolbar( $, functions, save )
     bindButton( "#paste", pasteItems );
     bindButton( "#delete", deleteItems );
     bindButton( "#edit", editMode );
-    bindButton( "#clear", clearAll );
+    bindButton( "#clear", clear );
+
+    $( '#time-signature' ).change( function()
+    {
+      save.changedStructure( "toolbar/timesignature" );
+    } );
   }
 
   prepareCpanel();

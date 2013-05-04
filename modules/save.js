@@ -8,8 +8,34 @@ function Save( plugins )
 
   var previousHash = "";
 
-  function changed()
+  var textChangeListeners = [];
+  var structureChangeListeners = [];
+
+  function addTextChangeListener( listener )
   {
+    textChangeListeners.push( listener );
+  }
+
+  function addStructureChangeListener( listener )
+  {
+    structureChangeListeners.push( listener );
+  }
+
+  function changedText( event )
+  {
+    for ( var i = 0; i < textChangeListeners.length; i++ )
+    {
+      textChangeListeners[i]( event );
+    }
+    writeUri();
+  }
+
+  function changedStructure( event )
+  {
+    for ( var i = 0; i < structureChangeListeners.length; i++ )
+    {
+      structureChangeListeners[i]( event );
+    }
     writeUri();
   }
 
@@ -41,7 +67,10 @@ function Save( plugins )
   }
 
   return {
-    "changed" : changed
+    "addTextChangeListener" : addTextChangeListener,
+    "addStructureChangeListener" : addStructureChangeListener,
+    "changedText" : changedText,
+    "changedStructure" : changedStructure
   };
 }
 
