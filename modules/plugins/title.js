@@ -1,4 +1,4 @@
-function Title( $, plugins, save )
+function Title( $, plugins, save, functions )
 {
   if ( Title.prototype._instance )
   {
@@ -6,9 +6,9 @@ function Title( $, plugins, save )
   }
   Title.prototype._instance = this;
 
-  var PLUGIN_ID = "00";
-  var DEFAULT_FORMAT = "0";
-  var SITE_TITLE = "Chordlove.com";
+  var PLUGIN_ID = '00';
+  var DEFAULT_FORMAT = '0';
+  var SITE_TITLE = 'Chordlove.com';
 
   var format = DEFAULT_FORMAT;
   var data = null;
@@ -16,45 +16,45 @@ function Title( $, plugins, save )
   function setData( inputFormat, inputData )
   {
     format = inputFormat;
-    data = inputData;
+    data = functions.decode( inputData );
   }
 
   function update()
   {
     setPageTitle( data );
-    $( "#title" ).val( data );
+    $( '#title' ).val( data );
   }
 
   function serialize()
   {
-    return PLUGIN_ID + DEFAULT_FORMAT + sanitizedTitle();
+    return PLUGIN_ID + DEFAULT_FORMAT + getTitle();
   }
 
-  function sanitizedTitle()
+  function getTitle()
   {
-    return $( "#title" ).val().replace( "_", "-" );
+    return functions.encode( $( '#title' ).val() );
   }
 
-  $( "#title" ).keydown( function( event )
+  $( '#title' ).keydown( function( event )
   {
     if ( event.which === 13 || event.which === 9 )
     {
       event.preventDefault();
       $( this ).blur();
-      $( "#share" ).focus();
+      $( '#share' ).focus();
       var title = sanitizedTitle();
       setPageTitle( title );
     }
   } ).change( function()
   {
-    save.changedText( "title" );
+    save.changedText( 'title' );
   } );
 
   function setPageTitle( title )
   {
     if ( title )
     {
-      window.document.title = title + " - " + SITE_TITLE;
+      window.document.title = title + ' - ' + SITE_TITLE;
     }
     else
     {
@@ -63,18 +63,18 @@ function Title( $, plugins, save )
   }
 
   return {
-    "update" : update,
-    "serialize" : serialize,
-    "setData" : setData
+    'update' : update,
+    'serialize' : serialize,
+    'setData' : setData
   };
 }
 
-define( "title", [ "plugins", "jquery", "save" ], function( plugins, $, save )
+define( 'title', [ 'plugins', 'jquery', 'save', 'functions' ], function( plugins, $, save, functions )
 {
   plugins.register( new plugins.PluginInfo( {
-    "name" : "title",
-    "instance" : new Title( $, plugins, save ),
-    "alwaysRun" : true,
-    "serialize" : true
+    'name' : 'title',
+    'instance' : new Title( $, plugins, save, functions ),
+    'alwaysRun' : true,
+    'serialize' : true
   } ) );
 } );

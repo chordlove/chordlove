@@ -100,7 +100,7 @@ function Chords( $, functions, save, toolbar )
         'data' : data,
         'currentPos' : currentPos,
         'countSize' : CONFIG.CHORDS_COUNT_LENGTH,
-        'transformer' : deserializeChord
+        'transformer' : functions.decode
       } );
       chords = read.array;
       currentPos = read.position;
@@ -173,7 +173,7 @@ function Chords( $, functions, save, toolbar )
     result += functions.getCharacters( chordItems.length, CONFIG.CHORDS_COUNT_LENGTH );
     for ( var i = 0; i < chordItems.length; i++ )
     {
-      var serializedChord = serializeChord( chordItems[i] );
+      var serializedChord = functions.encode( chordItems[i] );
       result += functions.getCharacters( serializedChord.length, 1 );
       result += serializedChord;
     }
@@ -293,26 +293,6 @@ function Chords( $, functions, save, toolbar )
       lyrics = $( $( 'input.song-text', wrapper ).get( 0 ) ).val() || '';
     }
     return new ChordData( chordText, beatCount, lyrics );
-  }
-
-  function serializeChord( chord )
-  {
-    var string = chord;
-    $.each( ESCAPES, function( index, value )
-    {
-      string = string.split( index ).join( ESCAPE_CHARACTER + value );
-    } );
-    return string;
-  }
-
-  function deserializeChord( chord )
-  {
-    var string = chord;
-    $.each( ESCAPES, function( index, value )
-    {
-      string = string.split( ESCAPE_CHARACTER + value ).join( index );
-    } );
-    return string;
   }
 
   function createItem( chordData )

@@ -1,6 +1,6 @@
 define(
-    "functions",
-    [ "jquery" ],
+    'functions',
+    [ 'jquery' ],
     function( $ )
     {
       var CHARACTERS = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-.!~*'()?", CHARACTERS_LEN = CHARACTERS.length;
@@ -98,10 +98,38 @@ define(
         };
       }
 
+      var ESCAPE_CHARACTER = '~', ESCAPES = {};
+      ESCAPES[ESCAPE_CHARACTER] = ESCAPE_CHARACTER;
+      ESCAPES['♭'] = 'b';
+      ESCAPES['♯'] = 's';
+      ESCAPES['_'] = '-';
+
+      function encode( stringToEncode )
+      {
+        var string = stringToEncode;
+        $.each( ESCAPES, function( index, value )
+        {
+          string = string.split( index ).join( ESCAPE_CHARACTER + value );
+        } );
+        return string;
+      }
+
+      function decode( stringToDecode )
+      {
+        var string = stringToDecode;
+        $.each( ESCAPES, function( index, value )
+        {
+          string = string.split( ESCAPE_CHARACTER + value ).join( index );
+        } );
+        return string;
+      }
+
       return {
-        "getNumber" : getNumberFromCharacters,
-        "getCharacters" : getCharactersFromNumber,
-        "bindButton" : bindButton,
-        "readStringArray" : readStringArray
+        'getNumber' : getNumberFromCharacters,
+        'getCharacters' : getCharactersFromNumber,
+        'bindButton' : bindButton,
+        'readStringArray' : readStringArray,
+        'encode' : encode,
+        'decode' : decode
       };
     } );
