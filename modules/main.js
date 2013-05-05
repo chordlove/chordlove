@@ -5,8 +5,7 @@ define( "jquery", [], function()
   return jQuery;
 } );
 
-require( [ "jquery", "functions", "plugins", "save", "toolbar", "plugins/title", "plugins/chords" ], function( $,
-    functions, thePlugins, save, toolbar )
+require( [ "jquery", "plugins", "save", "plugins/title", "plugins/chords" ], function( $, plugins, save )
 {
   $( function()
   {
@@ -14,10 +13,7 @@ require( [ "jquery", "functions", "plugins", "save", "toolbar", "plugins/title",
       cache : true
     } );
 
-    var PARENT = $( '#items' );
-    var pluginHandler = new PluginHandler();
-
-    PARENT.sortable( {
+    $( '#items' ).sortable( {
       "revert" : true,
       "handle" : ".handle",
       "stop" : function( event )
@@ -26,56 +22,7 @@ require( [ "jquery", "functions", "plugins", "save", "toolbar", "plugins/title",
       }
     } );
 
-    $( window ).hashchange( function()
-    {
-      pluginHandler.initialize();
-    } );
+    plugins.init();
 
-    function PluginHandler()
-    {
-      function parseHash()
-      {
-        var PLUGIN_END_MARKER = "_";
-        var hash = window.location.hash;
-        var readMode = false;
-        if ( hash.length > 0 )
-        {
-          var topLevelFormat = hash.charAt( 2 );
-          if ( topLevelFormat !== "0" )
-          {
-            // we'll handle this better when we're actually at format
-            // version 1.
-            throw "Unknown URL format.";
-          }
-          var plugins = decodeURIComponent( hash.substring( 3 ) ).split( PLUGIN_END_MARKER );
-          for ( var i = 0; i < plugins.length; i++ )
-          {
-            var plugin = plugins[i];
-            var pluginId = functions.getNumber( plugin.substr( 0, 2 ) );
-            var pluginFormat = functions.getNumber( plugin.substr( 2, 1 ) );
-            var pluginData = plugin.substr( 3 );
-            thePlugins.setData( pluginId, pluginFormat, pluginData );
-          }
-          readMode = true;
-        }
-        else
-        {
-          toolbar.setEditMode( true );
-          $( "#help" ).modal();
-        }
-        thePlugins.updateAll();
-        if ( readMode )
-        {
-          toolbar.hideOrShow( "hide" );
-        }
-      }
-
-      this.initialize = function()
-      {
-        parseHash();
-      };
-    }
-
-    pluginHandler.initialize();
   } );
 } );
