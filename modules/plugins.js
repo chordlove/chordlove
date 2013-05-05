@@ -6,8 +6,8 @@ function Plugins( $, pluginlist, functions, toolbar )
   }
   Plugins.prototype._instance = this;
 
-  var FORMAT = "0";
-  var PLUGIN_END_MARKER = "_";
+  var FORMAT = '0';
+  var PLUGIN_END_MARKER = '_';
 
   var plugins = {};
   var loading = {};
@@ -16,7 +16,7 @@ function Plugins( $, pluginlist, functions, toolbar )
   {
     parseHash();
   } );
-  
+
   function register( pluginInfo )
   {
     plugins[pluginInfo.name] = pluginInfo;
@@ -31,7 +31,7 @@ function Plugins( $, pluginlist, functions, toolbar )
   {
     this.name = info.name;
     this.instance = info.instance;
-    this.alwaysRun = info.alwaysRun;
+    this.render = info.render;    
     this.serialize = info.serialize;
   }
 
@@ -39,11 +39,11 @@ function Plugins( $, pluginlist, functions, toolbar )
   {
     if ( plugins[name] )
     {
-      func( plugins[name].instance );
+      func( plugins[name].instance, plugins[name] );
     }
     else
     {
-      if ( typeof loading[name] !== "undefined" )
+      if ( typeof loading[name] !== 'undefined' )
       {
         // Store function to execute after load.
         loading[name].push( func );
@@ -51,13 +51,13 @@ function Plugins( $, pluginlist, functions, toolbar )
       else
       {
         loading[name] = [];
-        require( [ "plugins/" + name ], function()
+        require( [ 'plugins/' + name ], function()
         {
           var instance = plugins[name].instance;
           func( instance );
           for ( var i = 0, len = loading[name].length; i < len; i++ )
           {
-            loading[name][i]( instance );
+            loading[name][i]( instance, plugins[name] );
           }
           loading[name] = undefined;
         } );
@@ -65,11 +65,11 @@ function Plugins( $, pluginlist, functions, toolbar )
     }
   }
 
-  function update( name, format, data )
+  function render( name, format, data )
   {
     executeByName( name, function( instance )
     {
-      instance.update( format, data );
+      instance.render( format, data );
     } );
   }
 
@@ -81,28 +81,31 @@ function Plugins( $, pluginlist, functions, toolbar )
     } );
   }
 
-  function setDataAndUpdate( id, format, data )
+  function setDataAndRender( id, format, data )
   {
-    executeByName( pluginlist.idToName( id ), function( instance )
+    executeByName( pluginlist.idToName( id ), function( instance, info )
     {
       instance.setData( format, data );
-      instance.update();
+      if ( info.render === true )
+      {
+        instance.render();
+      }
     } );
   }
 
   function parseHash()
   {
-    var PLUGIN_END_MARKER = "_";
+    var PLUGIN_END_MARKER = '_';
     var hash = window.location.hash;
     var readMode = false;
     if ( hash.length > 0 )
     {
       var topLevelFormat = hash.charAt( 2 );
-      if ( topLevelFormat !== "0" )
+      if ( topLevelFormat !== '0' )
       {
         // we'll handle this better when we're actually at format
         // version 1.
-        throw "Unknown URL format.";
+        throw 'Unknown URL format.';
       }
       var pluginSections = decodeURIComponent( hash.substring( 3 ) ).split( PLUGIN_END_MARKER );
       for ( var i = 0; i < pluginSections.length; i++ )
@@ -111,18 +114,18 @@ function Plugins( $, pluginlist, functions, toolbar )
         var pluginId = functions.getNumber( plugin.substr( 0, 2 ) );
         var pluginFormat = functions.getNumber( plugin.substr( 2, 1 ) );
         var pluginData = plugin.substr( 3 );
-        setDataAndUpdate( pluginId, pluginFormat, pluginData );
+        setDataAndRender( pluginId, pluginFormat, pluginData );
       }
       readMode = true;
     }
     else
     {
       toolbar.setEditMode( true );
-      $( "#help" ).modal();
+      $( '#help' ).modal();
     }
     if ( readMode )
     {
-      toolbar.hideOrShow( "hide" );
+      toolbar.hideOrShow( 'hide' );
     }
   }
 
@@ -140,22 +143,18 @@ function Plugins( $, pluginlist, functions, toolbar )
         }
       }
     } );
-    return "!" + FORMAT + data.join( PLUGIN_END_MARKER );
+    return '!' + FORMAT + data.join( PLUGIN_END_MARKER );
   }
 
   return {
-    "PluginInfo" : PluginInfo,
-    "register" : register,
-    "list" : list,
-    "exec" : executeByName,
-    "serialize" : serialize,
-    "setData" : setData,
-    "setDataAndUpdate" : setDataAndUpdate,
-    "init" : parseHash
+    'PluginInfo' : PluginInfo,
+    'register' : register,
+    'serialize' : serialize,
+    'init' : parseHash
   };
 }
 
-define( "plugins", [ "jquery", "pluginlist", "functions", "toolbar" ], function( $, pluginlist, functions, toolbar )
+define( 'plugins', [ 'jquery', 'pluginlist', 'functions', 'toolbar' ], function( $, pluginlist, functions, toolbar )
 {
   return new Plugins( $, pluginlist, functions, toolbar );
 } );

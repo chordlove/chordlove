@@ -1,4 +1,4 @@
-function Chords( $, functions, save, toolbar )
+function Chords( $, functions, save, toolbar, resizer )
 {
   if ( Chords.prototype._instance )
   {
@@ -17,19 +17,9 @@ function Chords( $, functions, save, toolbar )
     DEFAULT_TIME_SIGNATURE : 4
   };
 
-  var ESCAPE_CHARACTER = '~', ESCAPES = {};
-  ESCAPES[ESCAPE_CHARACTER] = ESCAPE_CHARACTER;
-  ESCAPES['♭'] = 'b';
-  ESCAPES['♯'] = 's';
-  ESCAPES['_'] = '-';
-
   var BULLETS = '••••••••••••••••';
 
   var SINGLE_BARLINE = $( '<li class="symbol item-barline"><img class="barline" src="images/single-barline.svg"  alt="|"></li>' );
-
-  var MIN_WIDTH = 100;
-  var MAX_WIDTH = 1000;
-  var WRAPPER_MARGIN = 7;
 
   var PARENT = $( '#items' );
 
@@ -42,6 +32,14 @@ function Chords( $, functions, save, toolbar )
 
   save.addStructureChangeListener( handleStructureChange );
 
+  save.addTextChangeListener( function( event )
+  {
+    if ( event.data && event.data.item )
+    {
+      resizer.performResize( $( event.data.item ) );
+    }
+  } );
+
   var format = DEFAULT_FORMAT;
   var data = null;
 
@@ -51,7 +49,7 @@ function Chords( $, functions, save, toolbar )
     data = inputData;
   }
 
-  function update()
+  function render()
   {
     PARENT.empty();
     if ( !data )
@@ -298,64 +296,38 @@ function Chords( $, functions, save, toolbar )
   function createItem( chordData )
   {
     var chordText = undefined;
-    var lyrics = undefined;
     var beats = undefined;
     if ( typeof chordData !== 'undefined' )
     {
       chordText = chordData.chord;
-      lyrics = chordData.lyrics;
       beats = chordData.beats;
     }
     var wrapper = $( '<li class="item" />' )
         .append(
             '<div class="handle"><i class="icon-move" title="move"></i><i class="icon-pushpin" title="select/unselect"></i></div>' );
-    var input = $( '<input class="chord-text" type="text" title="Add a chord" placeholder="Chord…" />' );
+    var input = $( '<input class="chord-text resize-trigger" type="text" title="Add a chord" placeholder="Chord…" />' );
     if ( chordText )
     {
       input.val( chordText );
     }
-    var textInput = false;
     var div = $( '<div class="chord"/>' );
-    var more = $( '<i class="icon-double-angle-down" title="Add song text"></i>' );
     input.appendTo( div );
     wrapper.append( div );
-    wrapper.append( more );
+    // wrapper.append( more );
     wrapper.appendTo( PARENT );
 
     createBeats( beats, wrapper );
 
-    $( input ).keydown( {
-      "next" : true
+    $( input ).keydown( functions.handleInputKeyEvent ).blur( {
+      'item' : wrapper
     }, function( event )
-    {
-      handleKeyEvent( event );
-    } ).blur( function( event )
     {
       handleChangeEvent( event );
     } );
 
-    $( more ).mousedown( function( event )
-    {
-      event.stopImmediatePropagation();
-      PARENT.addClass( 'has-text' );
-      addTextInput();
-      textInput = $( this ).siblings( 'div.chord' ).children( 'input.song-text' ).first();
-    } );
-
     addPinEvents( wrapper );
 
-    if ( PARENT.hasClass( 'has-text' ) )
-    {
-      addTextInput();
-      textInput = input.siblings( 'input.song-text' ).first();
-    }
-
-    if ( lyrics !== undefined )
-    {
-      textInput.val( lyrics );
-    }
-
-    prepareResize( input, wrapper );
+    resizer.prepareResize( wrapper );
     if ( chordData === undefined )
     {
       // create a blank item
@@ -364,8 +336,7 @@ function Chords( $, functions, save, toolbar )
     }
     else
     {
-      performResize( input, textInput, wrapper );
-      //save.changedText( "chords/create" );
+      resizer.performResize( wrapper );
     }
 
     function createBeats( beats, wrapper )
@@ -428,48 +399,10 @@ function Chords( $, functions, save, toolbar )
       } );
     }
 
-    function addTextInput()
-    {
-      $( 'div.chord input.chord-text' )
-          .each(
-              function()
-              {
-                if ( $( this ).siblings( 'input.song-text' ).length > 0 )
-                {
-                  return;
-                }
-                var textInput = $( '<input class="song-text" type="text" id="song-text" title="Add song text" placeholder="Text…" />' );
-                textInput.appendTo( $( this ).parent() ).keydown( {
-                  "next" : false
-                }, function( event )
-                {
-                  handleKeyEvent( event );
-                } ).blur( function( event )
-                {
-                  handleChangeEvent( event );
-                } );
-                prepareResize( textInput, wrapper );
-              } );
-    }
-
     function handleChangeEvent( event )
     {
-      performResize( input, textInput, wrapper );
-      save.changedText( "chords/blur" );
-    }
-
-    function handleKeyEvent( event )
-    {
-      var target = $( event.target );
-      if ( event.which === 13 || event.which === 9 )
-      {
-        event.preventDefault();
-        target.blur();
-        if ( event.data.next && event.which === 9 )
-        {
-          target.siblings( 'input' ).focus();
-        }
-      }
+      input.val( transformChordString( input.val() ) );
+      save.changedText( event );
     }
   }
 
@@ -500,82 +433,26 @@ function Chords( $, functions, save, toolbar )
     return inputContent;
   }
 
-  function performResize( input, textInput, wrapper )
-  {
-    input.val( transformChordString( input.val() ) );
-    // TODO don't send a change event if we're just updating from the url.
-    var minWidth = calculateResize( input );
-    if ( textInput )
-    {
-      var textMinWidth = calculateResize( textInput );
-      if ( textMinWidth > minWidth )
-      {
-        minWidth = textMinWidth;
-      }
-    }
-    wrapper.width( minWidth + WRAPPER_MARGIN );
-  }
-
   function checkAbsentKey( key )
   {
     return key !== undefined && key == false;
   }
 
-  function prepareResize( input, wrapper )
-  {
-    var testSubject = $( '<div/>' ).css( {
-      position : 'absolute',
-      top : -9999,
-      left : -9999,
-      width : 'auto',
-      fontSize : input.css( 'fontSize' ),
-      fontFamily : input.css( 'fontFamily' ),
-      fontWeight : input.css( 'fontWeight' ),
-      letterSpacing : input.css( 'letterSpacing' ),
-      whiteSpace : 'nowrap'
-    } );
-    testSubject.insertAfter( input );
-    input.data( "testSubject", testSubject );
-  }
-
-  function calculateResize( input )
-  {
-    var val = '';
-    if ( val === ( val = input.val() ) )
-    {
-      return MIN_WIDTH;
-    }
-
-    var testSubject = input.data( "testSubject" );
-
-    // Enter new content into testSubject
-    var escaped = val.replace( /&/g, '&amp;' ).replace( /\s/g, '&nbsp;' ).replace( /</g, '&lt;' )
-        .replace( />/g, '&gt;' );
-    testSubject.html( escaped );
-
-    // Calculate new width, check min/max values.
-    var testerWidth = testSubject.width();
-    var newWidth = testerWidth > MIN_WIDTH ? testerWidth : MIN_WIDTH;
-    newWidth = newWidth > MAX_WIDTH ? MAX_WIDTH : newWidth;
-
-    return newWidth;
-  }
-
   return {
-    "update" : update,
+    "render" : render,
     "serialize" : serialize,
     "setData" : setData,
     "ChordData" : ChordData
   };
 }
 
-define( "chords", [ "plugins", "jquery", "functions", "save", "toolbar" ], function( plugins, $, functions, save,
-    toolbar )
+define( "chords", [ "plugins", "jquery", "functions", "save", "toolbar", "resizer" ], function( plugins, $, functions, save,
+    toolbar, resizer )
 {
   plugins.register( new plugins.PluginInfo( {
     "name" : "chords",
-    "instance" : new Chords( $, functions, save, toolbar ),
-    "alwaysRun" : true,
+    "instance" : new Chords( $, functions, save, toolbar, resizer ),
+    "render" : true,
     "serialize" : true
   } ) );
 } );

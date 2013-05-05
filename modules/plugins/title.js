@@ -19,7 +19,7 @@ function Title( $, plugins, save, functions )
     data = functions.decode( inputData );
   }
 
-  function update()
+  function render()
   {
     setPageTitle( data );
     $( '#title' ).val( data );
@@ -42,8 +42,7 @@ function Title( $, plugins, save, functions )
       event.preventDefault();
       $( this ).blur();
       $( '#share' ).focus();
-      var title = sanitizedTitle();
-      setPageTitle( title );
+      setPageTitle( $( '#title' ).val() );
     }
   } ).change( function()
   {
@@ -63,7 +62,7 @@ function Title( $, plugins, save, functions )
   }
 
   return {
-    'update' : update,
+    'render' : render,
     'serialize' : serialize,
     'setData' : setData
   };
@@ -74,7 +73,7 @@ define( 'title', [ 'plugins', 'jquery', 'save', 'functions' ], function( plugins
   plugins.register( new plugins.PluginInfo( {
     'name' : 'title',
     'instance' : new Title( $, plugins, save, functions ),
-    'alwaysRun' : true,
+    'render' : true,
     'serialize' : true
   } ) );
 } );

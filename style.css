@@ -92,7 +92,13 @@ input[type="text"].song-text {
   margin-left: 4px;
   position: relative;
   top: -9px;
+  display: none;
 }
+
+#items.has-text input[type="text"].song-text {
+  display: inline;
+}
+
 
 /* from: http://stackoverflow.com/a/2610741 */
 ::-webkit-input-placeholder { /* WebKit browsers */

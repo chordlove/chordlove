@@ -6,7 +6,7 @@ function PluginList()
   }
   PluginList.prototype._instance = this;
 
-  var list = [ "title", "chords" ];
+  var list = [ 'title', 'chords', 'lyrics' ];
 
   function getNameFromId( id )
   {
@@ -14,11 +14,11 @@ function PluginList()
   }
 
   return {
-    "idToName" : getNameFromId
+    'idToName' : getNameFromId
   };
 }
 
-define( "pluginlist", [], function()
+define( 'pluginlist', [], function()
 {
   return new PluginList();
 } );

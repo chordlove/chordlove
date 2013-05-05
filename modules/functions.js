@@ -124,12 +124,45 @@ define(
         return string;
       }
 
+      function handleInputKeyEvent( event )
+      {
+        var target = $( event.target );
+        if ( event.which === 13 || event.which === 9 )
+        {
+          event.preventDefault();
+          target.blur();
+          // TODO handle tab + shift
+          if ( event.which === 9 )
+          {
+            var siblings = target.nextAll( 'input' );
+            if ( siblings.length > 0 )
+            {
+              siblings.first().focus();
+            }
+            else
+            {
+              var wrapper = target.parents( 'li.item' ).first();
+              var next = wrapper.nextAll( 'li.item' );
+              if ( next.length > 0 )
+              {
+                var input = next.first().find( 'input' );
+                if ( input.length > 0 )
+                {
+                  input.first().focus();
+                }
+              }
+            }
+          }
+        }
+      }
+
       return {
         'getNumber' : getNumberFromCharacters,
         'getCharacters' : getCharactersFromNumber,
         'bindButton' : bindButton,
         'readStringArray' : readStringArray,
         'encode' : encode,
-        'decode' : decode
+        'decode' : decode,
+        'handleInputKeyEvent' : handleInputKeyEvent
       };
     } );

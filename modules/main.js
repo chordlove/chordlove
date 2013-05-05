@@ -1,11 +1,9 @@
-window.chords = ( typeof window.chords !== 'undefined' ) ? window.chords : {};
-
-define( "jquery", [], function()
+define( 'jquery', [], function()
 {
   return jQuery;
 } );
 
-require( [ "jquery", "plugins", "save", "plugins/title", "plugins/chords" ], function( $, plugins, save )
+require( [ 'jquery', 'plugins', 'save', 'plugins/title', 'plugins/chords','plugins/lyrics' ], function( $, plugins, save )
 {
   $( function()
   {
@@ -14,9 +12,9 @@ require( [ "jquery", "plugins", "save", "plugins/title", "plugins/chords" ], fun
     } );
 
     $( '#items' ).sortable( {
-      "revert" : true,
-      "handle" : ".handle",
-      "stop" : function( event )
+      'revert' : true,
+      'handle' : '.handle',
+      'stop' : function( event )
       {
         save.changedStructure( event );
       }
