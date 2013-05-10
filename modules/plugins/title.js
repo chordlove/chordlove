@@ -27,7 +27,12 @@ function Title( $, plugins, save, functions )
 
   function serialize()
   {
-    return PLUGIN_ID + DEFAULT_FORMAT + getTitle();
+    var result = PLUGIN_ID + DEFAULT_FORMAT + getTitle();
+    if ( result.length < 4 )
+    {
+      result = '';
+    }
+    return result;
   }
 
   function getTitle()

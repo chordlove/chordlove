@@ -1,4 +1,4 @@
-function Lyrics( $, functions, save, toolbar, resizer )
+function Lyrics( $, functions, save, toolbar, resizer, plugins )
 {
   if ( Lyrics.prototype._instance )
   {
@@ -8,17 +8,13 @@ function Lyrics( $, functions, save, toolbar, resizer )
 
   var PLUGIN_ID = '02', DEFAULT_FORMAT = 0;
 
-  var CONFIG = {
-    CHORDS_COUNT_LENGTH : 1,
-    CHORD_BEAT_COUNT_LENGTH : 1,
-    CHORDITEMS_COUNT_LENGTH : 1,
-    TEXTITEMS_COUNT_LENGTH : 1,
-    TIME_SIGNATURE_LENGTH : 1,
-    DEFAULT_TIME_SIGNATURE : 4
-  };
-
   var PARENT = $( '#items' );
   var VIEW_BUTTON = $( '#view-lyrics' );
+
+  plugins.exec( 'chords', function( chords )
+  {
+    chords.registerContentExtractor( extract );
+  } );
 
   var visibleText = false;
   var hasText = false;
@@ -47,6 +43,28 @@ function Lyrics( $, functions, save, toolbar, resizer )
       visibleText = true;
       VIEW_BUTTON.addClass( 'active' );
     }
+  }
+
+  function getLyrics( item )
+  {
+    return $( 'input.song-text', item ).val();
+  }
+
+  function setLyrics( item, text )
+  {
+    $( 'input.song-text', item ).val( text );
+  }
+
+  function extract( item )
+  {
+    var text = getLyrics( item );
+    return function( theItem )
+    {
+      if ( typeof text !== 'undefined' )
+      {
+        setLyrics( theItem, text );
+      }
+    };
   }
 
   function addTextInput()
@@ -86,10 +104,41 @@ function Lyrics( $, functions, save, toolbar, resizer )
 
   function render()
   {
+    var lyrics = functions.readStringArray( {
+      'data' : data,
+      'countSize' : 1
+    } ).array;
+    hasText = true;
+    visibleText = true;
+    PARENT.addClass( 'has-text' );
+    VIEW_BUTTON.addClass( 'active' );
+    addTextInput();
+    $( '#items > li.item' ).each( function()
+    {
+      setLyrics( this, lyrics.shift() );
+    } );
   }
 
   function serialize()
   {
+    var result = '';
+    if ( hasText )
+    {
+      result += PLUGIN_ID + DEFAULT_FORMAT;
+      var items = [];
+      $( '#items > li.item' ).each( function()
+      {
+        items.push( getLyrics( this ) );
+      } );
+      result += functions.writeStringArray( {
+        'items' : items
+      } );
+      if ( result.length < 4 )
+      {
+        result = '';
+      }
+    }
+    return result;
   }
 
   return {
@@ -104,8 +153,8 @@ define( 'lyrics', [ 'plugins', 'jquery', 'functions', 'save', 'toolbar', 'resize
 {
   plugins.register( new plugins.PluginInfo( {
     'name' : 'lyrics',
-    'instance' : new Lyrics( $, functions, save, toolbar, resizer ),
-    'render' : false,
+    'instance' : new Lyrics( $, functions, save, toolbar, resizer, plugins ),
+    'render' : true,
     'serialize' : true
   } ) );
 } );

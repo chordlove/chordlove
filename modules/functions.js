@@ -52,14 +52,48 @@ define(
         } );
       }
 
+      function getValueWithDefault( value, standard )
+      {
+        if ( typeof value !== 'undefined' )
+        {
+          return value;
+        }
+        else
+        {
+          return standard;
+        }
+      }
+
+      function writeStringArray( data )
+      {
+        if ( data.items.length < 1 )
+        {
+          return '';
+        }
+        var items = data.items;
+        var itemLengthSize = getValueWithDefault( data.itemLengthSize, 1 );
+        var countSize = getValueWithDefault( data.countSize, 1 );
+        var result = '';
+        if ( countSize > 0 )
+        {
+          result += getCharactersFromNumber( items.length, countSize );
+        }
+        if ( items.length > 0 )
+        {
+          for ( var i = 0; i < items.length; i++ )
+          {
+            result += getCharactersFromNumber( items[i].length, itemLengthSize );
+            result += encode( items[i] );
+          }
+        }
+        return result;
+      }
+
       function readStringArray( input )
       {
-        var data = input.data, currentPos = input.currentPos;
-        var transformer = false;
-        if ( typeof input.transformer === 'function' )
-        {
-          transformer = input.transformer;
-        }
+        var data = input.data;
+        var currentPos = getValueWithDefault( input.currentPos, 0 );
+        var transformer = getValueWithDefault( input.transformer, false );
         var numberOfItems;
         if ( typeof input.size !== 'undefined' )
         {
@@ -79,7 +113,7 @@ define(
           var length = getNumberFromCharacters( data.charAt( currentPos++ ) );
           if ( length > 0 )
           {
-            var string = data.substr( currentPos, length );
+            var string = decode( data.substr( currentPos, length ) );
             if ( transformer )
             {
               string = transformer( string );
@@ -160,6 +194,7 @@ define(
         'getNumber' : getNumberFromCharacters,
         'getCharacters' : getCharactersFromNumber,
         'bindButton' : bindButton,
+        'writeStringArray' : writeStringArray,
         'readStringArray' : readStringArray,
         'encode' : encode,
         'decode' : decode,

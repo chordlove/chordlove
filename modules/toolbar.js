@@ -44,7 +44,7 @@ function Toolbar( $, functions, save )
       copiedItems = [];
       getSelectedItems().each( function()
       {
-        copiedItems.push( chords.getChordData( this ) );
+        copiedItems.push( chords.getExtracts( this ) );
       } );
     }
 
@@ -52,9 +52,10 @@ function Toolbar( $, functions, save )
     {
       $( copiedItems ).each( function()
       {
-        chords.createItem( this );
+        chords.createFromExtracts( this );
       } );
       save.changedStructure( "toolbar/paste" );
+      $( "li.ui-selected", PARENT ).removeClass("ui-selected");      
     }
 
     function editMode()

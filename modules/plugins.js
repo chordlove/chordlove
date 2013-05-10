@@ -31,7 +31,7 @@ function Plugins( $, pluginlist, functions, toolbar )
   {
     this.name = info.name;
     this.instance = info.instance;
-    this.render = info.render;    
+    this.render = info.render;
     this.serialize = info.serialize;
   }
 
@@ -143,14 +143,24 @@ function Plugins( $, pluginlist, functions, toolbar )
         }
       }
     } );
-    return '!' + FORMAT + data.join( PLUGIN_END_MARKER );
+    data.sort( compare );
+    var result = '!' + FORMAT + data.join( PLUGIN_END_MARKER );
+    return result.length < 3 ? '' : result;
+  }
+
+  function compare( a, b )
+  {
+    var aNum = functions.getNumber( a.substr( 0, 2 ) );
+    var bNum = functions.getNumber( b.substr( 0, 2 ) );
+    return aNum - bNum;
   }
 
   return {
     'PluginInfo' : PluginInfo,
     'register' : register,
     'serialize' : serialize,
-    'init' : parseHash
+    'init' : parseHash,
+    'exec' : executeByName
   };
 }
 

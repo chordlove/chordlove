@@ -17,15 +17,18 @@ function Chords( $, functions, save, toolbar, resizer )
     DEFAULT_TIME_SIGNATURE : 4
   };
 
-  var BULLETS = '••••••••••••••••';
-
   var SINGLE_BARLINE = $( '<li class="symbol item-barline"><img class="barline" src="images/single-barline.svg"  alt="|"></li>' );
 
   var PARENT = $( '#items' );
 
+  var contentExtractors = [];
+
+  var format = DEFAULT_FORMAT;
+  var data = null;
+
   toolbar.registerChordsModule( {
-    'getChordData' : getChordData,
-    'createItem' : createItem
+    "getExtracts" : getExtracts,
+    "createFromExtracts" : createFromExtracts
   } );
 
   functions.bindButton( "#add-chord", createItem );
@@ -39,9 +42,6 @@ function Chords( $, functions, save, toolbar, resizer )
       resizer.performResize( $( event.data.item ) );
     }
   } );
-
-  var format = DEFAULT_FORMAT;
-  var data = null;
 
   function setData( inputFormat, inputData )
   {
@@ -82,7 +82,7 @@ function Chords( $, functions, save, toolbar, resizer )
     $( '#time-signature' ).val( "" + deserializedData.timeSignature );
   }
 
-  function deserialize( data )
+  function deserialize( input )
   {
     var chords = [];
     var chordBeats = [];
@@ -92,46 +92,30 @@ function Chords( $, functions, save, toolbar, resizer )
     {
       var currentPos = 0;
 
-      timeSignature = functions.getNumber( data.substr( currentPos++, CONFIG.TIME_SIGNATURE_LENGTH ) );
+      timeSignature = functions.getNumber( input.substr( currentPos++, CONFIG.TIME_SIGNATURE_LENGTH ) );
 
       var read = functions.readStringArray( {
-        'data' : data,
+        'data' : input,
         'currentPos' : currentPos,
-        'countSize' : CONFIG.CHORDS_COUNT_LENGTH,
-        'transformer' : functions.decode
+        'countSize' : CONFIG.CHORDS_COUNT_LENGTH
       } );
       chords = read.array;
       currentPos = read.position;
 
-      var numberOfChordBeats = functions.getNumber( data.substr( currentPos++, CONFIG.CHORD_BEAT_COUNT_LENGTH ) );
+      var numberOfChordBeats = functions.getNumber( input.substr( currentPos++, CONFIG.CHORD_BEAT_COUNT_LENGTH ) );
       for ( var i = 0; i < numberOfChordBeats; i++ )
       {
-        var chord = functions.getNumber( data.charAt( currentPos++ ) );
-        var beats = functions.getNumber( data.charAt( currentPos++ ) );
+        var chord = functions.getNumber( input.charAt( currentPos++ ) );
+        var beats = functions.getNumber( input.charAt( currentPos++ ) );
         chordBeats.push( new ChordBeat( chord, beats ) );
       }
 
-      var numberOfChordItems = functions.getNumber( data.substr( currentPos++, CONFIG.CHORDITEMS_COUNT_LENGTH ) );
+      var numberOfChordItems = functions.getNumber( input.substr( currentPos++, CONFIG.CHORDITEMS_COUNT_LENGTH ) );
       for ( var i = 0; i < numberOfChordItems; i++ )
       {
-        var chordBeat = chordBeats[functions.getNumber( data.charAt( currentPos++ ) )];
+        var chordBeat = chordBeats[functions.getNumber( input.charAt( currentPos++ ) )];
         var chordText = chords[chordBeat.chord];
         chordItems.push( new ChordData( chordText, chordBeat.beats ) );
-      }
-
-      if ( data.length > currentPos )
-      {
-        var read = functions.readStringArray( {
-          'data' : data,
-          'currentPos' : currentPos,
-          'size' : numberOfChordItems
-        } );
-        var items = read.array;
-
-        for ( var i = 0; i < numberOfChordItems; i++ )
-        {
-          chordItems[i].lyrics = items[i];
-        }
       }
     }
     catch ( err )
@@ -164,7 +148,6 @@ function Chords( $, functions, save, toolbar, resizer )
     var chordItems = state.chordItems;
     var chordBeatsItems = state.chordBeatsItems;
     var chordBeatsCollection = state.chordBeatsCollection;
-    var textItems = state.textItems;
 
     result += functions.getCharacters( state.timeSignature, CONFIG.TIME_SIGNATURE_LENGTH );
 
@@ -189,16 +172,7 @@ function Chords( $, functions, save, toolbar, resizer )
     {
       result += functions.getCharacters( chordBeatsCollection[i], 1 );
     }
-
-    if ( textItems.length > 0 )
-    {
-      for ( var i = 0; i < textItems.length; i++ )
-      {
-        result += functions.getCharacters( textItems[i].length, 1 );
-        result += textItems[i];
-      }
-    }
-    return result.length > 3 ? result : '';
+    return result.length > 7 ? result : '';
   }
 
   function handleStructureChange( event )
@@ -214,8 +188,6 @@ function Chords( $, functions, save, toolbar, resizer )
     var chordBeatsKeys = {}, chordBeatsNo = 0;
     var chordBeatsValues = [];
     var chordBeatsCollection = [];
-    var textItems = [];
-    var hasTextItems = false;
     var timeSignature = $( '#time-signature' ).val();
     $( '#items > li.item' ).each( function( index )
     {
@@ -237,27 +209,11 @@ function Chords( $, functions, save, toolbar, resizer )
         chordBeatsValues.push( new ChordBeat( chords[val], beatsVal ) );
       }
       chordBeatsCollection.push( chordBeatsKeys[chordBeatsLookup] );
-      if ( typeof chordData.lyrics !== 'undefined' && chordData.lyrics != '' )
-      {
-        hasTextItems = true;
-      }
     } );
-    if ( hasTextItems )
-    {
-      $( chordDataItems ).each( function()
-      {
-        textItems.push( this.lyrics );
-      } );
-    }
-    else
-    {
-      textItems = [];
-    }
     return {
       'chordItems' : chordValues,
       'chordBeatsItems' : chordBeatsValues,
       'chordBeatsCollection' : chordBeatsCollection,
-      'textItems' : textItems,
       'timeSignature' : timeSignature
     };
   }
@@ -276,6 +232,42 @@ function Chords( $, functions, save, toolbar, resizer )
         SINGLE_BARLINE.clone().insertAfter( this );
       }
     } );
+  }
+
+  function registerContentExtractor( extractor )
+  {
+    contentExtractors.push( extractor );
+  }
+  registerContentExtractor( extract );
+
+  function extract( li )
+  {
+    var chord = $( $( 'input.chord-text', li ).get( 0 ) ).val();
+    var beats = $( $( 'div.duration > a', li ).get( 0 ) ).text();
+    return function( theItem )
+    {
+      $( 'input.chord-text', theItem ).val( chord );
+      $( 'div.duration > a', theItem ).text( beats );
+    };
+  }
+
+  function getExtracts( li )
+  {
+    var extracts = [];
+    for ( var i = 0; i < contentExtractors.length; i++ )
+    {
+      extracts.push( contentExtractors[i]( li ) );
+    }
+    return extracts;
+  }
+
+  function createFromExtracts( extracts )
+  {
+    var li = createItem();
+    for ( var i = 0; i < extracts.length; i++ )
+    {
+      extracts[i]( li );
+    }
   }
 
   function getChordData( li )
@@ -339,8 +331,12 @@ function Chords( $, functions, save, toolbar, resizer )
       resizer.performResize( wrapper );
     }
 
+    return wrapper;
+
     function createBeats( beats, wrapper )
     {
+      var BULLETS = '••••••••••••••••';
+
       var defaultBeats = parseInt( $( '#time-signature' ).val() );
       var num = defaultBeats;
       if ( typeof beats !== 'undefined' )
@@ -442,12 +438,13 @@ function Chords( $, functions, save, toolbar, resizer )
     "render" : render,
     "serialize" : serialize,
     "setData" : setData,
-    "ChordData" : ChordData
+    "ChordData" : ChordData,
+    "registerContentExtractor" : registerContentExtractor
   };
 }
 
-define( "chords", [ "plugins", "jquery", "functions", "save", "toolbar", "resizer" ], function( plugins, $, functions, save,
-    toolbar, resizer )
+define( "chords", [ "plugins", "jquery", "functions", "save", "toolbar", "resizer" ], function( plugins, $, functions,
+    save, toolbar, resizer )
 {
   plugins.register( new plugins.PluginInfo( {
     "name" : "chords",
