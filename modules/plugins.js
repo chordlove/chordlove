@@ -45,32 +45,30 @@ function Plugins( $, pluginlist, functions, toolbar )
 
   function executeByName( name, func )
   {
-    if ( plugins[name] )
+    if ( typeof loading[name] !== 'undefined' )
     {
+      // Store function to execute after load.
+      loading[name].push( func );
+    }
+    else if ( plugins[name] )
+    {
+      // The script has been loaded and batched executions run.
       func( plugins[name].instance, plugins[name], pub );
     }
     else
     {
-      if ( typeof loading[name] !== 'undefined' )
+      // Start loading the script.
+      loading[name] = [];
+      require( [ 'plugins/' + name, 'plugins' ], function( dontUse, pluginsModule )
       {
-        // Store function to execute after load.
-        loading[name].push( func );
-      }
-      else
-      {
-        loading[name] = [];
-        require( [ 'plugins/' + name, 'plugins' ], function( dontUse, pluginsModule )
+        var instance = plugins[name].instance;
+        func( instance, plugins[name], pluginsModule );
+        for ( var i = 0, len = loading[name].length; i < len; i++ )
         {
-          var instance = plugins[name].instance;
-          // console.log( 'fresh loaded ', pluginsModule );
-          func( instance, plugins[name], pluginsModule );
-          for ( var i = 0, len = loading[name].length; i < len; i++ )
-          {
-            loading[name][i]( instance, plugins[name], pluginsModule );
-          }
-          loading[name] = undefined;
-        } );
-      }
+          loading[name][i]( instance, plugins[name], pluginsModule );
+        }
+        delete loading[name];
+      } );
     }
   }
 
