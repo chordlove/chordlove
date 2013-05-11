@@ -6,6 +6,14 @@ function Plugins( $, pluginlist, functions, toolbar )
   }
   Plugins.prototype._instance = this;
 
+  var pub = {
+    'PluginInfo' : PluginInfo,
+    'register' : register,
+    'serialize' : serialize,
+    'init' : parseHash,
+    'exec' : executeByName
+  };
+
   var FORMAT = '0';
   var PLUGIN_END_MARKER = '_';
 
@@ -39,7 +47,7 @@ function Plugins( $, pluginlist, functions, toolbar )
   {
     if ( plugins[name] )
     {
-      func( plugins[name].instance, plugins[name] );
+      func( plugins[name].instance, plugins[name], pub );
     }
     else
     {
@@ -51,13 +59,14 @@ function Plugins( $, pluginlist, functions, toolbar )
       else
       {
         loading[name] = [];
-        require( [ 'plugins/' + name ], function()
+        require( [ 'plugins/' + name, 'plugins' ], function( dontUse, pluginsModule )
         {
           var instance = plugins[name].instance;
-          func( instance );
+          // console.log( 'fresh loaded ', pluginsModule );
+          func( instance, plugins[name], pluginsModule );
           for ( var i = 0, len = loading[name].length; i < len; i++ )
           {
-            loading[name][i]( instance, plugins[name] );
+            loading[name][i]( instance, plugins[name], pluginsModule );
           }
           loading[name] = undefined;
         } );
@@ -69,7 +78,10 @@ function Plugins( $, pluginlist, functions, toolbar )
   {
     executeByName( name, function( instance )
     {
-      instance.render( format, data );
+      if ( info.render === true )
+      {
+        instance.render( format, data );
+      }
     } );
   }
 
@@ -81,16 +93,39 @@ function Plugins( $, pluginlist, functions, toolbar )
     } );
   }
 
-  function setDataAndRender( id, format, data )
+  function setDataAndConfigure( input )
   {
-    executeByName( pluginlist.idToName( id ), function( instance, info )
+    executeByName( input.name, function( instance, info, pluginsModule )
     {
-      instance.setData( format, data );
+      instance.setData( input.format, input.data );
+      if ( 'postRender' in info )
+      {
+        pluginsModule.executeByName( info.postRender.module, function( moduleInstance )
+        {
+          moduleInstance.addPostRenderer( info.postRender.func );
+        } );
+      }
+    } );
+  }
+
+  function setDataAndRender( input )
+  {
+    executeByName( input.name, function( instance, info, pluginsModule )
+    {
+      instance.setData( input.format, input.data );
       if ( info.render === true )
       {
         instance.render();
       }
     } );
+  }
+
+  function PluginInput( pluginId, pluginFormat, pluginData )
+  {
+    this.id = pluginId;
+    this.format = pluginFormat;
+    this.data = pluginData;
+    this.name = pluginlist.idToName( pluginId );
   }
 
   function parseHash()
@@ -108,13 +143,16 @@ function Plugins( $, pluginlist, functions, toolbar )
         throw 'Unknown URL format.';
       }
       var pluginSections = decodeURIComponent( hash.substring( 3 ) ).split( PLUGIN_END_MARKER );
+      var plugins = [];
       for ( var i = 0; i < pluginSections.length; i++ )
       {
         var plugin = pluginSections[i];
         var pluginId = functions.getNumber( plugin.substr( 0, 2 ) );
         var pluginFormat = functions.getNumber( plugin.substr( 2, 1 ) );
         var pluginData = plugin.substr( 3 );
-        setDataAndRender( pluginId, pluginFormat, pluginData );
+        var pluginInput = new PluginInput( pluginId, pluginFormat, pluginData );
+        plugins.push( pluginInput );
+        setDataAndRender( pluginInput );
       }
       readMode = true;
     }
@@ -155,13 +193,7 @@ function Plugins( $, pluginlist, functions, toolbar )
     return aNum - bNum;
   }
 
-  return {
-    'PluginInfo' : PluginInfo,
-    'register' : register,
-    'serialize' : serialize,
-    'init' : parseHash,
-    'exec' : executeByName
-  };
+  return pub;
 }
 
 define( 'plugins', [ 'jquery', 'pluginlist', 'functions', 'toolbar' ], function( $, pluginlist, functions, toolbar )

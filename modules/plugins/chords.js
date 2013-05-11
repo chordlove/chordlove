@@ -21,6 +21,7 @@ function Chords( $, functions, save, toolbar, resizer )
 
   var PARENT = $( '#items' );
 
+  var postRenderers = [];
   var contentExtractors = [];
 
   var format = DEFAULT_FORMAT;
@@ -47,6 +48,11 @@ function Chords( $, functions, save, toolbar, resizer )
   {
     format = inputFormat;
     data = inputData;
+  }
+
+  function addPostRenderer( renderer )
+  {
+    postRenderers.push( renderer );
   }
 
   function render()
@@ -80,6 +86,10 @@ function Chords( $, functions, save, toolbar, resizer )
       }
     }
     $( '#time-signature' ).val( "" + deserializedData.timeSignature );
+    for ( var i = 0; i < postRenderers.length; i++ )
+    {
+      postRenderers[i]();
+    }
   }
 
   function deserialize( input )
@@ -439,7 +449,8 @@ function Chords( $, functions, save, toolbar, resizer )
     "serialize" : serialize,
     "setData" : setData,
     "ChordData" : ChordData,
-    "registerContentExtractor" : registerContentExtractor
+    "registerContentExtractor" : registerContentExtractor,
+    "addPostRenderer" : addPostRenderer
   };
 }
 
