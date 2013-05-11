@@ -192,7 +192,7 @@ div.duration ul>li>a {
 #items>li.symbol {
   width: 12px;
   border: none;
-  padding: 3px 0 0 0;
+  padding: 3px 0 3px 0;
   text-align: center;
 }
 
