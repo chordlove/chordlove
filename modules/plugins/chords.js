@@ -18,8 +18,7 @@ function Chords( $, functions, save, toolbar, resizer )
     DEFAULT_TIME_SIGNATURE : 4
   };
 
-  var SINGLE_BARLINE = $( '<li class="symbol item-barline"><img class="barline" src="images/single-barline.svg" alt="|"></li>' );
-
+  var $SINGLE_BARLINE = $( '<li class="symbol item-barline"><img class="barline" src="images/single-barline.svg" alt="|"></li>' );
   var $PARENT = $( '#items' );
   var $TIME_SIGNATURE = $( '#time-signature' );
   var $LI = $( '<li class="item" />' );
@@ -91,7 +90,7 @@ function Chords( $, functions, save, toolbar, resizer )
       beatsSum += this.beats;
       if ( beatsSum % timeSignature === 0 )
       {
-        SINGLE_BARLINE.clone().appendTo( $PARENT );
+        $SINGLE_BARLINE.clone().appendTo( $PARENT );
       }
     } );
     $TIME_SIGNATURE.val( "" + deserializedData.timeSignature );
@@ -252,7 +251,7 @@ function Chords( $, functions, save, toolbar, resizer )
       beatsSum += chordData.beats;
       if ( beatsSum % timeSignature === 0 )
       {
-        SINGLE_BARLINE.clone().insertAfter( this );
+        $SINGLE_BARLINE.clone().insertAfter( this );
       }
     } );
   }
