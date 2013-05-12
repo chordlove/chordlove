@@ -34,7 +34,6 @@ define( 'resizer', [ 'jquery' ], function( $ )
     var minWidth = MIN_WIDTH;
     $( FILTER, wrapper ).each( function()
     {
-      console.log(this);
       var input = $( this );
       if ( input.data( 'testSubject' ) )
       {

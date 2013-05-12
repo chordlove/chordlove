@@ -25,9 +25,8 @@ function Chords( $, functions, save, toolbar, resizer )
   var $HANDLE = $( '<div class="handle"><i class="icon-move" title="move"></i><i class="icon-pushpin" title="select/unselect"></i></div>' );
   var $INPUT = $( '<input class="chord-text resize-trigger" type="text" title="Add a chord" placeholder="Chord…" />' );
   var $CHORD = $( '<div class="chord"/>' );
-  var $BEATS_WRAPPER = $( '<div class="btn-group duration">' );
-  var $BEATS_LINK = $( '<a class="btn dropdown-toggle" data-toggle="dropdown" href="#" title="Beats for this chord"/>' );
-  var $BEATS_LIST = $( '<ul class="dropdown-menu"/>' );
+
+  var beatsHandler = new Beats( $TIME_SIGNATURE, save );
 
   var postRenderers = [];
   var contentExtractors = [];
@@ -328,13 +327,14 @@ function Chords( $, functions, save, toolbar, resizer )
     // wrapper.append( more );
     wrapper.appendTo( $PARENT );
 
-    createBeats( beats, wrapper );
+    beatsHandler.createBeats( beats, wrapper );
 
     $( input ).keydown( functions.handleInputKeyEvent ).blur( {
       'item' : wrapper
     }, function( event )
     {
-      handleChangeEvent( event );
+      input.val( transformChordString( input.val() ) );
+      save.changedText( event );
     } );
 
     addPinEvents( wrapper );
@@ -348,74 +348,6 @@ function Chords( $, functions, save, toolbar, resizer )
     }
 
     return wrapper;
-
-    function createBeats( beats, wrapper )
-    {
-      var BULLETS = '••••••••••••••••';
-
-      var defaultBeats = parseInt( $TIME_SIGNATURE.val() );
-      var num = defaultBeats;
-      if ( typeof beats !== 'undefined' )
-      {
-        num = beats;
-      }
-      var beatsWrapper = $BEATS_WRAPPER.clone();
-      var currentBeats = $BEATS_LINK.clone();
-      currentBeats.appendTo( beatsWrapper );
-      currentBeats.text( beatsToString( num ) );
-      currentBeats.dropdown();
-      var list = $BEATS_LIST.clone();
-      list.appendTo( beatsWrapper );
-
-      for ( var i = defaultBeats; i > 0; i-- )
-      {
-        var beatString = beatsToString( i );
-        var option = $( '<li><a href="#">' + beatString + '</a></li>' );
-        option.appendTo( list );
-        option.click( {
-          'beatString' : beatString
-        }, function( event )
-        {
-          currentBeats.dropdown( 'toggle' );
-          if ( currentBeats.text() !== event.data.beatString )
-          {
-            currentBeats.text( event.data.beatString );
-            save.changedStructure( "chords/beats" );
-          }
-          return false;
-        } );
-      }
-
-      beatsWrapper.appendTo( wrapper );
-
-      function beatsToString( num )
-      {
-        return BULLETS.substr( 0, num );
-      }
-    }
-
-    function addPinEvents( wrapper )
-    {
-      $( '.icon-pushpin', wrapper ).mousedown( function( event )
-      {
-        event.stopImmediatePropagation();
-        if ( wrapper.hasClass( 'ui-selected' ) )
-        {
-          wrapper.removeClass( 'ui-selected' );
-        }
-        else
-        {
-          wrapper.addClass( 'ui-selected' );
-        }
-        return false;
-      } );
-    }
-
-    function handleChangeEvent( event )
-    {
-      input.val( transformChordString( input.val() ) );
-      save.changedText( event );
-    }
   }
 
   function setCharAt( str, index, chr )
@@ -458,6 +390,81 @@ function Chords( $, functions, save, toolbar, resizer )
     "registerContentExtractor" : registerContentExtractor,
     "addPostRenderer" : addPostRenderer
   };
+}
+
+function Beats( $TIME_SIGNATURE, save )
+{
+  var MAX_BULLETS = 16;
+  var $BEATS_WRAPPER = $( '<div class="btn-group duration">' );
+  var $BEATS_LINK = $( '<a class="btn dropdown-toggle" data-toggle="dropdown" href="#" title="Beats for this chord"/>' );
+  var $BEATS_LIST = $( '<ul class="dropdown-menu"/>' );
+  var BULLET_STRING = '••••••••••••••••';
+  var BULLETS = [];
+  for ( var len = 0; len <= MAX_BULLETS; len++ )
+  {
+    BULLETS.push( BULLET_STRING.substr( 0, len ) );
+  }
+
+  function createBeats( beats, wrapper )
+  {
+
+    var defaultBeats = parseInt( $TIME_SIGNATURE.val() );
+    var num = defaultBeats;
+    if ( typeof beats !== 'undefined' )
+    {
+      num = beats;
+    }
+    var beatsWrapper = $BEATS_WRAPPER.clone();
+    var currentBeats = $BEATS_LINK.clone();
+    currentBeats.appendTo( beatsWrapper );
+    currentBeats.text( BULLETS[num] );
+    currentBeats.dropdown();
+    var list = $BEATS_LIST.clone();
+    list.appendTo( beatsWrapper );
+
+    for ( var len = defaultBeats; len > 0; len-- )
+    {
+      var beatString = BULLETS[len];
+      var option = $( '<li><a href="#">' + beatString + '</a></li>' );
+      option.appendTo( list );
+      option.click( {
+        'beatString' : beatString
+      }, function( event )
+      {
+        currentBeats.dropdown( 'toggle' );
+        if ( currentBeats.text() !== event.data.beatString )
+        {
+          currentBeats.text( event.data.beatString );
+          currentBeats.blur();
+          save.changedStructure( "chords/beats" );
+        }
+        return false;
+      } );
+    }
+
+    beatsWrapper.appendTo( wrapper );
+  }
+
+  return {
+    'createBeats' : createBeats
+  };
+}
+
+function addPinEvents( wrapper )
+{
+  $( '.icon-pushpin', wrapper ).mousedown( function( event )
+  {
+    event.stopImmediatePropagation();
+    if ( wrapper.hasClass( 'ui-selected' ) )
+    {
+      wrapper.removeClass( 'ui-selected' );
+    }
+    else
+    {
+      wrapper.addClass( 'ui-selected' );
+    }
+    return false;
+  } );
 }
 
 define( "chords", [ "plugins", "jquery", "functions", "save", "toolbar", "resizer" ], function( plugins, $, functions,

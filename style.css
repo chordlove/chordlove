@@ -99,7 +99,6 @@ input[type="text"].song-text {
   display: inline;
 }
 
-
 /* from: http://stackoverflow.com/a/2610741 */
 ::-webkit-input-placeholder { /* WebKit browsers */
   color: #bbbbbb;
