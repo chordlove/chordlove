@@ -17,15 +17,25 @@ function Chords( $, functions, save, toolbar, resizer )
     DEFAULT_TIME_SIGNATURE : 4
   };
 
-  var SINGLE_BARLINE = $( '<li class="symbol item-barline"><img class="barline" src="images/single-barline.svg"  alt="|"></li>' );
+  var SINGLE_BARLINE = $( '<li class="symbol item-barline"><img class="barline" src="images/single-barline.svg" alt="|"></li>' );
 
-  var PARENT = $( '#items' );
+  var $PARENT = $( '#items' );
+  var $TIME_SIGNATURE = $( '#time-signature' );
+  var $LI = $( '<li class="item" />' );
+  var $HANDLE = $( '<div class="handle"><i class="icon-move" title="move"></i><i class="icon-pushpin" title="select/unselect"></i></div>' );
+  var $INPUT = $( '<input class="chord-text resize-trigger" type="text" title="Add a chord" placeholder="Chord…" />' );
+  var $CHORD = $( '<div class="chord"/>' );
+  var $BEATS_WRAPPER = $( '<div class="btn-group duration">' );
+  var $BEATS_LINK = $( '<a class="btn dropdown-toggle" data-toggle="dropdown" href="#" title="Beats for this chord"/>' );
+  var $BEATS_LIST = $( '<ul class="dropdown-menu"/>' );
 
   var postRenderers = [];
   var contentExtractors = [];
 
   var format = DEFAULT_FORMAT;
   var data = null;
+
+  registerContentExtractor( extract );
 
   toolbar.registerChordsModule( {
     "getExtracts" : getExtracts,
@@ -57,7 +67,7 @@ function Chords( $, functions, save, toolbar, resizer )
 
   function render()
   {
-    PARENT.empty();
+    $PARENT.empty();
     if ( !data )
     {
       return;
@@ -72,23 +82,26 @@ function Chords( $, functions, save, toolbar, resizer )
     var hasText = chordItems && chordItems[0] && chordItems[0].lyrics !== undefined;
     if ( hasText )
     {
-      PARENT.addClass( 'has-text' );
+      $PARENT.addClass( 'has-text' );
     }
     var beatsSum = 0;
-    for ( var i = 0; i < chordItems.length; i++ )
+    $.each( chordItems, function()
     {
-      var chordItem = chordItems[i];
-      createItem( chordItem );
-      beatsSum += chordItem.beats;
+      createItem( this );
+      beatsSum += this.beats;
       if ( beatsSum % timeSignature === 0 )
       {
-        SINGLE_BARLINE.clone().appendTo( PARENT );
+        SINGLE_BARLINE.clone().appendTo( $PARENT );
       }
-    }
-    $( '#time-signature' ).val( "" + deserializedData.timeSignature );
+    } );
+    $TIME_SIGNATURE.val( "" + deserializedData.timeSignature );
     $.each( postRenderers, function()
     {
       this();
+    } );
+    $PARENT.children( 'li.item' ).each( function()
+    {
+      resizer.performResize( $( this ) );
     } );
   }
 
@@ -198,8 +211,8 @@ function Chords( $, functions, save, toolbar, resizer )
     var chordBeatsKeys = {}, chordBeatsNo = 0;
     var chordBeatsValues = [];
     var chordBeatsCollection = [];
-    var timeSignature = $( '#time-signature' ).val();
-    $( '#items > li.item' ).each( function( index )
+    var timeSignature = $TIME_SIGNATURE.val();
+    $PARENT.children( 'li.item' ).each( function( index )
     {
       var chordData = getChordData( this );
       chordDataItems.push( chordData );
@@ -230,10 +243,10 @@ function Chords( $, functions, save, toolbar, resizer )
 
   function updateBarlines()
   {
-    $( 'li.item-barline', PARENT ).remove();
-    var timeSignature = $( '#time-signature' ).val();
+    $PARENT.children( 'li.item-barline' ).remove();
+    var timeSignature = $TIME_SIGNATURE.val();
     var beatsSum = 0;
-    $( '#items > li.item' ).each( function( index )
+    $PARENT.children( 'li.item' ).each( function( index )
     {
       var chordData = getChordData( this );
       beatsSum += chordData.beats;
@@ -248,7 +261,6 @@ function Chords( $, functions, save, toolbar, resizer )
   {
     contentExtractors.push( extractor );
   }
-  registerContentExtractor( extract );
 
   function extract( li )
   {
@@ -288,7 +300,7 @@ function Chords( $, functions, save, toolbar, resizer )
     var chordText = $( chord ).val();
     var beatCount = $( beats ).text().length;
     var lyrics = undefined;
-    if ( PARENT.hasClass( 'has-text' ) )
+    if ( $PARENT.hasClass( 'has-text' ) )
     {
       lyrics = $( $( 'input.song-text', wrapper ).get( 0 ) ).val() || '';
     }
@@ -304,19 +316,17 @@ function Chords( $, functions, save, toolbar, resizer )
       chordText = chordData.chord;
       beats = chordData.beats;
     }
-    var wrapper = $( '<li class="item" />' )
-        .append(
-            '<div class="handle"><i class="icon-move" title="move"></i><i class="icon-pushpin" title="select/unselect"></i></div>' );
-    var input = $( '<input class="chord-text resize-trigger" type="text" title="Add a chord" placeholder="Chord…" />' );
+    var wrapper = $LI.clone().append( $HANDLE.clone() );
+    var input = $INPUT.clone();
     if ( chordText )
     {
       input.val( chordText );
     }
-    var div = $( '<div class="chord"/>' );
+    var div = $CHORD.clone();
     input.appendTo( div );
     wrapper.append( div );
     // wrapper.append( more );
-    wrapper.appendTo( PARENT );
+    wrapper.appendTo( $PARENT );
 
     createBeats( beats, wrapper );
 
@@ -336,10 +346,6 @@ function Chords( $, functions, save, toolbar, resizer )
       input.focus();
       save.changedStructure( 'chords/new' );
     }
-    else
-    {
-      resizer.performResize( wrapper );
-    }
 
     return wrapper;
 
@@ -347,18 +353,18 @@ function Chords( $, functions, save, toolbar, resizer )
     {
       var BULLETS = '••••••••••••••••';
 
-      var defaultBeats = parseInt( $( '#time-signature' ).val() );
+      var defaultBeats = parseInt( $TIME_SIGNATURE.val() );
       var num = defaultBeats;
       if ( typeof beats !== 'undefined' )
       {
         num = beats;
       }
-      var beatsWrapper = $( '<div class="btn-group duration">' );
-      var currentBeats = $( '<a class="btn dropdown-toggle" data-toggle="dropdown" href="#" title="Beats for this chord"/>' );
+      var beatsWrapper = $BEATS_WRAPPER.clone();
+      var currentBeats = $BEATS_LINK.clone();
       currentBeats.appendTo( beatsWrapper );
       currentBeats.text( beatsToString( num ) );
       currentBeats.dropdown();
-      var list = $( '<ul class="dropdown-menu"/>' );
+      var list = $BEATS_LIST.clone();
       list.appendTo( beatsWrapper );
 
       for ( var i = defaultBeats; i > 0; i-- )

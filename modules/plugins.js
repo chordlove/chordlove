@@ -54,10 +54,10 @@ function Plugins( $, pluginlist, functions, toolbar )
       {
         var instance = plugins[name].instance;
         func( instance, plugins[name], pluginsModule );
-        for ( var i = 0, len = loading[name].length; i < len; i++ )
+        $.each( loading[name], function()
         {
-          loading[name][i]( instance, plugins[name], pluginsModule );
-        }
+          this( instance, plugins[name], pluginsModule );
+        } );
         delete loading[name];
       } );
     }
@@ -139,20 +139,19 @@ function Plugins( $, pluginlist, functions, toolbar )
       }
       var pluginSections = decodeURIComponent( hash.substring( 3 ) ).split( PLUGIN_END_MARKER );
       var plugins = [];
-      for ( var i = 0; i < pluginSections.length; i++ )
+      $.each( pluginSections, function()
       {
-        var plugin = pluginSections[i];
-        var pluginId = functions.getNumber( plugin.substr( 0, 2 ) );
-        var pluginFormat = functions.getNumber( plugin.substr( 2, 1 ) );
-        var pluginData = plugin.substr( 3 );
+        var pluginId = functions.getNumber( this.substr( 0, 2 ) );
+        var pluginFormat = functions.getNumber( this.substr( 2, 1 ) );
+        var pluginData = this.substr( 3 );
         var pluginInput = new PluginInput( pluginId, pluginFormat, pluginData );
         plugins.push( pluginInput );
         setDataAndConfigure( pluginInput );
-      }
-      for ( var i = 0; i < plugins.length; i++ )
+      } );
+      $.each( plugins, function()
       {
-        render( plugins[i] );
-      }
+        render( this );
+      } );
       readMode = true;
     }
     else
