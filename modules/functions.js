@@ -3,12 +3,13 @@ define(
     [ 'jquery' ],
     function( $ )
     {
+      'use strict';
       var CHARACTERS = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-.!~*'()?", CHARACTERS_LEN = CHARACTERS.length;
 
       function getNumberFromCharacters( characters )
       {
         var sum = 0, len = characters.length;
-        for ( var i = 0; character = characters.charAt( i ), i < len; i++ )
+        for ( var i = 0, character; character = characters.charAt( i ), i < len; i++ )
         {
           var pos = CHARACTERS.indexOf( character );
           if ( pos === -1 )
@@ -82,8 +83,16 @@ define(
         {
           for ( var i = 0; i < items.length; i++ )
           {
-            result += getCharactersFromNumber( items[i].length, itemLengthSize );
-            result += encode( items[i] );
+            var item = items[i];
+            if ( typeof item === 'undefined' )
+            {
+              result += getCharactersFromNumber( 0 );
+            }
+            else
+            {
+              result += getCharactersFromNumber( item.length, itemLengthSize );
+              result += encode( item );
+            }
           }
         }
         return result;

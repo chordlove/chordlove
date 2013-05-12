@@ -1,5 +1,6 @@
 function Plugins( $, pluginlist, functions, toolbar )
 {
+  'use strict';
   if ( Plugins.prototype._instance )
   {
     return Plugins.prototype._instance;
@@ -196,5 +197,6 @@ function Plugins( $, pluginlist, functions, toolbar )
 
 define( 'plugins', [ 'jquery', 'pluginlist', 'functions', 'toolbar' ], function( $, pluginlist, functions, toolbar )
 {
+  'use strict';
   return new Plugins( $, pluginlist, functions, toolbar );
 } );

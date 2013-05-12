@@ -1,5 +1,6 @@
 function Chords( $, functions, save, toolbar, resizer )
 {
+  'use strict';
   if ( Chords.prototype._instance )
   {
     return Chords.prototype._instance;
@@ -394,6 +395,7 @@ function Chords( $, functions, save, toolbar, resizer )
 
 function Beats( $TIME_SIGNATURE, save )
 {
+  'use strict';
   var MAX_BULLETS = 16;
   var $BEATS_WRAPPER = $( '<div class="btn-group duration">' );
   var $BEATS_LINK = $( '<a class="btn dropdown-toggle" data-toggle="dropdown" href="#" title="Beats for this chord"/>' );
@@ -452,6 +454,7 @@ function Beats( $TIME_SIGNATURE, save )
 
 function addPinEvents( wrapper )
 {
+  'use strict';
   $( '.icon-pushpin', wrapper ).mousedown( function( event )
   {
     event.stopImmediatePropagation();
@@ -470,6 +473,7 @@ function addPinEvents( wrapper )
 define( "chords", [ "plugins", "jquery", "functions", "save", "toolbar", "resizer" ], function( plugins, $, functions,
     save, toolbar, resizer )
 {
+  'use strict';
   plugins.register( {
     "name" : "chords",
     "instance" : new Chords( $, functions, save, toolbar, resizer ),

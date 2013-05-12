@@ -1,5 +1,6 @@
 function Save( plugins )
 {
+  'use strict';
   if ( Save.prototype._instance )
   {
     return Save.prototype._instance;
@@ -76,5 +77,6 @@ function Save( plugins )
 
 define( "save", [ "plugins" ], function( plugins )
 {
+  'use strict';
   return new Save( plugins );
 } );

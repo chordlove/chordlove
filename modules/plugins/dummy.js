@@ -1,5 +1,6 @@
 function Dummy()
 {
+  'use strict';
   if ( Dummy.prototype._instance )
   {
     return Dummy.prototype._instance;
@@ -30,6 +31,7 @@ function Dummy()
 
 define( "dummy", [ "plugins" ], function( plugins )
 {
+  'use strict';
   plugins.register( {
     "name" : "dummy",
     "instance" : new Dummy(),

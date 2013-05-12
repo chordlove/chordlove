@@ -1,5 +1,6 @@
 function Toolbar( $, functions, save )
 {
+  'use strict';
   if ( Toolbar.prototype._instance )
   {
     return Toolbar.prototype._instance;
@@ -55,7 +56,7 @@ function Toolbar( $, functions, save )
         chords.createFromExtracts( this );
       } );
       save.changedStructure( "toolbar/paste" );
-      $( "li.ui-selected", PARENT ).removeClass("ui-selected");      
+      $( "li.ui-selected", PARENT ).removeClass( "ui-selected" );
     }
 
     function editMode()
@@ -129,5 +130,6 @@ function Toolbar( $, functions, save )
 
 define( "toolbar", [ "jquery", "functions", "save" ], function( $, functions, save )
 {
+  'use strict';
   return new Toolbar( $, functions, save );
 } );

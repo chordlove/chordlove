@@ -1,5 +1,6 @@
 function Title( $, plugins, save, functions )
 {
+  'use strict';
   if ( Title.prototype._instance )
   {
     return Title.prototype._instance;
@@ -75,6 +76,7 @@ function Title( $, plugins, save, functions )
 
 define( 'title', [ 'plugins', 'jquery', 'save', 'functions' ], function( plugins, $, save, functions )
 {
+  'use strict';
   plugins.register( {
     'name' : 'title',
     'instance' : new Title( $, plugins, save, functions ),

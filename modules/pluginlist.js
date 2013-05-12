@@ -1,5 +1,6 @@
 function PluginList()
 {
+  'use strict';
   if ( PluginList.prototype._instance )
   {
     return PluginList.prototype._instance;
@@ -20,5 +21,6 @@ function PluginList()
 
 define( 'pluginlist', [], function()
 {
+  'use strict';
   return new PluginList();
 } );

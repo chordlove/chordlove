@@ -1,5 +1,6 @@
 function Lyrics( $, functions, save, toolbar, resizer, plugins )
 {
+  'use strict';
   if ( Lyrics.prototype._instance )
   {
     return Lyrics.prototype._instance;
@@ -7,6 +8,8 @@ function Lyrics( $, functions, save, toolbar, resizer, plugins )
   Lyrics.prototype._instance = this;
 
   var PLUGIN_ID = '02', DEFAULT_FORMAT = 0;
+  var data = null;
+  var format = DEFAULT_FORMAT;
 
   var PARENT = $( '#items' );
   var VIEW_BUTTON = $( '#view-lyrics' );
@@ -94,8 +97,6 @@ function Lyrics( $, functions, save, toolbar, resizer, plugins )
             } );
   }
 
-  var data = null;
-
   function setData( inputFormat, inputData )
   {
     format = inputFormat;
@@ -151,6 +152,7 @@ function Lyrics( $, functions, save, toolbar, resizer, plugins )
 define( 'lyrics', [ 'plugins', 'jquery', 'functions', 'save', 'toolbar', 'resizer' ], function( plugins, $, functions,
     save, toolbar, resizer )
 {
+  'use strict';
   var instance = new Lyrics( $, functions, save, toolbar, resizer, plugins );
   plugins.register( {
     'name' : 'lyrics',
