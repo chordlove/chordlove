@@ -75,10 +75,10 @@ function Title( $, plugins, save, functions )
 
 define( 'title', [ 'plugins', 'jquery', 'save', 'functions' ], function( plugins, $, save, functions )
 {
-  plugins.register( new plugins.PluginInfo( {
+  plugins.register( {
     'name' : 'title',
     'instance' : new Title( $, plugins, save, functions ),
     'render' : true,
     'serialize' : true
-  } ) );
+  } );
 } );

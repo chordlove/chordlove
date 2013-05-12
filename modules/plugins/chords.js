@@ -86,10 +86,10 @@ function Chords( $, functions, save, toolbar, resizer )
       }
     }
     $( '#time-signature' ).val( "" + deserializedData.timeSignature );
-    for ( var i = 0; i < postRenderers.length; i++ )
+    $.each( postRenderers, function()
     {
-      postRenderers[i]();
-    }
+      this();
+    } );
   }
 
   function deserialize( input )
@@ -457,10 +457,10 @@ function Chords( $, functions, save, toolbar, resizer )
 define( "chords", [ "plugins", "jquery", "functions", "save", "toolbar", "resizer" ], function( plugins, $, functions,
     save, toolbar, resizer )
 {
-  plugins.register( new plugins.PluginInfo( {
+  plugins.register( {
     "name" : "chords",
     "instance" : new Chords( $, functions, save, toolbar, resizer ),
     "render" : true,
     "serialize" : true
-  } ) );
+  } );
 } );

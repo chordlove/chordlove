@@ -30,10 +30,10 @@ function Dummy()
 
 define( "dummy", [ "plugins" ], function( plugins )
 {
-  plugins.register( new plugins.PluginInfo( {
+  plugins.register( {
     "name" : "dummy",
     "instance" : new Dummy(),
     "alywaysRun" : true,
     "serialize" : true
-  } ) );
+  } );
 } );

@@ -151,10 +151,16 @@ function Lyrics( $, functions, save, toolbar, resizer, plugins )
 define( 'lyrics', [ 'plugins', 'jquery', 'functions', 'save', 'toolbar', 'resizer' ], function( plugins, $, functions,
     save, toolbar, resizer )
 {
-  plugins.register( new plugins.PluginInfo( {
+  var instance = new Lyrics( $, functions, save, toolbar, resizer, plugins );
+  plugins.register( {
     'name' : 'lyrics',
-    'instance' : new Lyrics( $, functions, save, toolbar, resizer, plugins ),
-    'render' : true,
-    'serialize' : true
-  } ) );
+    'instance' : instance,
+    'render' : false,
+    'serialize' : true,
+    'config' : [ {
+      'plugin' : 'chords',
+      'method' : 'addPostRenderer',
+      'args' : [ instance.render ]
+    } ]
+  } );
 } );

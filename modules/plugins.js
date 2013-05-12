@@ -7,7 +7,6 @@ function Plugins( $, pluginlist, functions, toolbar )
   Plugins.prototype._instance = this;
 
   var pub = {
-    'PluginInfo' : PluginInfo,
     'register' : register,
     'serialize' : serialize,
     'init' : parseHash,
@@ -33,14 +32,6 @@ function Plugins( $, pluginlist, functions, toolbar )
   function list()
   {
     return plugins.slice( 0 );
-  }
-
-  function PluginInfo( info )
-  {
-    this.name = info.name;
-    this.instance = info.instance;
-    this.render = info.render;
-    this.serialize = info.serialize;
   }
 
   function executeByName( name, func )
@@ -72,13 +63,14 @@ function Plugins( $, pluginlist, functions, toolbar )
     }
   }
 
-  function render( name, format, data )
+  function render( input )
   {
-    executeByName( name, function( instance )
+    executeByName( input.name, function( instance, info, pluginsModule )
     {
-      if ( info.render === true )
+      instance.setData( input.format, input.data );
+      if ( 'render' in info && info['render'] === true )
       {
-        instance.render( format, data );
+        instance.render();
       }
     } );
   }
@@ -96,11 +88,16 @@ function Plugins( $, pluginlist, functions, toolbar )
     executeByName( input.name, function( instance, info, pluginsModule )
     {
       instance.setData( input.format, input.data );
-      if ( 'postRender' in info )
+      if ( 'config' in info )
       {
-        pluginsModule.executeByName( info.postRender.module, function( moduleInstance )
+        $.each( info['config'], function()
         {
-          moduleInstance.addPostRenderer( info.postRender.func );
+          var method = this.method;
+          var args = this.args;
+          pluginsModule.exec( this.plugin, function( moduleInstance )
+          {
+            moduleInstance[method].apply( null, args );
+          } );
         } );
       }
     } );
@@ -111,7 +108,7 @@ function Plugins( $, pluginlist, functions, toolbar )
     executeByName( input.name, function( instance, info, pluginsModule )
     {
       instance.setData( input.format, input.data );
-      if ( info.render === true )
+      if ( 'render' in info && info['render'] === true )
       {
         instance.render();
       }
@@ -150,7 +147,11 @@ function Plugins( $, pluginlist, functions, toolbar )
         var pluginData = plugin.substr( 3 );
         var pluginInput = new PluginInput( pluginId, pluginFormat, pluginData );
         plugins.push( pluginInput );
-        setDataAndRender( pluginInput );
+        setDataAndConfigure( pluginInput );
+      }
+      for ( var i = 0; i < plugins.length; i++ )
+      {
+        render( plugins[i] );
       }
       readMode = true;
     }
@@ -170,7 +171,7 @@ function Plugins( $, pluginlist, functions, toolbar )
     var data = [];
     $.each( plugins, function( name, pluginInfo )
     {
-      if ( pluginInfo.serialize )
+      if ( 'serialize' in pluginInfo && pluginInfo['serialize'] === true )
       {
         var serialized = pluginInfo.instance.serialize();
         if ( serialized )
