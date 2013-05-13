@@ -1,11 +1,11 @@
-function Save( plugins )
+function Share( plugins )
 {
   'use strict';
-  if ( Save.prototype._instance )
+  if ( Share.prototype._instance )
   {
-    return Save.prototype._instance;
+    return Share.prototype._instance;
   }
-  Save.prototype._instance = this;
+  Share.prototype._instance = this;
 
   var previousHash = "";
 
@@ -75,8 +75,8 @@ function Save( plugins )
   };
 }
 
-define( "save", [ "plugins" ], function( plugins )
+define( "share", [ "plugins" ], function( plugins )
 {
   'use strict';
-  return new Save( plugins );
+  return new Share( plugins );
 } );

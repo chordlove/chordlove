@@ -1,4 +1,4 @@
-function Chords( $, functions, save, toolbar, resizer )
+function Chords( $, functions, share, toolbar, resizer )
 {
   'use strict';
   if ( Chords.prototype._instance )
@@ -26,7 +26,7 @@ function Chords( $, functions, save, toolbar, resizer )
   var $INPUT = $( '<input class="chord-text resize-trigger" type="text" title="Add a chord" placeholder="Chord…" />' );
   var $CHORD = $( '<div class="chord"/>' );
 
-  var beatsHandler = new Beats( $TIME_SIGNATURE, save );
+  var beatsHandler = new Beats( $TIME_SIGNATURE, share );
 
   var postRenderers = [];
   var contentExtractors = [];
@@ -43,9 +43,9 @@ function Chords( $, functions, save, toolbar, resizer )
 
   functions.bindButton( "#add-chord", createItem );
 
-  save.addStructureChangeListener( handleStructureChange );
+  share.addStructureChangeListener( handleStructureChange );
 
-  save.addTextChangeListener( function( event )
+  share.addTextChangeListener( function( event )
   {
     if ( event.data && event.data.item )
     {
@@ -216,7 +216,7 @@ function Chords( $, functions, save, toolbar, resizer )
       var chordData = getChordData( this );
       chordDataItems.push( chordData );
       var val = chordData.chord;
-      if ( 'val' in chords )
+      if ( !( 'val' in chords ) )
       {
         chords[val] = chordNo;
         chordNo++;
@@ -224,7 +224,7 @@ function Chords( $, functions, save, toolbar, resizer )
       }
       var beatsVal = chordData.beats;
       var chordBeatsLookup = "" + chords[val] + "=" + beatsVal;
-      if ( !('chordBeatsLookup' in chordBeatsKeys))
+      if ( !( 'chordBeatsLookup' in chordBeatsKeys ) )
       {
         chordBeatsKeys[chordBeatsLookup] = chordBeatsNo;
         chordBeatsNo++;
@@ -334,7 +334,7 @@ function Chords( $, functions, save, toolbar, resizer )
     }, function( event )
     {
       input.val( transformChordString( input.val() ) );
-      save.changedText( event );
+      share.changedText( event );
     } );
 
     addPinEvents( wrapper );
@@ -344,7 +344,7 @@ function Chords( $, functions, save, toolbar, resizer )
     {
       // create a blank item
       input.focus();
-      save.changedStructure( 'chords/new' );
+      share.changedStructure( 'chords/new' );
     }
 
     return wrapper;
@@ -392,7 +392,7 @@ function Chords( $, functions, save, toolbar, resizer )
   };
 }
 
-function Beats( $TIME_SIGNATURE, save )
+function Beats( $TIME_SIGNATURE, share )
 {
   'use strict';
   var MAX_BULLETS = 16;
@@ -437,7 +437,7 @@ function Beats( $TIME_SIGNATURE, save )
         {
           currentBeats.text( event.data.beatString );
           currentBeats.blur();
-          save.changedStructure( "chords/beats" );
+          share.changedStructure( "chords/beats" );
         }
         return false;
       } );
@@ -469,13 +469,13 @@ function addPinEvents( wrapper )
   } );
 }
 
-define( "chords", [ "plugins", "jquery", "functions", "save", "toolbar", "resizer" ], function( plugins, $, functions,
-    save, toolbar, resizer )
+define( "chords", [ "plugins", "jquery", "functions", "share", "toolbar", "resizer" ], function( plugins, $, functions,
+    share, toolbar, resizer )
 {
   'use strict';
   plugins.register( {
     "name" : "chords",
-    "instance" : new Chords( $, functions, save, toolbar, resizer ),
+    "instance" : new Chords( $, functions, share, toolbar, resizer ),
     "render" : true,
     "serialize" : true
   } );

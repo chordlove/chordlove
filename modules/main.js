@@ -4,7 +4,7 @@ define( 'jquery', [], function()
   return jQuery;
 } );
 
-require( [ 'jquery', 'plugins', 'save', 'plugins/title', 'plugins/chords','plugins/lyrics' ], function( $, plugins, save )
+require( [ 'jquery', 'plugins', 'share', 'plugins/title', 'plugins/chords','plugins/lyrics' ], function( $, plugins, share )
 {
   'use strict';
   $( function()
@@ -18,7 +18,7 @@ require( [ 'jquery', 'plugins', 'save', 'plugins/title', 'plugins/chords','plugi
       'handle' : '.handle',
       'stop' : function( event )
       {
-        save.changedStructure( event );
+        share.changedStructure( event );
       }
     } );
 

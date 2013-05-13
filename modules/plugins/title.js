@@ -1,4 +1,4 @@
-function Title( $, plugins, save, functions )
+function Title( $, plugins, share, functions )
 {
   'use strict';
   if ( Title.prototype._instance )
@@ -52,7 +52,7 @@ function Title( $, plugins, save, functions )
     }
   } ).change( function()
   {
-    save.changedText( 'title' );
+    share.changedText( 'title' );
   } );
 
   function setPageTitle( title )
@@ -74,12 +74,12 @@ function Title( $, plugins, save, functions )
   };
 }
 
-define( 'title', [ 'plugins', 'jquery', 'save', 'functions' ], function( plugins, $, save, functions )
+define( 'title', [ 'plugins', 'jquery', 'share', 'functions' ], function( plugins, $, share, functions )
 {
   'use strict';
   plugins.register( {
     'name' : 'title',
-    'instance' : new Title( $, plugins, save, functions ),
+    'instance' : new Title( $, plugins, share, functions ),
     'render' : true,
     'serialize' : true
   } );

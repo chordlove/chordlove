@@ -1,4 +1,4 @@
-function Lyrics( $, functions, save, toolbar, resizer, plugins )
+function Lyrics( $, functions, share, toolbar, resizer, plugins )
 {
   'use strict';
   if ( Lyrics.prototype._instance )
@@ -24,7 +24,7 @@ function Lyrics( $, functions, save, toolbar, resizer, plugins )
 
   functions.bindButton( '#view-lyrics', visibleLyrics );
 
-  save.addStructureChangeListener( addTextInput );
+  share.addStructureChangeListener( addTextInput );
 
   function visibleLyrics()
   {
@@ -91,7 +91,7 @@ function Lyrics( $, functions, save, toolbar, resizer, plugins )
                 'item' : wrapper
               }, function( event )
               {
-                save.changedText( event );
+                share.changedText( event );
               } );
               resizer.prepareResize( wrapper );
             } );
@@ -149,11 +149,11 @@ function Lyrics( $, functions, save, toolbar, resizer, plugins )
   };
 }
 
-define( 'lyrics', [ 'plugins', 'jquery', 'functions', 'save', 'toolbar', 'resizer' ], function( plugins, $, functions,
-    save, toolbar, resizer )
+define( 'lyrics', [ 'plugins', 'jquery', 'functions', 'share', 'toolbar', 'resizer' ], function( plugins, $, functions,
+    share, toolbar, resizer )
 {
   'use strict';
-  var instance = new Lyrics( $, functions, save, toolbar, resizer, plugins );
+  var instance = new Lyrics( $, functions, share, toolbar, resizer, plugins );
   plugins.register( {
     'name' : 'lyrics',
     'instance' : instance,

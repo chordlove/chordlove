@@ -75,7 +75,7 @@ define(
         var itemLengthSize = getValueWithDefault( data.itemLengthSize, 1 );
         var countSize = getValueWithDefault( data.countSize, 1 );
         var result = '';
-        if ( countSize > 0 )
+        if ( countSize )
         {
           result += getCharactersFromNumber( items.length, countSize );
         }

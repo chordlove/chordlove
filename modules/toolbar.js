@@ -1,4 +1,4 @@
-function Toolbar( $, functions, save )
+function Toolbar( $, functions, share )
 {
   'use strict';
   if ( Toolbar.prototype._instance )
@@ -28,7 +28,7 @@ function Toolbar( $, functions, save )
     function deleteItems()
     {
       getSelectedItems().remove();
-      save.changedStructure( "toolbar/delete" );
+      share.changedStructure( "toolbar/delete" );
     }
 
     var copiedItems = [];
@@ -37,7 +37,7 @@ function Toolbar( $, functions, save )
     {
       copyItems();
       getSelectedItems().remove();
-      save.changedStructure( "toolbar/cut" );
+      share.changedStructure( "toolbar/cut" );
     }
 
     function copyItems()
@@ -55,7 +55,7 @@ function Toolbar( $, functions, save )
       {
         chords.createFromExtracts( this );
       } );
-      save.changedStructure( "toolbar/paste" );
+      share.changedStructure( "toolbar/paste" );
       $( "li.ui-selected", PARENT ).removeClass( "ui-selected" );
     }
 
@@ -70,7 +70,7 @@ function Toolbar( $, functions, save )
       PARENT.empty();
       PARENT.removeClass( 'has-text' );
       $( '#title' ).val( '' ).focus();
-      save.changedStructure( "toolbar/clear" );
+      share.changedStructure( "toolbar/clear" );
       return false;
     }
 
@@ -83,7 +83,7 @@ function Toolbar( $, functions, save )
 
     $( '#time-signature' ).change( function()
     {
-      save.changedStructure( "toolbar/timesignature" );
+      share.changedStructure( "toolbar/timesignature" );
     } );
   }
 
@@ -128,8 +128,8 @@ function Toolbar( $, functions, save )
   };
 }
 
-define( "toolbar", [ "jquery", "functions", "save" ], function( $, functions, save )
+define( "toolbar", [ "jquery", "functions", "share" ], function( $, functions, share )
 {
   'use strict';
-  return new Toolbar( $, functions, save );
+  return new Toolbar( $, functions, share );
 } );
