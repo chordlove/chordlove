@@ -55,7 +55,7 @@ define(
 
       function getValueWithDefault( value, standard )
       {
-        if ( typeof value !== 'undefined' )
+        if ( value !== undefined )
         {
           return value;
         }
@@ -67,7 +67,7 @@ define(
 
       function writeStringArray( data )
       {
-        if ( data.items.length < 1 )
+        if ( !data.items.length )
         {
           return '';
         }
@@ -79,12 +79,12 @@ define(
         {
           result += getCharactersFromNumber( items.length, countSize );
         }
-        if ( items.length > 0 )
+        if ( items.length )
         {
           for ( var i = 0; i < items.length; i++ )
           {
             var item = items[i];
-            if ( typeof item === 'undefined' )
+            if ( item === undefined )
             {
               result += getCharactersFromNumber( 0 );
             }
@@ -104,11 +104,11 @@ define(
         var currentPos = getValueWithDefault( input.currentPos, 0 );
         var transformer = getValueWithDefault( input.transformer, false );
         var numberOfItems;
-        if ( typeof input.size !== 'undefined' )
+        if ( 'size' in input )
         {
           numberOfItems = input.size;
         }
-        else if ( typeof input.countSize !== 'undefined' )
+        else if ( 'countSize' in input )
         {
           numberOfItems = getNumberFromCharacters( data.substr( currentPos++, input.countSize ) );
         }
@@ -120,7 +120,7 @@ define(
         for ( var i = 0; i < numberOfItems; i++ )
         {
           var length = getNumberFromCharacters( data.charAt( currentPos++ ) );
-          if ( length > 0 )
+          if ( length )
           {
             var string = decode( data.substr( currentPos, length ) );
             if ( transformer )
@@ -178,7 +178,7 @@ define(
           if ( event.which === 9 )
           {
             var siblings = target.nextAll( 'input' );
-            if ( siblings.length > 0 )
+            if ( siblings.length )
             {
               siblings.first().focus();
             }
@@ -186,10 +186,10 @@ define(
             {
               var wrapper = target.parents( 'li.item' ).first();
               var next = wrapper.nextAll( 'li.item' );
-              if ( next.length > 0 )
+              if ( next.length )
               {
                 var input = next.first().find( 'input' );
-                if ( input.length > 0 )
+                if ( input.length )
                 {
                   input.first().focus();
                 }

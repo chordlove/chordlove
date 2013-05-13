@@ -63,7 +63,7 @@ function Lyrics( $, functions, save, toolbar, resizer, plugins )
     var text = getLyrics( item );
     return function( theItem )
     {
-      if ( typeof text !== 'undefined' )
+      if ( text !== undefined )
       {
         setLyrics( theItem, text );
       }
@@ -82,7 +82,7 @@ function Lyrics( $, functions, save, toolbar, resizer, plugins )
             {
               var chordInput = $( this );
               var wrapper = chordInput.parents( 'li.item' ).first();
-              if ( chordInput.siblings( 'input.song-text' ).length > 0 )
+              if ( chordInput.siblings( 'input.song-text' ).length )
               {
                 return;
               }

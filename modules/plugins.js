@@ -37,7 +37,7 @@ function Plugins( $, pluginlist, functions, toolbar )
 
   function executeByName( name, func )
   {
-    if ( typeof loading[name] !== 'undefined' )
+    if ( name in loading )
     {
       // Store function to execute after load.
       loading[name].push( func );
@@ -129,7 +129,7 @@ function Plugins( $, pluginlist, functions, toolbar )
     var PLUGIN_END_MARKER = '_';
     var hash = window.location.hash;
     var readMode = false;
-    if ( hash.length > 0 )
+    if ( hash.length )
     {
       var topLevelFormat = hash.charAt( 2 );
       if ( topLevelFormat !== '0' )

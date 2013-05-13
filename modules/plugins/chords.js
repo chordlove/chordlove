@@ -216,7 +216,7 @@ function Chords( $, functions, save, toolbar, resizer )
       var chordData = getChordData( this );
       chordDataItems.push( chordData );
       var val = chordData.chord;
-      if ( typeof ( chords[val] ) === 'undefined' )
+      if ( 'val' in chords )
       {
         chords[val] = chordNo;
         chordNo++;
@@ -224,7 +224,7 @@ function Chords( $, functions, save, toolbar, resizer )
       }
       var beatsVal = chordData.beats;
       var chordBeatsLookup = "" + chords[val] + "=" + beatsVal;
-      if ( typeof ( chordBeatsKeys[chordBeatsLookup] ) === 'undefined' )
+      if ( !('chordBeatsLookup' in chordBeatsKeys))
       {
         chordBeatsKeys[chordBeatsLookup] = chordBeatsNo;
         chordBeatsNo++;
@@ -310,7 +310,7 @@ function Chords( $, functions, save, toolbar, resizer )
   {
     var chordText = undefined;
     var beats = undefined;
-    if ( typeof chordData !== 'undefined' )
+    if ( chordData !== undefined )
     {
       chordText = chordData.chord;
       beats = chordData.beats;
@@ -411,7 +411,7 @@ function Beats( $TIME_SIGNATURE, save )
 
     var defaultBeats = parseInt( $TIME_SIGNATURE.val() );
     var num = defaultBeats;
-    if ( typeof beats !== 'undefined' )
+    if ( beats !== undefined )
     {
       num = beats;
     }
