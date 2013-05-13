@@ -40,10 +40,17 @@ define(
         }
         if ( num != 0 )
         {
-          throw "Couldn't encode " + number + " using only " + charNo + " characters.";
+          throw new EncodingError( "Couldn't encode " + number + " using only " + charNo + " characters." );
         }
         return characters;
       }
+
+      function EncodingError( message )
+      {
+        this.message = message;
+      }
+
+      EncodingError.prototype = new Error;
 
       function bindButton( selector, func )
       {
@@ -90,8 +97,9 @@ define(
             }
             else
             {
-              result += getCharactersFromNumber( item.length, itemLengthSize );
-              result += encode( item );
+              var encodedItem = encode( item );
+              result += getCharactersFromNumber( encodedItem.length, itemLengthSize );
+              result += encodedItem;
             }
           }
         }
@@ -100,35 +108,25 @@ define(
 
       function readStringArray( input )
       {
+        var array = [];
         var data = input.data;
         var currentPos = getValueWithDefault( input.currentPos, 0 );
         var transformer = getValueWithDefault( input.transformer, false );
-        var numberOfItems;
-        if ( 'size' in input )
-        {
-          numberOfItems = input.size;
-        }
-        else if ( 'countSize' in input )
-        {
-          numberOfItems = getNumberFromCharacters( data.substr( currentPos++, input.countSize ) );
-        }
-        else
-        {
-          throw "Can't load string array size due to missing configuration.";
-        }
-        var array = [];
+        var numInfo = getNumberOfItems( input, currentPos );
+        currentPos = numInfo.position;
+        var numberOfItems = numInfo.numberOfItems;
         for ( var i = 0; i < numberOfItems; i++ )
         {
-          var length = getNumberFromCharacters( data.charAt( currentPos++ ) );
-          if ( length )
+          var len = getNumberFromCharacters( data.charAt( currentPos++ ) );
+          if ( len )
           {
-            var string = decode( data.substr( currentPos, length ) );
+            var string = decode( data.substr( currentPos, len ) );
             if ( transformer )
             {
               string = transformer( string );
             }
             array.push( string );
-            currentPos += length;
+            currentPos += len;
           }
           else
           {
@@ -138,6 +136,47 @@ define(
         return {
           'array' : array,
           'position' : currentPos
+        };
+      }
+
+      function readChunkArray( input )
+      {
+        var chunks = [];
+        var data = input.data;
+        var chunkSize = input.chunkSize;
+        var currentPos = getValueWithDefault( input.currentPos, 0 );
+        var numInfo = getNumberOfItems( input, currentPos );
+        var numberOfItems = numInfo.numberOfItems;
+        currentPos = numInfo.position;
+        for ( var i = 0; i < numberOfItems; i++ )
+        {
+          var chunk = data.substr( currentPos, chunkSize );
+          chunks.push( chunk );
+          currentPos += chunkSize;
+        }
+        return chunks;
+      }
+
+      function getNumberOfItems( input, currentPos )
+      {
+        var pos = currentPos;
+        var numberOfItems;
+        if ( 'size' in input )
+        {
+          numberOfItems = input.size;
+        }
+        else if ( 'countSize' in input )
+        {
+          numberOfItems = getNumberFromCharacters( input.data.substr( pos, input.countSize ) );
+          pos += input.countSize;
+        }
+        else
+        {
+          throw "Can't load string array size due to missing configuration.";
+        }
+        return {
+          'numberOfItems' : numberOfItems,
+          'position' : pos
         };
       }
 
@@ -205,6 +244,7 @@ define(
         'bindButton' : bindButton,
         'writeStringArray' : writeStringArray,
         'readStringArray' : readStringArray,
+        'readChunkArray' : readChunkArray,
         'encode' : encode,
         'decode' : decode,
         'handleInputKeyEvent' : handleInputKeyEvent

@@ -9,14 +9,12 @@ function Chords( $, functions, share, toolbar, resizer )
 
   var PLUGIN_ID = "01", DEFAULT_FORMAT = 0;
 
-  var CONFIG = {
-    CHORDS_COUNT_LENGTH : 1,
-    CHORD_BEAT_COUNT_LENGTH : 1,
-    CHORDITEMS_COUNT_LENGTH : 1,
-    TEXTITEMS_COUNT_LENGTH : 1,
-    TIME_SIGNATURE_LENGTH : 1,
-    DEFAULT_TIME_SIGNATURE : 4
-  };
+  var DEFAULT_TIME_SIGNATURE = 4;
+  var CHORDS_COUNT_LENGTH = 2;
+  var CHORDITEMS_COUNT_LENGTH = 2;
+  var TIME_SIGNATURE_LENGTH = 1;
+  var CHORD_SIZE = 1;
+  var BEAT_SIZE = 1;
 
   var $SINGLE_BARLINE = $( '<li class="symbol item-barline"><img class="barline" src="images/single-barline.svg" alt="|"></li>' );
   var $PARENT = $( '#items' );
@@ -107,38 +105,33 @@ function Chords( $, functions, share, toolbar, resizer )
   function deserialize( input )
   {
     var chords = [];
-    var chordBeats = [];
     var chordItems = [];
-    var timeSignature = CONFIG.DEFAULT_TIME_SIGNATURE;
+    var timeSignature = DEFAULT_TIME_SIGNATURE;
+    var currentPos = 0;
     try
     {
-      var currentPos = 0;
-
-      timeSignature = functions.getNumber( input.substr( currentPos++, CONFIG.TIME_SIGNATURE_LENGTH ) );
+      timeSignature = functions.getNumber( input.substr( currentPos++, TIME_SIGNATURE_LENGTH ) );
 
       var read = functions.readStringArray( {
         'data' : input,
         'currentPos' : currentPos,
-        'countSize' : CONFIG.CHORDS_COUNT_LENGTH
+        'countSize' : CHORDS_COUNT_LENGTH
       } );
       chords = read.array;
       currentPos = read.position;
 
-      var numberOfChordBeats = functions.getNumber( input.substr( currentPos++, CONFIG.CHORD_BEAT_COUNT_LENGTH ) );
-      for ( var i = 0; i < numberOfChordBeats; i++ )
+      var chordBeatChunks = functions.readChunkArray( {
+        'data' : input,
+        'currentPos' : currentPos,
+        'countSize' : CHORDITEMS_COUNT_LENGTH,
+        'chunkSize' : CHORD_SIZE + BEAT_SIZE
+      } );
+      $.each( chordBeatChunks, function()
       {
-        var chord = functions.getNumber( input.charAt( currentPos++ ) );
-        var beats = functions.getNumber( input.charAt( currentPos++ ) );
-        chordBeats.push( new ChordBeat( chord, beats ) );
-      }
-
-      var numberOfChordItems = functions.getNumber( input.substr( currentPos++, CONFIG.CHORDITEMS_COUNT_LENGTH ) );
-      for ( var i = 0; i < numberOfChordItems; i++ )
-      {
-        var chordBeat = chordBeats[functions.getNumber( input.charAt( currentPos++ ) )];
-        var chordText = chords[chordBeat.chord];
-        chordItems.push( new ChordData( chordText, chordBeat.beats ) );
-      }
+        var chordText = chords[functions.getNumber( this.charAt( 0 ) )];
+        var chordBeat = functions.getNumber( this.charAt( 1 ) );
+        chordItems.push( new ChordBeat( chordText, chordBeat ) );
+      } );
     }
     catch ( err )
     {
@@ -156,88 +149,57 @@ function Chords( $, functions, share, toolbar, resizer )
     this.beats = beats;
   }
 
-  function ChordData( chord, beats, lyrics )
-  {
-    this.chord = chord;
-    this.beats = beats;
-    this.lyrics = lyrics;
-  }
-
   function serialize()
   {
     var result = PLUGIN_ID + DEFAULT_FORMAT;
     var state = getData();
+    var chords = state.chords;
     var chordItems = state.chordItems;
-    var chordBeatsItems = state.chordBeatsItems;
-    var chordBeatsCollection = state.chordBeatsCollection;
 
-    result += functions.getCharacters( state.timeSignature, CONFIG.TIME_SIGNATURE_LENGTH );
+    result += functions.getCharacters( state.timeSignature, TIME_SIGNATURE_LENGTH );
 
-    result += functions.getCharacters( chordItems.length, CONFIG.CHORDS_COUNT_LENGTH );
-    for ( var i = 0; i < chordItems.length; i++ )
+    result += functions.getCharacters( chords.length, CHORDS_COUNT_LENGTH );
+    for ( var i = 0; i < chords.length; i++ )
     {
-      var serializedChord = functions.encode( chordItems[i] );
+      var serializedChord = functions.encode( chords[i] );
       result += functions.getCharacters( serializedChord.length, 1 );
       result += serializedChord;
     }
 
-    result += functions.getCharacters( chordBeatsItems.length, CONFIG.CHORDITEMS_COUNT_LENGTH );
-    for ( var i = 0; i < chordBeatsItems.length; i++ )
-    {
-      var chordBeatsItem = chordBeatsItems[i];
-      result += functions.getCharacters( chordBeatsItem.chord, 1 );
-      result += functions.getCharacters( chordBeatsItem.beats, 1 );
-    }
+    result += functions.getCharacters( chordItems.length, CHORDITEMS_COUNT_LENGTH );
+    result += chordItems.join( '' );
 
-    result += functions.getCharacters( chordBeatsCollection.length, CONFIG.CHORDITEMS_COUNT_LENGTH );
-    for ( var i = 0; i < chordBeatsCollection.length; i++ )
-    {
-      result += functions.getCharacters( chordBeatsCollection[i], 1 );
-    }
     return result.length > 7 ? result : '';
-  }
-
-  function handleStructureChange( event )
-  {
-    updateBarlines();
   }
 
   function getData()
   {
     var chords = {}, chordNo = 0;
-    var chordDataItems = [];
     var chordValues = [];
-    var chordBeatsKeys = {}, chordBeatsNo = 0;
-    var chordBeatsValues = [];
-    var chordBeatsCollection = [];
+    var chordItems = [];
     var timeSignature = $TIME_SIGNATURE.val();
     $PARENT.children( 'li.item' ).each( function( index )
     {
       var chordData = getChordData( this );
-      chordDataItems.push( chordData );
       var val = chordData.chord;
-      if ( !( 'val' in chords ) )
+      if ( !( val in chords ) )
       {
-        chords[val] = chordNo;
+        chords[val] = functions.getCharacters( chordNo, CHORD_SIZE );
         chordNo++;
         chordValues.push( val );
       }
-      var beatsVal = chordData.beats;
-      var chordBeatsLookup = "" + chords[val] + "=" + beatsVal;
-      if ( !( 'chordBeatsLookup' in chordBeatsKeys ) )
-      {
-        chordBeatsKeys[chordBeatsLookup] = chordBeatsNo;
-        chordBeatsNo++;
-        chordBeatsValues.push( new ChordBeat( chords[val], beatsVal ) );
-      }
-      chordBeatsCollection.push( chordBeatsKeys[chordBeatsLookup] );
+      chordItems.push( chords[val] + functions.getCharacters( chordData.beats, BEAT_SIZE ) );
     } );
     return {
-      'chordItems' : chordValues,
-      'chordBeatsItems' : chordBeatsValues,
-      'chordBeatsCollection' : chordBeatsCollection,
+      'chords' : chordValues,
+      'chordItems' : chordItems,
       'timeSignature' : timeSignature
     };
+  }
+
+  function handleStructureChange( event )
+  {
+    updateBarlines();
   }
 
   function updateBarlines()
@@ -247,8 +209,7 @@ function Chords( $, functions, share, toolbar, resizer )
     var beatsSum = 0;
     $PARENT.children( 'li.item' ).each( function( index )
     {
-      var chordData = getChordData( this );
-      beatsSum += chordData.beats;
+      beatsSum += getBeats( this ).length;
       if ( beatsSum % timeSignature === 0 )
       {
         $SINGLE_BARLINE.clone().insertAfter( this );
@@ -263,8 +224,8 @@ function Chords( $, functions, share, toolbar, resizer )
 
   function extract( li )
   {
-    var chord = $( $( 'input.chord-text', li ).get( 0 ) ).val();
-    var beats = $( $( 'div.duration > a', li ).get( 0 ) ).text();
+    var chord = getChord( li );
+    var beats = getBeats( li );
     return function( theItem )
     {
       $( 'input.chord-text', theItem ).val( chord );
@@ -291,19 +252,21 @@ function Chords( $, functions, share, toolbar, resizer )
     }
   }
 
+  function getBeats( li )
+  {
+    return $( 'div.duration > a', li ).text();
+  }
+
+  function getChord( li )
+  {
+    return $( 'input.chord-text', li ).val();
+  }
+
   function getChordData( li )
   {
-    var wrapper = $( li );
-    var chord = $( 'input.chord-text', wrapper ).get( 0 );
-    var beats = $( 'div.duration > a', wrapper ).get( 0 );
-    var chordText = $( chord ).val();
-    var beatCount = $( beats ).text().length;
-    var lyrics = undefined;
-    if ( $PARENT.hasClass( 'has-text' ) )
-    {
-      lyrics = $( $( 'input.song-text', wrapper ).get( 0 ) ).val() || '';
-    }
-    return new ChordData( chordText, beatCount, lyrics );
+    var chordText = getChord( li );
+    var beatCount = getBeats( li ).length;
+    return new ChordBeat( chordText, beatCount );
   }
 
   function createItem( chordData )
@@ -386,7 +349,6 @@ function Chords( $, functions, share, toolbar, resizer )
     "render" : render,
     "serialize" : serialize,
     "setData" : setData,
-    "ChordData" : ChordData,
     "registerContentExtractor" : registerContentExtractor,
     "addPostRenderer" : addPostRenderer
   };

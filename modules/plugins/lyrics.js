@@ -107,7 +107,7 @@ function Lyrics( $, functions, share, toolbar, resizer, plugins )
   {
     var lyrics = functions.readStringArray( {
       'data' : data,
-      'countSize' : 1
+      'countSize' : 2
     } ).array;
     hasText = true;
     visibleText = true;
@@ -132,10 +132,12 @@ function Lyrics( $, functions, share, toolbar, resizer, plugins )
         items.push( getLyrics( this ) );
       } );
       result += functions.writeStringArray( {
-        'items' : items
+        'items' : items,
+        'countSize' : 2
       } );
-      if ( result.length < 4 )
+      if ( result.length < 6 + items.length )
       {
+        // all items have zero length
         result = '';
       }
     }
