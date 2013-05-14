@@ -169,7 +169,7 @@ function Chords( $, functions, share, toolbar, resizer )
     result += functions.getCharacters( chordItems.length, CHORDITEMS_COUNT_LENGTH );
     result += chordItems.join( '' );
 
-    return result.length > 7 ? result : '';
+    return result.length > 8 ? result : '';
   }
 
   function getData()
