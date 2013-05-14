@@ -1,3 +1,8 @@
+/**
+ * Maps plugin id:s to plugin names.
+ * 
+ * @module pluginlist
+ */
 function PluginList()
 {
   'use strict';
@@ -9,13 +14,22 @@ function PluginList()
 
   var list = [ 'title', 'chords', 'lyrics' ];
 
-  function getNameFromId( id )
+  /**
+   * Get plugin name from id.
+   * 
+   * @method
+   * @name module:pluginlist.idToName
+   * @param {integer}
+   *          id The id to map.
+   * @returns {string} The corresponding plugin name.
+   */
+  function idToName( id )
   {
     return list[id];
   }
 
   return {
-    'idToName' : getNameFromId
+    'idToName' : idToName
   };
 }
 

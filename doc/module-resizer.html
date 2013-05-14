@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Module: plugins</title>
+    <title>JSDoc: Module: resizer</title>
     
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">Module: plugins</h1>
+    <h1 class="page-title">Module: resizer</h1>
     
     
 
@@ -27,7 +27,7 @@
     
 <header>
     <h2>
-    plugins
+    resizer
     </h2>
     
 </header>  
@@ -38,7 +38,7 @@
     
     
         
-            <div class="description">Load and execute operations from plugins.</div>
+            <div class="description">Resize wrapper based on text length in input box(es).</div>
         
         
         
@@ -64,7 +64,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        plugins.js, line 1
+        resizer.js, line 1
     </li></ul></dd>
     
     
@@ -89,12 +89,6 @@
         
         <ul>
             <li><a href="module-jquery.html">module:jquery</a></li>
-        
-            <li><a href="module-pluginlist.html">module:pluginlist</a></li>
-        
-            <li><a href="module-functions.html">module:functions</a></li>
-        
-            <li><a href="module-toolbar.html">module:toolbar</a></li>
         </ul>
     
     
@@ -110,7 +104,7 @@
         <dl>
             
 <dt>
-    <h4 class="name" id="exec"><span class="type-signature">&lt;static> </span>exec<span class="signature">(name, func)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="performResize"><span class="type-signature">&lt;static> </span>performResize<span class="signature">(wrapper)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -118,8 +112,7 @@
     
     
     <div class="description">
-        Execute operations against a plugin by providing a function. The function gets the plugin instance, plugin metadata
-and the plugins module provided as arguments. <i>Note that this method does not return anything.</i>
+        Perform resizing based on the text value of the input elements.
     </div>
     
 
@@ -153,13 +146,13 @@ and the plugins module provided as arguments. <i>Note that this method does not 
 	
         <tr>
             
-                <td class="name"><code>name</code></td>
+                <td class="name"><code>wrapper</code></td>
             
             
             <td class="type">
             
                 
-<span class="param-type">String</span>
+<span class="param-type">HTMLElement</span>
 
 
             
@@ -169,31 +162,7 @@ and the plugins module provided as arguments. <i>Note that this method does not 
             
             
             
-            <td class="description last">The name of the plugin to use.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>func</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">Function</span>
-
-
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">Function that uses the plugin. Typically:
-         <code>function(plugin, pluginMetaData, pluginsModule){...}</code></td>
+            <td class="description last">The container which will be resized as needed.</td>
         </tr>
 	
 	
@@ -224,7 +193,7 @@ and the plugins module provided as arguments. <i>Note that this method does not 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        plugins.js, line 56
+        resizer.js, line 48
     </li></ul></dd>
     
     
@@ -252,7 +221,7 @@ and the plugins module provided as arguments. <i>Note that this method does not 
         
             
 <dt>
-    <h4 class="name" id="register"><span class="type-signature">&lt;static> </span>register<span class="signature">(pluginInfo)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="prepareResize"><span class="type-signature">&lt;static> </span>prepareResize<span class="signature">(wrapper)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -260,7 +229,7 @@ and the plugins module provided as arguments. <i>Note that this method does not 
     
     
     <div class="description">
-        Register a plugin when it's loaded.
+        Prepare input elements for resizing.
     </div>
     
 
@@ -294,13 +263,13 @@ and the plugins module provided as arguments. <i>Note that this method does not 
 	
         <tr>
             
-                <td class="name"><code>pluginInfo</code></td>
+                <td class="name"><code>wrapper</code></td>
             
             
             <td class="type">
             
                 
-<span class="param-type">Object</span>
+<span class="param-type">HTMLElement</span>
 
 
             
@@ -310,7 +279,7 @@ and the plugins module provided as arguments. <i>Note that this method does not 
             
             
             
-            <td class="description last">Metadata about the plugin.</td>
+            <td class="description last">The container which will be later resized.</td>
         </tr>
 	
 	
@@ -341,7 +310,7 @@ and the plugins module provided as arguments. <i>Note that this method does not 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        plugins.js, line 38
+        resizer.js, line 16
     </li></ul></dd>
     
     

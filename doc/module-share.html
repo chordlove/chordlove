@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Module: plugins</title>
+    <title>JSDoc: Module: share</title>
     
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">Module: plugins</h1>
+    <h1 class="page-title">Module: share</h1>
     
     
 
@@ -27,7 +27,7 @@
     
 <header>
     <h2>
-    plugins
+    share
     </h2>
     
 </header>  
@@ -38,7 +38,7 @@
     
     
         
-            <div class="description">Load and execute operations from plugins.</div>
+            <div class="description">Creates sharable URLs and manages events connected to this.</div>
         
         
         
@@ -64,7 +64,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        plugins.js, line 1
+        share.js, line 1
     </li></ul></dd>
     
     
@@ -88,13 +88,7 @@
         <h3 class="subsection-title">Requires</h3>
         
         <ul>
-            <li><a href="module-jquery.html">module:jquery</a></li>
-        
-            <li><a href="module-pluginlist.html">module:pluginlist</a></li>
-        
-            <li><a href="module-functions.html">module:functions</a></li>
-        
-            <li><a href="module-toolbar.html">module:toolbar</a></li>
+            <li><a href="module-plugins.html">module:plugins</a></li>
         </ul>
     
     
@@ -110,7 +104,7 @@
         <dl>
             
 <dt>
-    <h4 class="name" id="exec"><span class="type-signature">&lt;static> </span>exec<span class="signature">(name, func)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="addStructureChangeListener"><span class="type-signature">&lt;static> </span>addStructureChangeListener<span class="signature">(listener)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -118,8 +112,7 @@
     
     
     <div class="description">
-        Execute operations against a plugin by providing a function. The function gets the plugin instance, plugin metadata
-and the plugins module provided as arguments. <i>Note that this method does not return anything.</i>
+        Register a listener for events altering the structure of the content.
     </div>
     
 
@@ -153,30 +146,7 @@ and the plugins module provided as arguments. <i>Note that this method does not 
 	
         <tr>
             
-                <td class="name"><code>name</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">The name of the plugin to use.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>func</code></td>
+                <td class="name"><code>listener</code></td>
             
             
             <td class="type">
@@ -192,8 +162,7 @@ and the plugins module provided as arguments. <i>Note that this method does not 
             
             
             
-            <td class="description last">Function that uses the plugin. Typically:
-         <code>function(plugin, pluginMetaData, pluginsModule){...}</code></td>
+            <td class="description last">Receiver of the events.</td>
         </tr>
 	
 	
@@ -224,7 +193,7 @@ and the plugins module provided as arguments. <i>Note that this method does not 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        plugins.js, line 56
+        share.js, line 62
     </li></ul></dd>
     
     
@@ -252,7 +221,7 @@ and the plugins module provided as arguments. <i>Note that this method does not 
         
             
 <dt>
-    <h4 class="name" id="register"><span class="type-signature">&lt;static> </span>register<span class="signature">(pluginInfo)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="addTextChangeListener"><span class="type-signature">&lt;static> </span>addTextChangeListener<span class="signature">(listener)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -260,7 +229,7 @@ and the plugins module provided as arguments. <i>Note that this method does not 
     
     
     <div class="description">
-        Register a plugin when it's loaded.
+        Register a listener for events altering text-level content but not the structure of the content.
     </div>
     
 
@@ -294,13 +263,13 @@ and the plugins module provided as arguments. <i>Note that this method does not 
 	
         <tr>
             
-                <td class="name"><code>pluginInfo</code></td>
+                <td class="name"><code>listener</code></td>
             
             
             <td class="type">
             
                 
-<span class="param-type">Object</span>
+<span class="param-type">Function</span>
 
 
             
@@ -310,7 +279,7 @@ and the plugins module provided as arguments. <i>Note that this method does not 
             
             
             
-            <td class="description last">Metadata about the plugin.</td>
+            <td class="description last">Receiver of the events.</td>
         </tr>
 	
 	
@@ -341,7 +310,231 @@ and the plugins module provided as arguments. <i>Note that this method does not 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        plugins.js, line 38
+        share.js, line 49
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="changedStructure"><span class="type-signature">&lt;static> </span>changedStructure<span class="signature">(event)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Tells the share module that there has been a structure-level change.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>event</code></td>
+            
+            
+            <td class="type">
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The event object wich listeners will receive.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        share.js, line 92
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="changedText"><span class="type-signature">&lt;static> </span>changedText<span class="signature">(event)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Tells the share module that there has been a text-level change.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>event</code></td>
+            
+            
+            <td class="type">
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The event object wich listeners will receive.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        share.js, line 75
     </li></ul></dd>
     
     

@@ -1,3 +1,10 @@
+/**
+ * Creates sharable URLs and manages events connected to this.
+ * 
+ * @module share
+ * @requires plugins
+ */
+
 function Share( plugins )
 {
   'use strict';
@@ -11,34 +18,6 @@ function Share( plugins )
 
   var textChangeListeners = [];
   var structureChangeListeners = [];
-
-  function addTextChangeListener( listener )
-  {
-    textChangeListeners.push( listener );
-  }
-
-  function addStructureChangeListener( listener )
-  {
-    structureChangeListeners.push( listener );
-  }
-
-  function changedText( event )
-  {
-    for ( var i = 0; i < textChangeListeners.length; i++ )
-    {
-      textChangeListeners[i]( event );
-    }
-    writeUri();
-  }
-
-  function changedStructure( event )
-  {
-    for ( var i = 0; i < structureChangeListeners.length; i++ )
-    {
-      structureChangeListeners[i]( event );
-    }
-    writeUri();
-  }
 
   $( "#share-url" ).click( function()
   {
@@ -65,6 +44,66 @@ function Share( plugins )
       window.history.pushState( status, window.document.title, hash );
       previousHash = hash;
     }
+  }
+
+  /**
+   * Register a listener for events altering text-level content but not the structure of the content.
+   * 
+   * @method
+   * @name module:share.addTextChangeListener
+   * @param {Function}
+   *          listener Receiver of the events.
+   */
+  function addTextChangeListener( listener )
+  {
+    textChangeListeners.push( listener );
+  }
+
+  /**
+   * Register a listener for events altering the structure of the content.
+   * 
+   * @method
+   * @name module:share.addStructureChangeListener
+   * @param {Function}
+   *          listener Receiver of the events.
+   */
+  function addStructureChangeListener( listener )
+  {
+    structureChangeListeners.push( listener );
+  }
+
+  /**
+   * Tells the share module that there has been a text-level change.
+   * 
+   * @method
+   * @name module:share.changedText
+   * @param event
+   *          The event object wich listeners will receive.
+   */
+  function changedText( event )
+  {
+    for ( var i = 0; i < textChangeListeners.length; i++ )
+    {
+      textChangeListeners[i]( event );
+    }
+    writeUri();
+  }
+
+  /**
+   * Tells the share module that there has been a structure-level change.
+   * 
+   * @method
+   * @name module:share.changedStructure
+   * @param event
+   *          The event object wich listeners will receive.
+   */
+  function changedStructure( event )
+  {
+    for ( var i = 0; i < structureChangeListeners.length; i++ )
+    {
+      structureChangeListeners[i]( event );
+    }
+    writeUri();
   }
 
   return {

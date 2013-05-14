@@ -9,7 +9,7 @@
   },
   "plugins": [],
   "templates": {
-    "cleverLinks": false,
+    "cleverLinks": true,
     "monospaceLinks": false
   },
   "jsVersion": 180,

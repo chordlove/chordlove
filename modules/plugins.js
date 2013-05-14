@@ -2,6 +2,10 @@
  * Load and execute operations from plugins.
  * 
  * @module plugins
+ * @requires jquery
+ * @requires pluginlist
+ * @requires functions
+ * @requires toolbar
  */
 
 function Plugins( $, pluginlist, functions, toolbar )
@@ -17,7 +21,7 @@ function Plugins( $, pluginlist, functions, toolbar )
     'register' : register,
     'serialize' : serialize,
     'init' : parseHash,
-    'exec' : executeByName
+    'exec' : exec
   };
 
   var FORMAT = '0';
@@ -51,17 +55,17 @@ function Plugins( $, pluginlist, functions, toolbar )
 
   /**
    * Execute operations against a plugin by providing a function. The function gets the plugin instance, plugin metadata
-   * and the plugins module provided as arguments.
+   * and the plugins module provided as arguments. <i>Note that this method does not return anything.</i>
    * 
    * @method
    * @name module:plugins.exec
    * @param {String}
    *          name The name of the plugin to use.
    * @param {Function}
-   *          Function that uses the plugin. Typically:
+   *          func Function that uses the plugin. Typically:
    *          <code>function(plugin, pluginMetaData, pluginsModule){...}</code>
    */
-  function executeByName( name, func )
+  function exec( name, func )
   {
     if ( name in loading )
     {
@@ -92,7 +96,7 @@ function Plugins( $, pluginlist, functions, toolbar )
 
   function render( input )
   {
-    executeByName( input.name, function( instance, info, pluginsModule )
+    exec( input.name, function( instance, info, pluginsModule )
     {
       instance.setData( input.format, input.data );
       if ( 'render' in info && info['render'] === true )
@@ -104,7 +108,7 @@ function Plugins( $, pluginlist, functions, toolbar )
 
   function setData( id, format, data )
   {
-    executeByName( pluginlist.idToName( id ), function( instance )
+    exec( pluginlist.idToName( id ), function( instance )
     {
       instance.setData( format, data );
     } );
@@ -112,7 +116,7 @@ function Plugins( $, pluginlist, functions, toolbar )
 
   function setDataAndConfigure( input )
   {
-    executeByName( input.name, function( instance, info, pluginsModule )
+    exec( input.name, function( instance, info, pluginsModule )
     {
       instance.setData( input.format, input.data );
       if ( 'config' in info )
@@ -132,7 +136,7 @@ function Plugins( $, pluginlist, functions, toolbar )
 
   function setDataAndRender( input )
   {
-    executeByName( input.name, function( instance, info, pluginsModule )
+    exec( input.name, function( instance, info, pluginsModule )
     {
       instance.setData( input.format, input.data );
       if ( 'render' in info && info['render'] === true )

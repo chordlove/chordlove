@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Module: plugins</title>
+    <title>JSDoc: Module: functions</title>
     
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">Module: plugins</h1>
+    <h1 class="page-title">Module: functions</h1>
     
     
 
@@ -27,7 +27,7 @@
     
 <header>
     <h2>
-    plugins
+    functions
     </h2>
     
 </header>  
@@ -38,7 +38,7 @@
     
     
         
-            <div class="description">Load and execute operations from plugins.</div>
+            <div class="description">Utility functions, mostly for handling strings.</div>
         
         
         
@@ -64,7 +64,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        plugins.js, line 1
+        functions.js, line 1
     </li></ul></dd>
     
     
@@ -89,12 +89,6 @@
         
         <ul>
             <li><a href="module-jquery.html">module:jquery</a></li>
-        
-            <li><a href="module-pluginlist.html">module:pluginlist</a></li>
-        
-            <li><a href="module-functions.html">module:functions</a></li>
-        
-            <li><a href="module-toolbar.html">module:toolbar</a></li>
         </ul>
     
     
@@ -110,7 +104,7 @@
         <dl>
             
 <dt>
-    <h4 class="name" id="exec"><span class="type-signature">&lt;static> </span>exec<span class="signature">(name, func)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="bindButton"><span class="type-signature">&lt;static> </span>bindButton<span class="signature">(selector, func)</span><span class="type-signature"> &rarr; {jQuery}</span></h4>
     
     
 </dt>
@@ -118,8 +112,7 @@
     
     
     <div class="description">
-        Execute operations against a plugin by providing a function. The function gets the plugin instance, plugin metadata
-and the plugins module provided as arguments. <i>Note that this method does not return anything.</i>
+        Bind an elements click event to a function.
     </div>
     
 
@@ -153,13 +146,13 @@ and the plugins module provided as arguments. <i>Note that this method does not 
 	
         <tr>
             
-                <td class="name"><code>name</code></td>
+                <td class="name"><code>selector</code></td>
             
             
             <td class="type">
             
                 
-<span class="param-type">String</span>
+<span class="param-type">string</span>
 
 
             
@@ -169,7 +162,7 @@ and the plugins module provided as arguments. <i>Note that this method does not 
             
             
             
-            <td class="description last">The name of the plugin to use.</td>
+            <td class="description last">JQuery selector for the element to bind.</td>
         </tr>
 	
 	
@@ -192,8 +185,7 @@ and the plugins module provided as arguments. <i>Note that this method does not 
             
             
             
-            <td class="description last">Function that uses the plugin. Typically:
-         <code>function(plugin, pluginMetaData, pluginsModule){...}</code></td>
+            <td class="description last">The function to use as event handler.</td>
         </tr>
 	
 	
@@ -224,7 +216,7 @@ and the plugins module provided as arguments. <i>Note that this method does not 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        plugins.js, line 56
+        functions.js, line 81
     </li></ul></dd>
     
     
@@ -245,6 +237,28 @@ and the plugins module provided as arguments. <i>Note that this method does not 
     
     
     
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    The jQuery object for the selector.
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">jQuery</span>
+
+
+	</dd>
+</dl>
+
+        
     
     
 </dd>
@@ -252,7 +266,7 @@ and the plugins module provided as arguments. <i>Note that this method does not 
         
             
 <dt>
-    <h4 class="name" id="register"><span class="type-signature">&lt;static> </span>register<span class="signature">(pluginInfo)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="getCharacters"><span class="type-signature">&lt;static> </span>getCharacters<span class="signature">(number, charNo)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -260,7 +274,7 @@ and the plugins module provided as arguments. <i>Note that this method does not 
     
     
     <div class="description">
-        Register a plugin when it's loaded.
+        Encode a number as characters.
     </div>
     
 
@@ -294,13 +308,13 @@ and the plugins module provided as arguments. <i>Note that this method does not 
 	
         <tr>
             
-                <td class="name"><code>pluginInfo</code></td>
+                <td class="name"><code>number</code></td>
             
             
             <td class="type">
             
                 
-<span class="param-type">Object</span>
+<span class="param-type">integer</span>
 
 
             
@@ -310,7 +324,30 @@ and the plugins module provided as arguments. <i>Note that this method does not 
             
             
             
-            <td class="description last">Metadata about the plugin.</td>
+            <td class="description last">The number to encode.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>charNo</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">integer</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The number of characters to use.</td>
         </tr>
 	
 	
@@ -341,7 +378,151 @@ and the plugins module provided as arguments. <i>Note that this method does not 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        plugins.js, line 38
+        functions.js, line 45
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    <h5>Throws:</h5>
+    
+            
+
+<dl>
+    <dt>
+        <div class="param-desc">
+        Typically if the number of characters is too small.
+        </div>
+    </dt>
+    <dt>
+        <dl>
+            <dt>
+                Type
+            </dt>
+            <dd>
+                
+<span class="param-type">EncodingError</span>
+
+
+            </dd>
+        </dl>
+    </dt>
+</dl>
+
+
+        
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="getNumber"><span class="type-signature">&lt;static> </span>getNumber<span class="signature">(characters)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Get a number encoded as characters.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>characters</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The characters to decode as a number.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        functions.js, line 15
     </li></ul></dd>
     
     

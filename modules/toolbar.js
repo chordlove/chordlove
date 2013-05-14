@@ -1,3 +1,12 @@
+/**
+ * Behavior of the toolbar.
+ * 
+ * @module toolbar
+ * @requires jquery
+ * @requires functions
+ * @requires share
+ */
+
 function Toolbar( $, functions, share )
 {
   'use strict';
@@ -10,6 +19,14 @@ function Toolbar( $, functions, share )
   var PARENT = $( '#items' );
   var chords = null;
 
+  /**
+   * Register the chords module so it can be used for copy-paste operations.
+   * 
+   * @method
+   * @name module:toolbar.registerChordsModule
+   * @param {Chords}
+   *          chordsModule The chords module to use.
+   */
   function registerChordsModule( chordsModule )
   {
     chords = chordsModule;
@@ -22,13 +39,13 @@ function Toolbar( $, functions, share )
 
     function getSelectedItems()
     {
-      return $( "li.ui-selected", PARENT );
+      return $( 'li.ui-selected', PARENT );
     }
 
     function deleteItems()
     {
       getSelectedItems().remove();
-      share.changedStructure( "toolbar/delete" );
+      share.changedStructure( 'toolbar/delete' );
     }
 
     var copiedItems = [];
@@ -37,7 +54,7 @@ function Toolbar( $, functions, share )
     {
       copyItems();
       getSelectedItems().remove();
-      share.changedStructure( "toolbar/cut" );
+      share.changedStructure( 'toolbar/cut' );
     }
 
     function copyItems()
@@ -55,8 +72,8 @@ function Toolbar( $, functions, share )
       {
         chords.createFromExtracts( this );
       } );
-      share.changedStructure( "toolbar/paste" );
-      $( "li.ui-selected", PARENT ).removeClass( "ui-selected" );
+      share.changedStructure( 'toolbar/paste' );
+      $( 'li.ui-selected', PARENT ).removeClass( 'ui-selected' );
     }
 
     function editMode()
@@ -70,65 +87,81 @@ function Toolbar( $, functions, share )
       PARENT.empty();
       PARENT.removeClass( 'has-text' );
       $( '#title' ).val( '' ).focus();
-      share.changedStructure( "toolbar/clear" );
+      share.changedStructure( 'toolbar/clear' );
       return false;
     }
 
-    bindButton( "#cut", cutItems );
-    bindButton( "#copy", copyItems );
-    bindButton( "#paste", pasteItems );
-    bindButton( "#delete", deleteItems );
-    bindButton( "#edit", editMode );
-    bindButton( "#clear", clear );
+    bindButton( '#cut', cutItems );
+    bindButton( '#copy', copyItems );
+    bindButton( '#paste', pasteItems );
+    bindButton( '#delete', deleteItems );
+    bindButton( '#edit', editMode );
+    bindButton( '#clear', clear );
 
     $( '#time-signature' ).change( function()
     {
-      share.changedStructure( "toolbar/timesignature" );
+      share.changedStructure( 'toolbar/timesignature' );
     } );
   }
 
   prepareCpanel();
 
+  /**
+   * Set the edit mode to use.
+   * 
+   * @method
+   * @name module:toolbar.setEditMode
+   * @param {boolean}
+   *          mode Set to <code>true</code> to enable editing.
+   */
   function setEditMode( mode )
   {
     if ( mode === true )
     {
       $( 'body' ).addClass( 'edit-mode' );
       $( '#edit' ).addClass( 'active' );
-      hideOrShow( "show" );
+      hideOrShow( 'show' );
     }
     else
     {
       $( 'body' ).removeClass( 'edit-mode' );
       $( '#edit' ).removeClass( 'active' );
-      hideOrShow( "hide" );
+      hideOrShow( 'hide' );
     }
   }
 
+  /**
+   * Hide or show empty input elements. Make all input elements read-only in the case of hiding.
+   * 
+   * @method
+   * @name module:toolbar.hideOrShow
+   * @param {string}
+   *          action Choose action by using <code>show</code> or <code>hide</code> as the value.
+   */
   function hideOrShow( action )
   {
     $( '#items input, #title' ).each( function()
     {
       var element = $( this );
-      if ( element.val() === "" )
+      if ( element.val() === '' )
       {
         element[action]();
       }
       else
       {
-        element.prop( 'readonly', action === "hide" );
+        element.prop( 'readonly', action === 'hide' );
       }
     } );
   }
 
   return {
-    "hideOrShow" : hideOrShow,
-    "setEditMode" : setEditMode,
-    "registerChordsModule" : registerChordsModule
+    'hideOrShow' : hideOrShow,
+    'setEditMode' : setEditMode,
+    'registerChordsModule' : registerChordsModule
   };
 }
 
-define( "toolbar", [ "jquery", "functions", "share" ], function( $, functions, share )
+define( 'toolbar', [ 'jquery', 'functions', 'share' ], function( $, functions, share )
 {
   'use strict';
   return new Toolbar( $, functions, share );

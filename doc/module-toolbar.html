@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Module: plugins</title>
+    <title>JSDoc: Module: toolbar</title>
     
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">Module: plugins</h1>
+    <h1 class="page-title">Module: toolbar</h1>
     
     
 
@@ -27,7 +27,7 @@
     
 <header>
     <h2>
-    plugins
+    toolbar
     </h2>
     
 </header>  
@@ -38,7 +38,7 @@
     
     
         
-            <div class="description">Load and execute operations from plugins.</div>
+            <div class="description">Behavior of the toolbar.</div>
         
         
         
@@ -64,7 +64,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        plugins.js, line 1
+        toolbar.js, line 1
     </li></ul></dd>
     
     
@@ -90,11 +90,9 @@
         <ul>
             <li><a href="module-jquery.html">module:jquery</a></li>
         
-            <li><a href="module-pluginlist.html">module:pluginlist</a></li>
-        
             <li><a href="module-functions.html">module:functions</a></li>
         
-            <li><a href="module-toolbar.html">module:toolbar</a></li>
+            <li><a href="module-share.html">module:share</a></li>
         </ul>
     
     
@@ -110,7 +108,7 @@
         <dl>
             
 <dt>
-    <h4 class="name" id="exec"><span class="type-signature">&lt;static> </span>exec<span class="signature">(name, func)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="hideOrShow"><span class="type-signature">&lt;static> </span>hideOrShow<span class="signature">(action)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -118,8 +116,7 @@
     
     
     <div class="description">
-        Execute operations against a plugin by providing a function. The function gets the plugin instance, plugin metadata
-and the plugins module provided as arguments. <i>Note that this method does not return anything.</i>
+        Hide or show empty input elements. Make all input elements read-only in the case of hiding.
     </div>
     
 
@@ -153,13 +150,13 @@ and the plugins module provided as arguments. <i>Note that this method does not 
 	
         <tr>
             
-                <td class="name"><code>name</code></td>
+                <td class="name"><code>action</code></td>
             
             
             <td class="type">
             
                 
-<span class="param-type">String</span>
+<span class="param-type">string</span>
 
 
             
@@ -169,31 +166,7 @@ and the plugins module provided as arguments. <i>Note that this method does not 
             
             
             
-            <td class="description last">The name of the plugin to use.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>func</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">Function</span>
-
-
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">Function that uses the plugin. Typically:
-         <code>function(plugin, pluginMetaData, pluginsModule){...}</code></td>
+            <td class="description last">Choose action by using <code>show</code> or <code>hide</code> as the value.</td>
         </tr>
 	
 	
@@ -224,7 +197,7 @@ and the plugins module provided as arguments. <i>Note that this method does not 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        plugins.js, line 56
+        toolbar.js, line 133
     </li></ul></dd>
     
     
@@ -252,7 +225,7 @@ and the plugins module provided as arguments. <i>Note that this method does not 
         
             
 <dt>
-    <h4 class="name" id="register"><span class="type-signature">&lt;static> </span>register<span class="signature">(pluginInfo)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="registerChordsModule"><span class="type-signature">&lt;static> </span>registerChordsModule<span class="signature">(chordsModule)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -260,7 +233,7 @@ and the plugins module provided as arguments. <i>Note that this method does not 
     
     
     <div class="description">
-        Register a plugin when it's loaded.
+        Register the chords module so it can be used for copy-paste operations.
     </div>
     
 
@@ -294,13 +267,13 @@ and the plugins module provided as arguments. <i>Note that this method does not 
 	
         <tr>
             
-                <td class="name"><code>pluginInfo</code></td>
+                <td class="name"><code>chordsModule</code></td>
             
             
             <td class="type">
             
                 
-<span class="param-type">Object</span>
+<span class="param-type">Chords</span>
 
 
             
@@ -310,7 +283,7 @@ and the plugins module provided as arguments. <i>Note that this method does not 
             
             
             
-            <td class="description last">Metadata about the plugin.</td>
+            <td class="description last">The chords module to use.</td>
         </tr>
 	
 	
@@ -341,7 +314,124 @@ and the plugins module provided as arguments. <i>Note that this method does not 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        plugins.js, line 38
+        toolbar.js, line 22
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="setEditMode"><span class="type-signature">&lt;static> </span>setEditMode<span class="signature">(mode)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Set the edit mode to use.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>mode</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Set to <code>true</code> to enable editing.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        toolbar.js, line 109
     </li></ul></dd>
     
     

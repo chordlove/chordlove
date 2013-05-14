@@ -1,1 +1,2 @@
+rm -rf ./doc/*
 jsdoc -c jsdoc-conf.json jsdoc.md

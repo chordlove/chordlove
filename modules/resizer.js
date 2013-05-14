@@ -1,3 +1,10 @@
+/**
+ * Resize wrapper based on text length in input box(es).
+ * 
+ * @module resizer
+ * @requires jquery
+ */
+
 define( 'resizer', [ 'jquery' ], function( $ )
 {
   'use strict';
@@ -6,6 +13,14 @@ define( 'resizer', [ 'jquery' ], function( $ )
   var WRAPPER_MARGIN = 7;
   var FILTER = 'input.resize-trigger';
 
+  /**
+   * Prepare input elements for resizing.
+   * 
+   * @method
+   * @name module:resizer.prepareResize
+   * @param {HTMLElement}
+   *          wrapper The container which will be later resized.
+   */
   function prepareResize( wrapper )
   {
     $( FILTER, wrapper ).each( function()
@@ -30,6 +45,14 @@ define( 'resizer', [ 'jquery' ], function( $ )
     } );
   }
 
+  /**
+   * Perform resizing based on the text value of the input elements.
+   * 
+   * @method
+   * @name module:resizer.performResize
+   * @param {HTMLElement}
+   *          wrapper The container which will be resized as needed.
+   */
   function performResize( wrapper )
   {
     var minWidth = MIN_WIDTH;

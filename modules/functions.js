@@ -1,3 +1,9 @@
+/**
+ * Utility functions, mostly for handling strings.
+ * 
+ * @module functions
+ * @requires jquery
+ */
 define(
     'functions',
     [ 'jquery' ],
@@ -6,7 +12,15 @@ define(
       'use strict';
       var CHARACTERS = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-.!~*'()?", CHARACTERS_LEN = CHARACTERS.length;
 
-      function getNumberFromCharacters( characters )
+      /**
+       * Get a number encoded as characters.
+       * 
+       * @method
+       * @name module:functions.getNumber
+       * @param {string}
+       *          characters The characters to decode as a number.
+       */
+      function getNumber( characters )
       {
         var sum = 0, len = characters.length;
         for ( var i = 0, character; character = characters.charAt( i ), i < len; i++ )
@@ -28,7 +42,19 @@ define(
         return sum;
       }
 
-      function getCharactersFromNumber( number, charNo )
+      /**
+       * Encode a number as characters.
+       * 
+       * @method
+       * @name module:functions.getCharacters
+       * @param {integer}
+       *          number The number to encode.
+       * @param {integer}
+       *          charNo The number of characters to use.
+       * @throws {EncodingError}
+       *           Typically if the number of characters is too small.
+       */
+      function getCharacters( number, charNo )
       {
         var characters = '';
         var num = number;
@@ -52,6 +78,17 @@ define(
 
       EncodingError.prototype = new Error;
 
+      /**
+       * Bind an elements click event to a function.
+       * 
+       * @method
+       * @name module:functions.bindButton
+       * @param {string}
+       *          selector JQuery selector for the element to bind.
+       * @param {Function}
+       *          func The function to use as event handler.
+       * @returns {jQuery} The jQuery object for the selector.
+       */
       function bindButton( selector, func )
       {
         return $( selector ).click( function()
@@ -84,7 +121,7 @@ define(
         var result = '';
         if ( countSize )
         {
-          result += getCharactersFromNumber( items.length, countSize );
+          result += getCharacters( items.length, countSize );
         }
         if ( items.length )
         {
@@ -93,12 +130,12 @@ define(
             var item = items[i];
             if ( item === undefined )
             {
-              result += getCharactersFromNumber( 0 );
+              result += getCharacters( 0 );
             }
             else
             {
               var encodedItem = encode( item );
-              result += getCharactersFromNumber( encodedItem.length, itemLengthSize );
+              result += getCharacters( encodedItem.length, itemLengthSize );
               result += encodedItem;
             }
           }
@@ -117,7 +154,7 @@ define(
         var numberOfItems = numInfo.numberOfItems;
         for ( var i = 0; i < numberOfItems; i++ )
         {
-          var len = getNumberFromCharacters( data.charAt( currentPos++ ) );
+          var len = getNumber( data.charAt( currentPos++ ) );
           if ( len )
           {
             var string = decode( data.substr( currentPos, len ) );
@@ -167,7 +204,7 @@ define(
         }
         else if ( 'countSize' in input )
         {
-          numberOfItems = getNumberFromCharacters( input.data.substr( pos, input.countSize ) );
+          numberOfItems = getNumber( input.data.substr( pos, input.countSize ) );
           pos += input.countSize;
         }
         else
@@ -239,8 +276,8 @@ define(
       }
 
       return {
-        'getNumber' : getNumberFromCharacters,
-        'getCharacters' : getCharactersFromNumber,
+        'getNumber' : getNumber,
+        'getCharacters' : getCharacters,
         'bindButton' : bindButton,
         'writeStringArray' : writeStringArray,
         'readStringArray' : readStringArray,
