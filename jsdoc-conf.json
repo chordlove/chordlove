@@ -1,0 +1,22 @@
+{
+  "tags": {
+    "allowUnknownTags": true
+  },
+ "source": {
+    "include": ["modules"],
+    "includePattern": ".+\\.js(doc)?$",
+    "excludePattern": "(^|\\/|\\\\)_"
+  },
+  "plugins": [],
+  "templates": {
+    "cleverLinks": false,
+    "monospaceLinks": false
+  },
+  "jsVersion": 180,
+  "opts": {
+    "recurse": true,
+    "private": true,
+    "encoding": "utf8",
+    "destination": "./doc/"
+  }
+}

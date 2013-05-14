@@ -1,3 +1,9 @@
+/**
+ * Load and execute operations from plugins.
+ * 
+ * @module plugins
+ */
+
 function Plugins( $, pluginlist, functions, toolbar )
 {
   'use strict';
@@ -7,7 +13,7 @@ function Plugins( $, pluginlist, functions, toolbar )
   }
   Plugins.prototype._instance = this;
 
-  var pub = {
+  var exports = {
     'register' : register,
     'serialize' : serialize,
     'init' : parseHash,
@@ -25,6 +31,14 @@ function Plugins( $, pluginlist, functions, toolbar )
     parseHash();
   } );
 
+  /**
+   * Register a plugin when it's loaded.
+   * 
+   * @method
+   * @name module:plugins.register
+   * @param {Object}
+   *          pluginInfo Metadata about the plugin.
+   */
   function register( pluginInfo )
   {
     plugins[pluginInfo.name] = pluginInfo;
@@ -35,6 +49,18 @@ function Plugins( $, pluginlist, functions, toolbar )
     return plugins.slice( 0 );
   }
 
+  /**
+   * Execute operations against a plugin by providing a function. The function gets the plugin instance, plugin metadata
+   * and the plugins module provided as arguments.
+   * 
+   * @method
+   * @name module:plugins.exec
+   * @param {String}
+   *          name The name of the plugin to use.
+   * @param {Function}
+   *          Function that uses the plugin. Typically:
+   *          <code>function(plugin, pluginMetaData, pluginsModule){...}</code>
+   */
   function executeByName( name, func )
   {
     if ( name in loading )
@@ -45,7 +71,7 @@ function Plugins( $, pluginlist, functions, toolbar )
     else if ( plugins[name] )
     {
       // The script has been loaded and batched executions run.
-      func( plugins[name].instance, plugins[name], pub );
+      func( plugins[name].instance, plugins[name], exports );
     }
     else
     {
@@ -192,7 +218,7 @@ function Plugins( $, pluginlist, functions, toolbar )
     return aNum - bNum;
   }
 
-  return pub;
+  return exports;
 }
 
 define( 'plugins', [ 'jquery', 'pluginlist', 'functions', 'toolbar' ], function( $, pluginlist, functions, toolbar )
