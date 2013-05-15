@@ -309,7 +309,8 @@ define(
           // TODO handle tab + shift
           if ( event.which === 9 )
           {
-            var siblings = target.nextAll( 'input' );
+            var backwards = 'shiftKey' in event && event.shiftKey === true;
+            var siblings = target[backwards ? 'prevAll' : 'nextAll']( 'input' );
             if ( siblings.length )
             {
               siblings.first().focus();
@@ -317,13 +318,13 @@ define(
             else
             {
               var wrapper = target.parents( 'li.item' ).first();
-              var next = wrapper.nextAll( 'li.item' );
+              var next = wrapper[backwards ? 'prevAll' : 'nextAll']( 'li.item' );
               if ( next.length )
               {
                 var input = next.first().find( 'input' );
                 if ( input.length )
                 {
-                  input.first().focus();
+                  input[backwards ? 'last' : 'first']().focus();
                 }
               }
             }
