@@ -1,3 +1,17 @@
+/**
+ * Render and serialize chords together with beats per chord and time signature. <i>The</i> core of the whole
+ * application.
+ * <p>
+ * There's two classes at play here, the Chords class and the separate Beats class to manage beat counts.
+ * 
+ * @module plugins/chords
+ * @requires jquery
+ * @requires functions
+ * @requires share
+ * @requires toolbar
+ * @requires resizer
+ */
+
 function Chords( $, functions, share, toolbar, resizer )
 {
   'use strict';
@@ -51,17 +65,39 @@ function Chords( $, functions, share, toolbar, resizer )
     }
   } );
 
+  /**
+   * Set format version and data to render.
+   * 
+   * @param {integer}
+   *          inputFormat The format version.
+   * @param {string}
+   *          inputData The data.
+   */
   function setData( inputFormat, inputData )
   {
     format = inputFormat;
     data = inputData;
   }
 
+  /**
+   * Add a renderer to be executed after the chords have been rendered.
+   * 
+   * @method
+   * @name module:plugins/chords.addPostRenderer
+   * @param {Function}
+   *          renderer The renderer to execute.
+   */
   function addPostRenderer( renderer )
   {
     postRenderers.push( renderer );
   }
 
+  /**
+   * Render data. Kicked off by the {@link module:plugins} module.
+   * 
+   * @method
+   * @name module:plugins/chords.render
+   */
   function render()
   {
     $PARENT.empty();
@@ -217,6 +253,28 @@ function Chords( $, functions, share, toolbar, resizer )
     } );
   }
 
+  /**
+   * Register an extractor that extracts data for copy/paste operations.
+   * <p>
+   * The registered function will be provided a <code>LI</code> element and should return a new function which
+   * processes a different <code>LI</code> element and applies the stored data to it. Something along the lines of:
+   * 
+   * <pre><code>
+   * function extract( li )
+   * {
+   *   var data = getData( li );
+   *   return function( newLi )
+   *   {
+   *     setData( newLi, data );
+   *   }
+   * }
+   * </code></pre>
+   * 
+   * @method
+   * @name module:plugins/chords.registerContentExtractor
+   * @param {Function}
+   *          extractor The extractor to register.
+   */
   function registerContentExtractor( extractor )
   {
     contentExtractors.push( extractor );
@@ -233,6 +291,15 @@ function Chords( $, functions, share, toolbar, resizer )
     };
   }
 
+  /**
+   * Get contents of items. Only made available to the {@link module:toolbar} for copy operations.
+   * 
+   * @method
+   * @name module:plugins/chords.getExtracts
+   * @param {HTMLLIElement}
+   *          li The element to extract data from.
+   * @returns {Array} Extracted data from different extractors.
+   */
   function getExtracts( li )
   {
     var extracts = [];
@@ -243,6 +310,16 @@ function Chords( $, functions, share, toolbar, resizer )
     return extracts;
   }
 
+  /**
+   * Create new items from previously extracted data. Only made available to the {@link module:toolbar} for paste
+   * operations.
+   * 
+   * @method
+   * @name module:plugins/chords.createFromExtracts
+   * @param {Array}
+   *          extracts Previously extracted data.
+   * @returns {HTMLLIElement} The created item.
+   */
   function createFromExtracts( extracts )
   {
     var li = createItem();
@@ -250,6 +327,7 @@ function Chords( $, functions, share, toolbar, resizer )
     {
       extracts[i]( li );
     }
+    return li;
   }
 
   function getBeats( li )

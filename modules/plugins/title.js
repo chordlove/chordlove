@@ -1,3 +1,13 @@
+/**
+ * Manages the song title.
+ * 
+ * @module plugins/title
+ * @requires jquery
+ * @requires plugins
+ * @requires share
+ * @requires functions
+ */
+
 function Title( $, plugins, share, functions )
 {
   'use strict';
@@ -14,18 +24,30 @@ function Title( $, plugins, share, functions )
   var format = DEFAULT_FORMAT;
   var data = null;
 
+  /**
+   * @method
+   * @name module:plugins/title.setData
+   */
   function setData( inputFormat, inputData )
   {
     format = inputFormat;
     data = functions.decode( inputData );
   }
 
+  /**
+   * @method
+   * @name module:plugins/title.render
+   */
   function render()
   {
     setPageTitle( data );
     $( '#title' ).val( data );
   }
 
+  /**
+   * @method
+   * @name module:plugins/title.serialize
+   */
   function serialize()
   {
     var result = PLUGIN_ID + DEFAULT_FORMAT + getTitle();

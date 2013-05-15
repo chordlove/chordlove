@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Module: share</title>
+    <title>JSDoc: Module: plugins/chords</title>
     
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">Module: share</h1>
+    <h1 class="page-title">Module: plugins/chords</h1>
     
     
 
@@ -27,7 +27,7 @@
     
 <header>
     <h2>
-    share
+    plugins/chords
     </h2>
     
 </header>  
@@ -38,7 +38,10 @@
     
     
         
-            <div class="description">Creates sharable URLs and manages events connected to this.</div>
+            <div class="description">Render and serialize chords together with beats per chord and time signature. <i>The</i> core of the whole
+application.
+<p>
+There's two classes at play here, the Chords class and the separate Beats class to manage beat counts.</div>
         
         
         
@@ -64,7 +67,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        share.js, line 1
+        plugins/chords.js, line 1
     </li></ul></dd>
     
     
@@ -88,7 +91,15 @@
         <h3 class="subsection-title">Requires</h3>
         
         <ul>
-            <li><a href="module-plugins.html">module:plugins</a></li>
+            <li><a href="module-jquery.html">module:jquery</a></li>
+        
+            <li><a href="module-functions.html">module:functions</a></li>
+        
+            <li><a href="module-share.html">module:share</a></li>
+        
+            <li><a href="module-toolbar.html">module:toolbar</a></li>
+        
+            <li><a href="module-resizer.html">module:resizer</a></li>
         </ul>
     
     
@@ -104,7 +115,7 @@
         <dl>
             
 <dt>
-    <h4 class="name" id="addStructureChangeListener"><span class="type-signature">&lt;static> </span>addStructureChangeListener<span class="signature">(listener)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="addPostRenderer"><span class="type-signature">&lt;static> </span>addPostRenderer<span class="signature">(renderer)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -112,7 +123,7 @@
     
     
     <div class="description">
-        Register a listener for events altering the structure of the content.
+        Add a renderer to be executed after the chords have been rendered.
     </div>
     
 
@@ -146,7 +157,7 @@
 	
         <tr>
             
-                <td class="name"><code>listener</code></td>
+                <td class="name"><code>renderer</code></td>
             
             
             <td class="type">
@@ -162,7 +173,7 @@
             
             
             
-            <td class="description last">Receiver of the events.</td>
+            <td class="description last">The renderer to execute.</td>
         </tr>
 	
 	
@@ -193,7 +204,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        share.js, line 62
+        plugins/chords.js, line 82
     </li></ul></dd>
     
     
@@ -221,7 +232,7 @@
         
             
 <dt>
-    <h4 class="name" id="addTextChangeListener"><span class="type-signature">&lt;static> </span>addTextChangeListener<span class="signature">(listener)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="createFromExtracts"><span class="type-signature">&lt;static> </span>createFromExtracts<span class="signature">(extracts)</span><span class="type-signature"> &rarr; {HTMLLIElement}</span></h4>
     
     
 </dt>
@@ -229,7 +240,8 @@
     
     
     <div class="description">
-        Register a listener for events altering text-level content but not the structure of the content.
+        Create new items from previously extracted data. Only made available to the <a href="module-toolbar.html"><code>module:toolbar</code></a> for paste
+operations.
     </div>
     
 
@@ -263,7 +275,299 @@
 	
         <tr>
             
-                <td class="name"><code>listener</code></td>
+                <td class="name"><code>extracts</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Array</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Previously extracted data.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        plugins/chords.js, line 313
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    The created item.
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">HTMLLIElement</span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="getExtracts"><span class="type-signature">&lt;static> </span>getExtracts<span class="signature">(li)</span><span class="type-signature"> &rarr; {Array}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Get contents of items. Only made available to the <a href="module-toolbar.html"><code>module:toolbar</code></a> for copy operations.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>li</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">HTMLLIElement</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The element to extract data from.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        plugins/chords.js, line 294
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    Extracted data from different extractors.
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">Array</span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="registerContentExtractor"><span class="type-signature">&lt;static> </span>registerContentExtractor<span class="signature">(extractor)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Register an extractor that extracts data for copy/paste operations.
+<p>
+The registered function will be provided a <code>LI</code> element and should return a new function which
+processes a different <code>LI</code> element and applies the stored data to it. Something along the lines of:
+
+<pre><code>
+function extract( li )
+{
+  var data = getData( li );
+  return function( newLi )
+  {
+    setData( newLi, data );
+  }
+}
+</code></pre>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>extractor</code></td>
             
             
             <td class="type">
@@ -279,7 +583,7 @@
             
             
             
-            <td class="description last">Receiver of the events.</td>
+            <td class="description last">The extractor to register.</td>
         </tr>
 	
 	
@@ -310,7 +614,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        share.js, line 49
+        plugins/chords.js, line 256
     </li></ul></dd>
     
     
@@ -338,7 +642,7 @@
         
             
 <dt>
-    <h4 class="name" id="changedStructure"><span class="type-signature">&lt;static> </span>changedStructure<span class="signature">(event)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="render"><span class="type-signature">&lt;static> </span>render<span class="signature">()</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -346,7 +650,7 @@
     
     
     <div class="description">
-        Tells the share module that there has been a structure-level change.
+        Render data. Kicked off by the <a href="module-plugins.html"><code>module:plugins</code></a> module.
     </div>
     
 
@@ -354,49 +658,6 @@
     
     
     
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>event</code></td>
-            
-            
-            <td class="type">
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">The event object wich listeners will receive.</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
     
     
     
@@ -422,119 +683,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        share.js, line 92
-    </li></ul></dd>
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="changedText"><span class="type-signature">&lt;static> </span>changedText<span class="signature">(event)</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Tells the share module that there has been a text-level change.
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>event</code></td>
-            
-            
-            <td class="type">
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">The event object wich listeners will receive.</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        share.js, line 75
+        plugins/chords.js, line 95
     </li></ul></dd>
     
     

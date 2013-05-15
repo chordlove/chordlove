@@ -98,7 +98,7 @@ function Plugins( $, pluginlist, functions, toolbar )
   {
     exec( input.name, function( instance, info, pluginsModule )
     {
-      instance.setData( input.format, input.data );
+      // instance.setData( input.format, input.data );
       if ( 'render' in info && info['render'] === true )
       {
         instance.render();

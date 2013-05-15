@@ -1,3 +1,16 @@
+/**
+ * Module to add lyrics to the chord items. Hooks into the {@link module:plugins/chords} module to get rendering
+ * executed and adds its own copy/paste extractor as well.
+ * 
+ * @module plugins/lyrics
+ * @requires jquery
+ * @requires functions
+ * @requires share
+ * @requires toolbar
+ * @requires resizer
+ * @requires plugins
+ */
+
 function Lyrics( $, functions, share, toolbar, resizer, plugins )
 {
   'use strict';
@@ -97,12 +110,20 @@ function Lyrics( $, functions, share, toolbar, resizer, plugins )
             } );
   }
 
+  /**
+   * @method
+   * @name module:plugins/lyrics.setData
+   */
   function setData( inputFormat, inputData )
   {
     format = inputFormat;
     data = inputData;
   }
 
+  /**
+   * @method
+   * @name module:plugins/lyrics.render
+   */
   function render()
   {
     var lyrics = functions.readStringArray( {
@@ -120,6 +141,10 @@ function Lyrics( $, functions, share, toolbar, resizer, plugins )
     } );
   }
 
+  /**
+   * @method
+   * @name module:plugins/lyrics.serialize
+   */
   function serialize()
   {
     var result = '';
