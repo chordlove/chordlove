@@ -109,6 +109,15 @@ define(
         }
       }
 
+      /**
+       * Transforms an array of strings to a single string suitable for inclusion in URLs.
+       * 
+       * @method
+       * @name module:functions.writeStringArray
+       * @param {Object}
+       *          data An object containing the mandatory <code>items</code> key. Optional keys:
+       *          <code>itemLengthSize</code>, <code>countSize</code>.
+       */
       function writeStringArray( data )
       {
         if ( !data.items.length )
@@ -143,6 +152,16 @@ define(
         return result;
       }
 
+      /**
+       * Transforms a string representation of an array into an array of strings.
+       * 
+       * @method
+       * @name functions.readStringArray
+       * @param {Object}
+       *          input An object containing the mandatory <code>data</code> key. Optional keys:
+       *          <code>currentPos</code>, <code>transformer</code>, <code>size</code>, <code>countSize</code>.
+       * @returns {Object} An object with the keys <code>array</code> and <code>position</code>.
+       */
       function readStringArray( input )
       {
         var array = [];
@@ -176,6 +195,16 @@ define(
         };
       }
 
+      /**
+       * Transforms a string into an array of equal sized chunks.
+       * 
+       * @method
+       * @name module:functions.readChunkArray
+       * @param {Object}
+       *          input An object with the mandatory key <code>data<code>.
+       *          Optional keys: <code>currentPos</code>, <code>size</code>, <code>countSize</code>.
+       * @returns {Array} An array of string chunks.
+       */
       function readChunkArray( input )
       {
         var chunks = [];
@@ -223,6 +252,15 @@ define(
       ESCAPES['♯'] = 's';
       ESCAPES['_'] = '-';
 
+      /**
+       * Encodes a string altering some characters with special meaning to Chordlove.
+       * 
+       * @method
+       * @name module:functions.encode
+       * @param {string}
+       *          stringToEncode
+       * @returns {string} The encoded string.
+       */
       function encode( stringToEncode )
       {
         var string = stringToEncode;
@@ -233,6 +271,15 @@ define(
         return string;
       }
 
+      /**
+       * Decodes a string from a Chordlove URL.
+       * 
+       * @method
+       * @name module:functions.decode
+       * @param {string}
+       *          stringToDecode
+       * @returns {string} The decoded string.
+       */
       function decode( stringToDecode )
       {
         var string = stringToDecode;
@@ -243,6 +290,15 @@ define(
         return string;
       }
 
+      /**
+       * Event handler for handling key events in <code>input</code> elements. It makes sure the <kbd>TAB</kbd> key
+       * works correctly.
+       * 
+       * @method
+       * @name module:functions.handleInputKeyEvent
+       * @param {Object}
+       *          event A jQuery event object.
+       */
       function handleInputKeyEvent( event )
       {
         var target = $( event.target );
