@@ -44,8 +44,9 @@ Dependencies
 
 * [Font Awesome](http://fortawesome.github.io/Font-Awesome/)
 * [Inject](http://www.injectjs.com/)
-* [JQuery](http://jquery.com/)
-* [JQuery UI](http://jqueryui.com/)
+* [jQuery](http://jquery.com/)
+* [jQuery hashchange event](http://benalman.com/projects/jquery-hashchange-plugin/)
+* [jQuery UI](http://jqueryui.com/)
 * [Twitter Bootstrap](http://twitter.github.io/bootstrap/)
 
 Fonts
