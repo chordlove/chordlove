@@ -170,6 +170,10 @@ div.duration ul>li>a {
   font-size: 15px;
 }
 
+#help .modal-body td {
+  padding: 2px 4px;
+}
+
 #items {
   padding-left: 0;
 }
