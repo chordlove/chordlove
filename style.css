@@ -128,7 +128,7 @@ div.duration {
   line-height: 10px;
 }
 
-.duration a {
+div.duration a {
   padding: 2px 0 0 0;
   height: 6px;
   font-size: 10px;
@@ -136,12 +136,12 @@ div.duration {
     'Arial Unicode MS', serif;
 }
 
-.btn-group.duration>.btn,.btn-group.duration>.dropdown-menu,.btn-group.duration>.popover {
+div.btn-group.duration>.btn,div.btn-group.duration>.dropdown-menu,div.btn-group.duration>.popover {
   font-size: 10px;
   line-height: 6px;
 }
 
-.btn-group.duration>.btn,.btn-group.duration>.popover,.duration.btn-group.open .btn.dropdown-toggle
+div.btn-group.duration>.btn,div.btn-group.duration>.popover,div.duration.btn-group.open .btn.dropdown-toggle,div.btn-group.chord-menu>.btn,div.btn-group.chord-menu>.popover,div.chord-menu.btn-group.open .btn.dropdown-toggle
   {
   background: none;
   border: none;
@@ -212,25 +212,6 @@ img.barline {
   height: 68px;
 }
 
-#items>li i.icon-double-angle-down {
-  display: none;
-}
-
-body.edit-mode #items>li i.icon-double-angle-down {
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  display: inline-block;
-}
-
-#items.has-text>li i.icon-double-angle-down {
-  display: none;
-}
-
-select.equivalent {
-  font-weight: bold;
-}
-
 #items>li.ui-selecting {
   background: #FECA40;
 }
@@ -239,17 +220,17 @@ select.equivalent {
   background: #F39814;
 }
 
-body li .handle {
+body li div.handle {
   display: none;
 }
 
-body.edit-mode #items>li .handle {
+body.edit-mode #items>li div.handle {
   background: #f8f8f8;
   position: absolute;
   left: 0;
   top: 0;
   bottom: 0;
-  padding: 2px;
+  padding: 0 2px 2px 2px;
   font-size: 12px;
   border-top-left-radius: 4px;
   border-bottom-left-radius: 4px;
@@ -261,13 +242,30 @@ li i {
   color: #666666;
 }
 
-li .handle .icon-pushpin {
+div.chord-menu {
   position: absolute;
   bottom: 0;
   left: 0;
-  padding: 2px;
+  padding: 0;
+}
+
+div.chord-menu>a {
+  padding: 0 2px;
+  font-size: 12px;
+}
+
+li .handle .icon-pushpin {
+  position: absolute;
+  top: 18px;
+  left: 0;
+  padding: 2px 4px;
   cursor: default;
 }
+
+#items.has-text li div.handle .icon-pushpin {
+  top: 28px;
+}
+
 
 li.ui-selected .handle .icon-pushpin {
   color: #F39814;

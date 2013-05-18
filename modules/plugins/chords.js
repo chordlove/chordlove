@@ -35,6 +35,9 @@ function Chords( $, functions, share, toolbar, resizer )
   var $TIME_SIGNATURE = $( '#time-signature' );
   var $LI = $( '<li class="item" />' );
   var $HANDLE = $( '<div class="handle"><i class="icon-move" title="move"></i><i class="icon-pushpin" title="select/unselect"></i></div>' );
+  var $MENU = $( '<div class="btn-group chord-menu"><a class="btn dropdown-toggle" data-toggle="dropdown" href="#" title="More …"><i class="icon-cog"></i></a><ul class="dropdown-menu"></ul></div>' );
+  var $MENU_LI = $( '<li />' );
+  var $MENU_A = $( '<a href="#"/>' );
   var $INPUT = $( '<input class="chord-text resize-trigger" type="text" title="Add a chord" placeholder="Chord…" />' );
   var $CHORD = $( '<div class="chord"/>' );
 
@@ -356,7 +359,15 @@ function Chords( $, functions, share, toolbar, resizer )
       chordText = chordData.chord;
       beats = chordData.beats;
     }
-    var wrapper = $LI.clone().append( $HANDLE.clone() );
+    var handle = $HANDLE.clone();
+    var menu = $MENU.clone();
+    var menuList = $( 'ul', menu );
+    var menuLi = $MENU_LI.clone();
+    var menuA = $MENU_A.clone().text( 'Menu item' );
+    menuLi.append( menuA );
+    menuList.append( menuLi );
+    handle.append( menu );
+    var wrapper = $LI.clone().append( handle );
     var input = $INPUT.clone();
     if ( chordText )
     {
@@ -365,7 +376,6 @@ function Chords( $, functions, share, toolbar, resizer )
     var div = $CHORD.clone();
     input.appendTo( div );
     wrapper.append( div );
-    // wrapper.append( more );
     wrapper.appendTo( $PARENT );
 
     beatsHandler.createBeats( beats, wrapper );
