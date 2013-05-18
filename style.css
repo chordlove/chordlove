@@ -254,6 +254,14 @@ div.chord-menu>a {
   font-size: 12px;
 }
 
+#items div.chord-menu>ul>li>a {
+  padding: 3px;
+}
+
+#items div.chord-menu>ul>li>a:hover {
+  color: #ffffff;
+}
+
 li .handle .icon-pushpin {
   position: absolute;
   top: 18px;

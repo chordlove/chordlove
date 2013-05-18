@@ -38,6 +38,7 @@ function Chords( $, functions, share, toolbar, resizer )
   var $MENU = $( '<div class="btn-group chord-menu"><a class="btn dropdown-toggle" data-toggle="dropdown" href="#" title="More …"><i class="icon-cog"></i></a><ul class="dropdown-menu"></ul></div>' );
   var $MENU_LI = $( '<li />' );
   var $MENU_A = $( '<a href="#"/>' );
+  var MENU_PASTE_BEFORE = '<i class="icon-paste"></i> Paste before';
   var $INPUT = $( '<input class="chord-text resize-trigger" type="text" title="Add a chord" placeholder="Chord…" />' );
   var $CHORD = $( '<div class="chord"/>' );
 
@@ -362,10 +363,7 @@ function Chords( $, functions, share, toolbar, resizer )
     var handle = $HANDLE.clone();
     var menu = $MENU.clone();
     var menuList = $( 'ul', menu );
-    var menuLi = $MENU_LI.clone();
-    var menuA = $MENU_A.clone().text( 'Menu item' );
-    menuLi.append( menuA );
-    menuList.append( menuLi );
+    addChordMenuItems( menuList );
     handle.append( menu );
     var wrapper = $LI.clone().append( handle );
     var input = $INPUT.clone();
@@ -399,6 +397,14 @@ function Chords( $, functions, share, toolbar, resizer )
     }
 
     return wrapper;
+  }
+
+  function addChordMenuItems( menuList )
+  {
+    var li = $MENU_LI.clone();
+    var a = $MENU_A.clone().html( MENU_PASTE_BEFORE );
+    li.append( a );
+    menuList.append( li );
   }
 
   function setCharAt( str, index, chr )
