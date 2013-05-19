@@ -117,7 +117,8 @@ input[type="text"].song-text {
   color: #bbbbbb;
 }
 
-:-ms-input-placeholder { /* Internet Explorer 10+ */
+h1 input[type="text"]:-ms-input-placeholder,input[type="text"].chord-text:-ms-input-placeholder,input[type="text"].song-text:-ms-input-placeholder
+  { /* Internet Explorer 10+ */
   color: #bbbbbb;
 }
 
@@ -273,7 +274,6 @@ li .handle .icon-pushpin {
 #items.has-text li div.handle .icon-pushpin {
   top: 28px;
 }
-
 
 li.ui-selected .handle .icon-pushpin {
   color: #F39814;

@@ -1,8 +1,9 @@
 /**
- * Render and serialize chords together with beats per chord and time signature. <i>The</i> core of the whole
+ * Render and serialize chords together with beats per chord and time signature. <i>The core</i> of the whole
  * application.
  * <p>
- * There's two classes at play here, the Chords class and the separate Beats class to manage beat counts.
+ * There's three classes at play here, the core Chords class, the separate Beats class to manage beat counts and the
+ * CopyPaste class to handle copy/paste actions.
  * 
  * @module plugins/chords
  * @requires jquery
@@ -21,7 +22,7 @@ function Chords( $, functions, share, toolbar, resizer )
   }
   Chords.prototype._instance = this;
 
-  var PLUGIN_ID = "01", DEFAULT_FORMAT = 0;
+  var PLUGIN_ID = '01', DEFAULT_FORMAT = 0;
 
   var DEFAULT_TIME_SIGNATURE = 4;
   var CHORDS_COUNT_LENGTH = 2;
@@ -52,12 +53,12 @@ function Chords( $, functions, share, toolbar, resizer )
 
   registerContentExtractor( extract );
 
-  toolbar.registerChordsModule( {
-    "getExtracts" : getExtracts,
-    "createFromExtracts" : createFromExtracts
-  } );
+  var copyPaste = new CopyPaste( {
+    'getExtracts' : getExtracts,
+    'createItem' : createItem
+  }, share, functions, $PARENT );
 
-  functions.bindButton( "#add-chord", createItem );
+  functions.bindButton( '#add-chord', createItem );
 
   share.addStructureChangeListener( handleStructureChange );
 
@@ -111,7 +112,7 @@ function Chords( $, functions, share, toolbar, resizer )
     }
     if ( format !== DEFAULT_FORMAT )
     {
-      throw "Unknown chords data format.";
+      throw 'Unknown chords data format.';
     }
     var deserializedData = deserialize( data );
     var chordItems = deserializedData.chordItems;
@@ -124,14 +125,16 @@ function Chords( $, functions, share, toolbar, resizer )
     var beatsSum = 0;
     $.each( chordItems, function()
     {
-      createItem( this );
+      createItem( {
+        'chordData' : this
+      } );
       beatsSum += this.beats;
       if ( beatsSum % timeSignature === 0 )
       {
         $SINGLE_BARLINE.clone().appendTo( $PARENT );
       }
     } );
-    $TIME_SIGNATURE.val( "" + deserializedData.timeSignature );
+    $TIME_SIGNATURE.val( '' + deserializedData.timeSignature );
     $.each( postRenderers, function()
     {
       this();
@@ -178,8 +181,8 @@ function Chords( $, functions, share, toolbar, resizer )
       console.log( err );
     }
     return {
-      "chordItems" : chordItems,
-      "timeSignature" : timeSignature
+      'chordItems' : chordItems,
+      'timeSignature' : timeSignature
     };
   }
 
@@ -314,26 +317,6 @@ function Chords( $, functions, share, toolbar, resizer )
     return extracts;
   }
 
-  /**
-   * Create new items from previously extracted data. Only made available to the {@link module:toolbar} for paste
-   * operations.
-   * 
-   * @method
-   * @name module:plugins/chords.createFromExtracts
-   * @param {Array}
-   *          extracts Previously extracted data.
-   * @returns {HTMLLIElement} The created item.
-   */
-  function createFromExtracts( extracts )
-  {
-    var li = createItem();
-    for ( var i = 0; i < extracts.length; i++ )
-    {
-      extracts[i]( li );
-    }
-    return li;
-  }
-
   function getBeats( li )
   {
     return $( 'div.duration > a', li ).text();
@@ -351,21 +334,29 @@ function Chords( $, functions, share, toolbar, resizer )
     return new ChordBeat( chordText, beatCount );
   }
 
-  function createItem( chordData )
+  function createItem( inputData )
   {
     var chordText = undefined;
     var beats = undefined;
-    if ( chordData !== undefined )
+    var before = undefined;
+    if ( inputData !== undefined )
     {
-      chordText = chordData.chord;
-      beats = chordData.beats;
+      if ( 'chordData' in inputData )
+      {
+        chordText = inputData.chordData.chord;
+        beats = inputData.chordData.beats;
+      }
+      if ( 'before' in inputData )
+      {
+        before = inputData.before;
+      }
     }
     var handle = $HANDLE.clone();
+    var wrapper = $LI.clone().append( handle );
     var menu = $MENU.clone();
     var menuList = $( 'ul', menu );
-    addChordMenuItems( menuList );
+    addChordMenuItems( menuList, wrapper );
     handle.append( menu );
-    var wrapper = $LI.clone().append( handle );
     var input = $INPUT.clone();
     if ( chordText )
     {
@@ -374,7 +365,14 @@ function Chords( $, functions, share, toolbar, resizer )
     var div = $CHORD.clone();
     input.appendTo( div );
     wrapper.append( div );
-    wrapper.appendTo( $PARENT );
+    if ( before )
+    {
+      wrapper.insertBefore( before );
+    }
+    else
+    {
+      wrapper.appendTo( $PARENT );
+    }
 
     beatsHandler.createBeats( beats, wrapper );
 
@@ -389,7 +387,7 @@ function Chords( $, functions, share, toolbar, resizer )
     addPinEvents( wrapper );
 
     resizer.prepareResize( wrapper );
-    if ( chordData === undefined )
+    if ( inputData === undefined )
     {
       // create a blank item
       input.focus();
@@ -399,10 +397,17 @@ function Chords( $, functions, share, toolbar, resizer )
     return wrapper;
   }
 
-  function addChordMenuItems( menuList )
+  function addChordMenuItems( menuList, wrapper )
   {
     var li = $MENU_LI.clone();
     var a = $MENU_A.clone().html( MENU_PASTE_BEFORE );
+    a.click( {
+      'li' : wrapper.get( 0 )
+    }, function( event )
+    {
+      event.preventDefault();
+      copyPaste.pasteItems( event.data.li );
+    } );
     li.append( a );
     menuList.append( li );
   }
@@ -440,11 +445,11 @@ function Chords( $, functions, share, toolbar, resizer )
   }
 
   return {
-    "render" : render,
-    "serialize" : serialize,
-    "setData" : setData,
-    "registerContentExtractor" : registerContentExtractor,
-    "addPostRenderer" : addPostRenderer
+    'render' : render,
+    'serialize' : serialize,
+    'setData' : setData,
+    'registerContentExtractor' : registerContentExtractor,
+    'addPostRenderer' : addPostRenderer
   };
 }
 
@@ -493,7 +498,7 @@ function Beats( $TIME_SIGNATURE, share )
         {
           currentBeats.text( event.data.beatString );
           currentBeats.blur();
-          share.changedStructure( "chords/beats" );
+          share.changedStructure( 'chords/beats' );
         }
         return false;
       } );
@@ -507,10 +512,69 @@ function Beats( $TIME_SIGNATURE, share )
   };
 }
 
+function CopyPaste( chords, share, functions, $PARENT )
+{
+  'use strict';
+  var copiedItems = [];
+
+  functions.bindButton( '#cut', cutItems );
+  functions.bindButton( '#copy', copyItems );
+  functions.bindButton( '#paste', pasteItems );
+  functions.bindButton( '#delete', deleteItems );
+
+  function getSelectedItems()
+  {
+    return $( 'li.ui-selected', $PARENT );
+  }
+
+  function deleteItems()
+  {
+    getSelectedItems().remove();
+    share.changedStructure( 'chords/CopyPaste/delete' );
+  }
+
+  function cutItems()
+  {
+    copyItems();
+    getSelectedItems().remove();
+    share.changedStructure( 'chords/CopyPaste/cut' );
+  }
+
+  function copyItems()
+  {
+    copiedItems = [];
+    getSelectedItems().each( function()
+    {
+      copiedItems.push( chords.getExtracts( this ) );
+    } );
+  }
+
+  function pasteItems( beforeElement )
+  {
+    var before = beforeElement ? {
+      'before' : beforeElement
+    } : undefined;
+    $( copiedItems ).each( function()
+    {
+      var li = chords.createItem( before );
+      for ( var i = 0; i < this.length; i++ )
+      {
+        this[i]( li );
+      }
+    } );
+    $( 'li.ui-selected', $PARENT ).removeClass( 'ui-selected' );
+    share.changedStructure( 'chords/CopyPaste/paste' );
+  }
+
+  return {
+    'pasteItems' : pasteItems
+  };
+}
+
 function addPinEvents( wrapper )
 {
   'use strict';
-  $( '.icon-pushpin', wrapper ).mousedown( function( event )
+  $( 'i.icon-pushpin', wrapper ).mousedown( function( event )
   {
     event.stopImmediatePropagation();
     if ( wrapper.hasClass( 'ui-selected' ) )
@@ -525,14 +589,14 @@ function addPinEvents( wrapper )
   } );
 }
 
-define( "chords", [ "plugins", "jquery", "functions", "share", "toolbar", "resizer" ], function( plugins, $, functions,
+define( 'chords', [ 'plugins', 'jquery', 'functions', 'share', 'toolbar', 'resizer' ], function( plugins, $, functions,
     share, toolbar, resizer )
 {
   'use strict';
   plugins.register( {
-    "name" : "chords",
-    "instance" : new Chords( $, functions, share, toolbar, resizer ),
-    "render" : true,
-    "serialize" : true
+    'name' : 'chords',
+    'instance' : new Chords( $, functions, share, toolbar, resizer ),
+    'render' : true,
+    'serialize' : true
   } );
 } );

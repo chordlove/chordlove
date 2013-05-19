@@ -17,64 +17,11 @@ function Toolbar( $, functions, share )
   Toolbar.prototype._instance = this;
 
   var PARENT = $( '#items' );
-  var chords = null;
-
-  /**
-   * Register the chords module so it can be used for copy-paste operations.
-   * 
-   * @method
-   * @name module:toolbar.registerChordsModule
-   * @param {Chords}
-   *          chordsModule The chords module to use.
-   */
-  function registerChordsModule( chordsModule )
-  {
-    chords = chordsModule;
-  }
 
   function prepareCpanel()
   {
     // TODO this is a backwards compat hack.
     var bindButton = functions.bindButton;
-
-    function getSelectedItems()
-    {
-      return $( 'li.ui-selected', PARENT );
-    }
-
-    function deleteItems()
-    {
-      getSelectedItems().remove();
-      share.changedStructure( 'toolbar/delete' );
-    }
-
-    var copiedItems = [];
-
-    function cutItems()
-    {
-      copyItems();
-      getSelectedItems().remove();
-      share.changedStructure( 'toolbar/cut' );
-    }
-
-    function copyItems()
-    {
-      copiedItems = [];
-      getSelectedItems().each( function()
-      {
-        copiedItems.push( chords.getExtracts( this ) );
-      } );
-    }
-
-    function pasteItems()
-    {
-      $( copiedItems ).each( function()
-      {
-        chords.createFromExtracts( this );
-      } );
-      share.changedStructure( 'toolbar/paste' );
-      $( 'li.ui-selected', PARENT ).removeClass( 'ui-selected' );
-    }
 
     function editMode()
     {
@@ -85,16 +32,13 @@ function Toolbar( $, functions, share )
     function clear()
     {
       PARENT.empty();
+      // TODO: can't just rip it out like this
       PARENT.removeClass( 'has-text' );
       $( '#title' ).val( '' ).focus();
       share.changedStructure( 'toolbar/clear' );
       return false;
     }
 
-    bindButton( '#cut', cutItems );
-    bindButton( '#copy', copyItems );
-    bindButton( '#paste', pasteItems );
-    bindButton( '#delete', deleteItems );
     bindButton( '#edit', editMode );
     bindButton( '#clear', clear );
 
@@ -156,8 +100,7 @@ function Toolbar( $, functions, share )
 
   return {
     'hideOrShow' : hideOrShow,
-    'setEditMode' : setEditMode,
-    'registerChordsModule' : registerChordsModule
+    'setEditMode' : setEditMode
   };
 }
 
