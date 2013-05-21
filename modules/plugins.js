@@ -125,9 +125,10 @@ function Plugins( $, pluginlist, functions, toolbar )
         {
           var method = this.method;
           var args = this.args;
+          console.log( this );
           pluginsModule.exec( this.plugin, function( moduleInstance )
           {
-            console.log( this );
+            console.log( moduleInstance );
             moduleInstance[method].apply( null, args );
           } );
         } );
