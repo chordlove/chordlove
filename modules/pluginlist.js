@@ -12,7 +12,7 @@ function PluginList()
   }
   PluginList.prototype._instance = this;
 
-  var list = [ 'title', 'chords', 'lyrics' ];
+  var list = [ 'title', 'chords', 'lyrics', 'structure', 'verses' ];
 
   /**
    * Get plugin name from id.

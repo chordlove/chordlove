@@ -47,11 +47,14 @@ function Chords( $, functions, share, toolbar, resizer )
 
   var postRenderers = [];
   var contentExtractors = [];
+  var chordMenuMembers = [];
 
   var format = DEFAULT_FORMAT;
   var data = null;
 
   registerContentExtractor( extract );
+
+  registerChordMenuMember( pasteBeforeMenu );
 
   var copyPaste = new CopyPaste( {
     'getExtracts' : getExtracts,
@@ -397,19 +400,59 @@ function Chords( $, functions, share, toolbar, resizer )
     return wrapper;
   }
 
+  /**
+   * Register a member in the chord menu.
+   * <p>
+   * The registered function will be provided the chord item wrapping <code>LI</code> element and the <code>LI</code>
+   * and <code>A</code> element going into the menu, all wrapped as jQuery objects. Manipulate the menu elements as
+   * needed. Something along the lines of:
+   * 
+   * <pre><code>
+   * function menuMember( wrapper, li, a )
+   * {
+   *   a.html( '&lt;i class=&quot;icon-paste&quot;&gt;&lt;/i&gt; Paste before' ).click( {
+   *     'li' : wrapper.get( 0 )
+   *   }, function( event )
+   *   {
+   *     event.preventDefault();
+   *     // the real work happens elsewhere in this case
+   *     copyPaste.pasteItems( event.data.li );
+   *   } );
+   * }
+   * </code></pre>
+   * 
+   * @method
+   * @name module:plugins/chords.registerChordMenuMember
+   * @param {Function}
+   *          menuMember The menu member function to register.
+   */
+  function registerChordMenuMember( menuMember )
+  {
+    chordMenuMembers.push( menuMember );
+  }
+
   function addChordMenuItems( menuList, wrapper )
   {
-    var li = $MENU_LI.clone();
-    var a = $MENU_A.clone().html( MENU_PASTE_BEFORE );
-    a.click( {
+    for ( var i = 0; i < chordMenuMembers.length; i++ )
+    {
+      var menuMember = chordMenuMembers[i];
+      var menuLi = $MENU_LI.clone();
+      var menuA = $MENU_A.clone();
+      menuMember( wrapper, menuLi, menuA );
+      menuLi.append( menuA );
+      menuList.append( menuLi );
+    }
+  }
+
+  function pasteBeforeMenu( wrapper, li, a )
+  {
+    a.html( MENU_PASTE_BEFORE ).click( {
       'li' : wrapper.get( 0 )
     }, function( event )
     {
       event.preventDefault();
       copyPaste.pasteItems( event.data.li );
     } );
-    li.append( a );
-    menuList.append( li );
   }
 
   function setCharAt( str, index, chr )
@@ -449,7 +492,8 @@ function Chords( $, functions, share, toolbar, resizer )
     'serialize' : serialize,
     'setData' : setData,
     'registerContentExtractor' : registerContentExtractor,
-    'addPostRenderer' : addPostRenderer
+    'addPostRenderer' : addPostRenderer,
+    'registerChordMenuMember' : registerChordMenuMember
   };
 }
 

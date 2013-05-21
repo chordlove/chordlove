@@ -201,7 +201,7 @@ define(
        * @method
        * @name module:functions.readChunkArray
        * @param {Object}
-       *          input An object with the mandatory key <code>data<code>.
+       *          input An object with the mandatory keys <code>data<code> and <code>chunkSize</code>.
        *          Optional keys: <code>currentPos</code>, <code>size</code>, <code>countSize</code>.
        * @returns {Array} An array of string chunks.
        */

@@ -100,6 +100,10 @@ input[type="text"].song-text {
   display: none;
 }
 
+#items li.start-of-line {
+  clear: left;
+}
+
 #items.has-text input[type="text"].song-text {
   display: inline;
 }

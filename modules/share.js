@@ -14,31 +14,31 @@ function Share( plugins )
   }
   Share.prototype._instance = this;
 
-  var previousHash = "";
+  var previousHash = '';
 
   var textChangeListeners = [];
   var structureChangeListeners = [];
 
-  $( "#share-url" ).click( function()
+  $( '#share-url' ).click( function()
   {
     this.select();
   } );
 
-  $( "#share" ).click( function()
+  $( '#share' ).click( function()
   {
-    var href = window.location.href.replace( "|", "%7C" ).replace( "—", "%E2%80%94" );
+    var href = window.location.href.replace( '|', '%7C' ).replace( '—', '%E2%80%94' );
     this.blur();
-    $( "#share-url" ).val( href );
-    $( "#share-form" ).modal().on( 'shown', function()
+    $( '#share-url' ).val( href );
+    $( '#share-form' ).modal().on( 'shown', function()
     {
-      $( "#share-url" ).select();
+      $( '#share-url' ).select();
     } );
   } );
 
   function writeUri()
   {
     var status = plugins.serialize();
-    var hash = "#" + encodeURIComponent( status );
+    var hash = '#' + encodeURIComponent( status );
     if ( hash !== previousHash )
     {
       window.history.pushState( status, window.document.title, hash );
@@ -106,15 +106,21 @@ function Share( plugins )
     writeUri();
   }
 
+  function changed()
+  {
+    writeUri();
+  }
+
   return {
-    "addTextChangeListener" : addTextChangeListener,
-    "addStructureChangeListener" : addStructureChangeListener,
-    "changedText" : changedText,
-    "changedStructure" : changedStructure
+    'addTextChangeListener' : addTextChangeListener,
+    'addStructureChangeListener' : addStructureChangeListener,
+    'changedText' : changedText,
+    'changedStructure' : changedStructure,
+    'changed' : changed
   };
 }
 
-define( "share", [ "plugins" ], function( plugins )
+define( 'share', [ 'plugins' ], function( plugins )
 {
   'use strict';
   return new Share( plugins );

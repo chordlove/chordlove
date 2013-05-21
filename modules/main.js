@@ -20,26 +20,26 @@ define( 'jquery', [], function()
  * @requires plugins/chords
  * @requires plugins/lyrics
  */
-require( [ 'jquery', 'plugins', 'share', 'plugins/title', 'plugins/chords', 'plugins/lyrics' ], function( $, plugins,
-    share )
-{
-  'use strict';
-  $( function()
-  {
-    $.ajaxSetup( {
-      cache : true
-    } );
-
-    $( '#items' ).sortable( {
-      'revert' : true,
-      'handle' : '.handle',
-      'stop' : function( event )
+require( [ 'jquery', 'plugins', 'share', 'plugins/title', 'plugins/chords', 'plugins/lyrics', 'plugins/structure' ],
+    function( $, plugins, share )
+    {
+      'use strict';
+      $( function()
       {
-        share.changedStructure( event );
-      }
+        $.ajaxSetup( {
+          cache : true
+        } );
+
+        $( '#items' ).sortable( {
+          'revert' : true,
+          'handle' : '.handle',
+          'stop' : function( event )
+          {
+            share.changedStructure( event );
+          }
+        } );
+
+        plugins.init();
+
+      } );
     } );
-
-    plugins.init();
-
-  } );
-} );
