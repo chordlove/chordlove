@@ -428,6 +428,7 @@ function Chords( $, functions, share, toolbar, resizer )
    */
   function registerChordMenuMember( menuMember )
   {
+    console.log( menuMember );
     chordMenuMembers.push( menuMember );
   }
 
