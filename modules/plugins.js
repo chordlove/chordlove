@@ -45,6 +45,7 @@ function Plugins( $, pluginlist, functions, toolbar )
    */
   function register( pluginInfo )
   {
+    console.log( pluginInfo );
     plugins[pluginInfo.name] = pluginInfo;
   }
 
