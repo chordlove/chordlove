@@ -41,6 +41,10 @@ function Structure( $, share, functions )
    */
   function render()
   {
+    if ( data === null )
+    {
+      return;
+    }
     setStructure( data );
   }
 
@@ -115,7 +119,6 @@ function Structure( $, share, functions )
 define( 'structure', [ 'plugins', 'jquery', 'share', 'functions' ], function( plugins, $, share, functions )
 {
   'use strict';
-  console.log( 'initializing structure plugin' );
   var instance = new Structure( $, share, functions );
   plugins.register( {
     'name' : 'structure',

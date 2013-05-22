@@ -29,6 +29,7 @@ function Plugins( $, pluginlist, functions, toolbar )
 
   var plugins = {};
   var loading = {};
+  var configItems = [];
 
   $( window ).hashchange( function()
   {
@@ -45,7 +46,14 @@ function Plugins( $, pluginlist, functions, toolbar )
    */
   function register( pluginInfo )
   {
-    console.log( pluginInfo );
+    if ( 'config' in pluginInfo )
+    {
+      var config = pluginInfo.config;
+      for ( var i = 0; i < config.length; i++ )
+      {
+        configItems.push( config[i] );
+      }
+    }
     plugins[pluginInfo.name] = pluginInfo;
   }
 
@@ -99,7 +107,6 @@ function Plugins( $, pluginlist, functions, toolbar )
   {
     exec( input.name, function( instance, info, pluginsModule )
     {
-      // instance.setData( input.format, input.data );
       if ( 'render' in info && info['render'] === true )
       {
         instance.render();
@@ -107,33 +114,21 @@ function Plugins( $, pluginlist, functions, toolbar )
     } );
   }
 
-  function setData( id, format, data )
+  function configure( config )
   {
-    exec( pluginlist.idToName( id ), function( instance )
+    var method = config.method;
+    var args = config.args;
+    exec( config.plugin, function( moduleInstance )
     {
-      instance.setData( format, data );
+      moduleInstance[method].apply( null, args );
     } );
   }
 
-  function setDataAndConfigure( input )
+  function setData( input )
   {
     exec( input.name, function( instance, info, pluginsModule )
     {
       instance.setData( input.format, input.data );
-      if ( 'config' in info )
-      {
-        $.each( info['config'], function()
-        {
-          var method = this.method;
-          var args = this.args;
-          console.log( this );
-          pluginsModule.exec( this.plugin, function( moduleInstance )
-          {
-            console.log( moduleInstance );
-            moduleInstance[method].apply( null, args );
-          } );
-        } );
-      }
     } );
   }
 
@@ -180,8 +175,12 @@ function Plugins( $, pluginlist, functions, toolbar )
         var pluginData = this.substr( 3 );
         var pluginInput = new PluginInput( pluginId, pluginFormat, pluginData );
         plugins.push( pluginInput );
-        setDataAndConfigure( pluginInput );
+        setData( pluginInput );
       } );
+      while ( configItems.length )
+      {
+        configure( configItems.pop() );
+      }
       $.each( plugins, function()
       {
         render( this );
@@ -196,6 +195,10 @@ function Plugins( $, pluginlist, functions, toolbar )
     if ( readMode )
     {
       toolbar.hideOrShow( 'hide' );
+    }
+    while ( configItems.length )
+    {
+      configure( configItems.pop() );
     }
   }
 

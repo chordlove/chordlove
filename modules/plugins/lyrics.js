@@ -126,6 +126,10 @@ function Lyrics( $, functions, share, toolbar, resizer, plugins )
    */
   function render()
   {
+    if ( data === null )
+    {
+      return;
+    }
     var lyrics = functions.readStringArray( {
       'data' : data,
       'countSize' : 2
