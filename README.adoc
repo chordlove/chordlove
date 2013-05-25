@@ -8,12 +8,9 @@ Please report bugs at https://github.com/chordlove/chordlove/issues
 
 === Contributing ===
 
-Pull requests are very welcome.
-
-In case you plan to write a large chunk of code, start an issue to discuss it first!
+See https://github.com/chordlove/chordlove/blob/master/CONTRIBUTING.md[contributor guidelines].
 
 === License ===
 
 The project is licensed under http://www.gnu.org/licenses/agpl.html[AGPL v3].
-
 
