@@ -33,7 +33,10 @@ function Toolbar( $, functions, share )
   }
   Toolbar.prototype._instance = this;
 
-  var PARENT = $( '#items' );
+  var $PARENT = $( '#items' );
+  var $ADDONS_MENU = $( '#addons' );
+  var $MENU_LI = $( '<li />' );
+  var $MENU_A = $( '<a href="#"/>' );
 
   function prepareCpanel()
   {
@@ -48,9 +51,9 @@ function Toolbar( $, functions, share )
 
     function clear()
     {
-      PARENT.empty();
+      $PARENT.empty();
       // TODO: can't just rip it out like this
-      PARENT.removeClass( 'has-text' );
+      $PARENT.removeClass( 'has-text' );
       $( '#title' ).val( '' ).focus();
       share.changedStructure( 'toolbar/clear' );
       return false;
@@ -115,9 +118,33 @@ function Toolbar( $, functions, share )
     } );
   }
 
+  /**
+   * Register a member in the addons menu.
+   * <p>
+   * The registered function will be provided the <code>LI</code> and <code>A</code> element going into the menu,
+   * bot wrapped as jQuery objects. Manipulate the menu elements as needed. Something along the lines of:
+   * 
+   * <pre><code>
+   * </code></pre>
+   * 
+   * @method
+   * @name module:toolbar.registerAddonsMenuMember
+   * @param {Function}
+   *          menuMember The menu member function to register.
+   */
+  function registerAddonsMenuMember( menuMember )
+  {
+    var menuLi = $MENU_LI.clone();
+    var menuA = $MENU_A.clone();
+    menuMember( menuLi, menuA );
+    menuLi.append( menuA );
+    $ADDONS_MENU.append( menuLi );
+  }
+
   return {
     'hideOrShow' : hideOrShow,
-    'setEditMode' : setEditMode
+    'setEditMode' : setEditMode,
+    'registerAddonsMenuMember' : registerAddonsMenuMember
   };
 }
 

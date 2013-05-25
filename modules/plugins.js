@@ -46,7 +46,6 @@ function Plugins( $, pluginlist, functions, toolbar )
 
   var plugins = {};
   var loading = {};
-  var configItems = [];
 
   $( window ).hashchange( function()
   {

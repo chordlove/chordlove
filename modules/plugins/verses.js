@@ -1,5 +1,5 @@
 /* 
- * Chordlove is a tool for sharing song chords and lyrics.
+ * Chordlove is a tool for sharing song chords and verses.
  * Copyright (C) 2013 NA Konsult AB
  * 
  * This program is free software: you can redistribute it and/or modify
@@ -43,11 +43,9 @@ function Verses( $, functions, share, toolbar, resizer, plugins )
 
   var PARENT = $( '#verses-items' );
 
-  functions.bindButton( '#view-lyrics', visibleVerses );
-
   /**
    * @method
-   * @name module:plugins/lyrics.setData
+   * @name module:plugins/verses.setData
    */
   function setData( inputFormat, inputData )
   {
@@ -57,57 +55,32 @@ function Verses( $, functions, share, toolbar, resizer, plugins )
 
   /**
    * @method
-   * @name module:plugins/lyrics.render
+   * @name module:plugins/verses.render
    */
   function render()
   {
-    var lyrics = functions.readStringArray( {
-      'data' : data,
-      'countSize' : 2
-    } ).array;
-    hasText = true;
-    visibleText = true;
-    PARENT.addClass( 'has-text' );
-    VIEW_BUTTON.addClass( 'active' );
-    addTextInput();
-    $( '#items > li.item' ).each( function()
-    {
-      setVerses( this, lyrics.shift() );
-    } );
   }
 
   /**
    * @method
-   * @name module:plugins/lyrics.serialize
+   * @name module:plugins/verses.serialize
    */
   function serialize()
   {
     var result = '';
-    if ( hasText )
-    {
-      result += PLUGIN_ID + DEFAULT_FORMAT;
-      var items = [];
-      $( '#items > li.item' ).each( function()
-      {
-        items.push( getVerses( this ) );
-      } );
-      result += functions.writeStringArray( {
-        'items' : items,
-        'countSize' : 2
-      } );
-      if ( result.length < 6 + items.length )
-      {
-        // all items have zero length
-        result = '';
-      }
-    }
     return result;
+  }
+
+  function load()
+  {
+    console.log( 'LOADING!' );
   }
 
   return {
     'render' : render,
     'serialize' : serialize,
-    'setData' : setData
+    'setData' : setData,
+    'load' : load
   };
 }
 

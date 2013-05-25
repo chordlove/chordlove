@@ -37,26 +37,26 @@ define( 'jquery', [], function()
  * @requires plugins/chords
  * @requires plugins/lyrics
  */
-require( [ 'jquery', 'plugins', 'share', 'plugins/title', 'plugins/chords', 'plugins/lyrics', 'plugins/structure' ],
-    function( $, plugins, share )
-    {
-      'use strict';
-      $( function()
-      {
-        $.ajaxSetup( {
-          cache : true
-        } );
-
-        $( '#items' ).sortable( {
-          'revert' : true,
-          'handle' : '.handle',
-          'stop' : function( event )
-          {
-            share.changedStructure( event );
-          }
-        } );
-
-        plugins.init();
-
-      } );
+require( [ 'jquery', 'plugins', 'share', 'plugins/title', 'plugins/chords', 'plugins/lyrics', 'plugins/structure',
+    'plugins/addons' ], function( $, plugins, share )
+{
+  'use strict';
+  $( function()
+  {
+    $.ajaxSetup( {
+      cache : true
     } );
+
+    $( '#items' ).sortable( {
+      'revert' : true,
+      'handle' : '.handle',
+      'stop' : function( event )
+      {
+        share.changedStructure( event );
+      }
+    } );
+
+    plugins.init();
+
+  } );
+} );

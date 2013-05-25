@@ -15,7 +15,6 @@
  *You should have received a copy of the GNU Affero General Public License
  *along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 @font-face {
   font-family: 'DejaVuSerifBook';
   src: url('fonts/DejaVuSerif-webfont.eot');
@@ -305,7 +304,7 @@ li.ui-selected .handle .icon-pushpin {
   margin-left: 11px;
 }
 
-#tools span.btn-group {
+#tools span.btn-group, #tools div.btn-group {
   display: none;
 }
 
@@ -313,7 +312,7 @@ li.ui-selected .handle .icon-pushpin {
   display: inline-block;
 }
 
-body.edit-mode #tools span.btn-group {
+body.edit-mode #tools span.btn-group, body.edit-mode #tools div.btn-group {
   display: inline-block;
 }
 
