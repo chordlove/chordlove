@@ -116,23 +116,17 @@ function Structure( $, share, functions )
   };
 }
 
-define( 'structure', [ 'plugins', 'jquery', 'share', 'functions' ], function( plugins, $, share, functions )
+define( 'plugins/structure', [ 'plugins', 'jquery', 'share', 'functions', 'plugins/chords' ], function( plugins, $,
+    share, functions, chords )
 {
   'use strict';
   var instance = new Structure( $, share, functions );
+  chords.registerChordMenuMember( instance.startOfLineMenu );
+  chords.addPostRenderer( instance.render );
   plugins.register( {
     'name' : 'structure',
     'instance' : instance,
     'render' : false,
-    'serialize' : true,
-    'config' : [ {
-      'plugin' : 'chords',
-      'method' : 'addPostRenderer',
-      'args' : [ instance.render ]
-    }, {
-      'plugin' : 'chords',
-      'method' : 'registerChordMenuMember',
-      'args' : [ instance.startOfLineMenu ]
-    } ]
+    'serialize' : true
   } );
 } );

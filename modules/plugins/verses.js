@@ -94,8 +94,8 @@ function Verses( $, functions, share, toolbar, resizer, plugins )
   };
 }
 
-define( 'verses', [ 'plugins', 'jquery', 'functions', 'share', 'toolbar', 'resizer' ], function( plugins, $, functions,
-    share, toolbar, resizer )
+define( 'plugins/verses', [ 'plugins', 'jquery', 'functions', 'share', 'toolbar', 'resizer' ], function( plugins, $,
+    functions, share, toolbar, resizer )
 {
   'use strict';
   var instance = new Verses( $, functions, share, toolbar, resizer, plugins );
@@ -105,4 +105,5 @@ define( 'verses', [ 'plugins', 'jquery', 'functions', 'share', 'toolbar', 'resiz
     'render' : true,
     'serialize' : true
   } );
+  return instance;
 } );

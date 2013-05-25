@@ -46,14 +46,6 @@ function Plugins( $, pluginlist, functions, toolbar )
    */
   function register( pluginInfo )
   {
-    if ( 'config' in pluginInfo )
-    {
-      var config = pluginInfo.config;
-      for ( var i = 0; i < config.length; i++ )
-      {
-        configItems.push( config[i] );
-      }
-    }
     plugins[pluginInfo.name] = pluginInfo;
   }
 
@@ -114,20 +106,6 @@ function Plugins( $, pluginlist, functions, toolbar )
     } );
   }
 
-  function configure()
-  {
-    while ( configItems.length )
-    {
-      var config = configItems.pop();
-      var method = config.method;
-      var args = config.args;
-      exec( config.plugin, function( moduleInstance )
-      {
-        moduleInstance[method].apply( null, args );
-      } );
-    }
-  }
-
   function setData( input )
   {
     exec( input.name, function( instance, info, pluginsModule )
@@ -172,7 +150,6 @@ function Plugins( $, pluginlist, functions, toolbar )
       }
       var pluginSections = decodeURIComponent( hash.substring( 3 ) ).split( PLUGIN_END_MARKER );
       var plugins = [];
-      configure();
       $.each( pluginSections, function()
       {
         var pluginId = functions.getNumber( this.substr( 0, 2 ) );
@@ -182,7 +159,6 @@ function Plugins( $, pluginlist, functions, toolbar )
         plugins.push( pluginInput );
         setData( pluginInput );
       } );
-      configure();
       $.each( plugins, function()
       {
         render( this );
@@ -198,7 +174,6 @@ function Plugins( $, pluginlist, functions, toolbar )
     {
       toolbar.hideOrShow( 'hide' );
     }
-    configure();
   }
 
   function serialize()

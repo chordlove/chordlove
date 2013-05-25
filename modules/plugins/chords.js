@@ -633,14 +633,16 @@ function addPinEvents( wrapper )
   } );
 }
 
-define( 'chords', [ 'plugins', 'jquery', 'functions', 'share', 'toolbar', 'resizer' ], function( plugins, $, functions,
-    share, toolbar, resizer )
+define( 'plugins/chords', [ 'plugins', 'jquery', 'functions', 'share', 'toolbar', 'resizer' ], function( plugins, $,
+    functions, share, toolbar, resizer )
 {
   'use strict';
+  var instance = new Chords( $, functions, share, toolbar, resizer );
   plugins.register( {
     'name' : 'chords',
-    'instance' : new Chords( $, functions, share, toolbar, resizer ),
+    'instance' : instance,
     'render' : true,
     'serialize' : true
   } );
+  return instance;
 } );

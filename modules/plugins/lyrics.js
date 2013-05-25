@@ -180,20 +180,17 @@ function Lyrics( $, functions, share, toolbar, resizer, plugins )
   };
 }
 
-define( 'lyrics', [ 'plugins', 'jquery', 'functions', 'share', 'toolbar', 'resizer' ], function( plugins, $, functions,
-    share, toolbar, resizer )
-{
-  'use strict';
-  var instance = new Lyrics( $, functions, share, toolbar, resizer, plugins );
-  plugins.register( {
-    'name' : 'lyrics',
-    'instance' : instance,
-    'render' : false,
-    'serialize' : true,
-    'config' : [ {
-      'plugin' : 'chords',
-      'method' : 'addPostRenderer',
-      'args' : [ instance.render ]
-    } ]
-  } );
-} );
+define( 'plugins/lyrics', [ 'plugins', 'jquery', 'functions', 'share', 'toolbar', 'resizer', 'plugins/chords' ],
+    function( plugins, $, functions, share, toolbar, resizer, chords )
+    {
+      'use strict';
+      var instance = new Lyrics( $, functions, share, toolbar, resizer, plugins );
+      chords.addPostRenderer( instance.render );
+      plugins.register( {
+        'name' : 'lyrics',
+        'instance' : instance,
+        'render' : false,
+        'serialize' : true
+      } );
+      return instance;
+    } );

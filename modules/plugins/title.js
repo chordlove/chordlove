@@ -96,13 +96,15 @@ function Title( $, plugins, share, functions )
   };
 }
 
-define( 'title', [ 'plugins', 'jquery', 'share', 'functions' ], function( plugins, $, share, functions )
+define( 'plugins/title', [ 'plugins', 'jquery', 'share', 'functions' ], function( plugins, $, share, functions )
 {
   'use strict';
+  var instance = new Title( $, plugins, share, functions );
   plugins.register( {
     'name' : 'title',
-    'instance' : new Title( $, plugins, share, functions ),
+    'instance' : instance,
     'render' : true,
     'serialize' : true
   } );
+  return instance;
 } );
