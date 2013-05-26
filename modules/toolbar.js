@@ -34,7 +34,7 @@ function Toolbar( $, functions, share )
   Toolbar.prototype._instance = this;
 
   var $PARENT = $( '#items' );
-  var $ADDONS_MENU = $( '#addons' );
+  var $ADDONS_MENU = $( '#addons-list' );
   var $MENU_LI = $( '<li />' );
   var $MENU_A = $( '<a href="#"/>' );
 

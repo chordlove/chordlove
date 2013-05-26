@@ -185,12 +185,14 @@ define(
         var data = input.data;
         var currentPos = getValueWithDefault( input.currentPos, 0 );
         var transformer = getValueWithDefault( input.transformer, false );
+        var itemLengthSize = getValueWithDefault( input.itemLengthSize, 1 );
         var numInfo = getNumberOfItems( input, currentPos );
         currentPos = numInfo.position;
         var numberOfItems = numInfo.numberOfItems;
         for ( var i = 0; i < numberOfItems; i++ )
         {
-          var len = getNumber( data.charAt( currentPos++ ) );
+          var len = getNumber( data.substr( currentPos, itemLengthSize ) );
+          currentPos += itemLengthSize;
           if ( len )
           {
             var string = decode( data.substr( currentPos, len ) );
@@ -265,6 +267,8 @@ define(
 
       var ESCAPE_CHARACTER = '~', ESCAPES = {};
       ESCAPES[ESCAPE_CHARACTER] = ESCAPE_CHARACTER;
+      ESCAPES[' '] = '0';
+      ESCAPES['\n'] = '1';
       ESCAPES['♭'] = 'b';
       ESCAPES['♯'] = 's';
       ESCAPES['_'] = '-';

@@ -41,7 +41,7 @@ function Verses( $, functions, share, toolbar, resizer, plugins )
   var data = null;
   var format = DEFAULT_FORMAT;
 
-  var PARENT = $( '#verses-items' );
+  var $ADDONS = $( '#addons' );
 
   /**
    * @method
@@ -59,6 +59,21 @@ function Verses( $, functions, share, toolbar, resizer, plugins )
    */
   function render()
   {
+    var blocks = functions.readStringArray( {
+      'data' : data,
+      'countSize' : 1,
+      'itemLengthSize' : 2
+    } ).array;
+    var maxBlockLength = 0;
+    $.each( blocks, function()
+    {
+      var len = this.split( '\n' ).length - 1;
+      if ( len > maxBlockLength )
+      {
+        maxBlockLength = len;
+      }
+    } );
+    renderBlocks( blocks, maxBlockLength );
   }
 
   /**
@@ -67,13 +82,122 @@ function Verses( $, functions, share, toolbar, resizer, plugins )
    */
   function serialize()
   {
-    var result = '';
-    return result;
+    var content = getContentFromContainer();
+    return PLUGIN_ID + DEFAULT_FORMAT + functions.writeStringArray( {
+      'items' : content,
+      'countSize' : 1,
+      'itemLengthSize' : 2
+    } );
+  }
+
+  function getContentFromForm()
+  {
+    var lines = $( '#verses-content' ).val().split( "\n" );
+    lines.push( "" ); // ensure last block gets added
+    var blocks = [];
+    var maxBlockLength = 0;
+    var blockLength = 0;
+    var block = "";
+    $.each( lines, function( index, line )
+    {
+      if ( $.trim( this ).length === 0 )
+      {
+        if ( block.length > 0 )
+        {
+          blocks.push( block );
+          if ( blockLength > maxBlockLength )
+          {
+            maxBlockLength = blockLength;
+          }
+          block = "";
+          blockLength = 0;
+        }
+        else
+        {
+          // ignore multiple blank lines
+        }
+      }
+      else
+      {
+        block += line + "\n";
+        blockLength++;
+      }
+    } );
+    return {
+      'blocks' : blocks,
+      'maxBlockLength' : maxBlockLength
+    };
+  }
+
+  function getContentFromContainer()
+  {
+    var $container = $( '#verses-blocks' );
+    var blocks = [];
+    if ( $container.length === 0 )
+    {
+      return blocks;
+    }
+    $container.children( 'p' ).each( function()
+    {
+      blocks.push( $( this ).text() );
+    } );
+    return blocks;
+  }
+
+  function renderBlocks( blocks, maxBlockLength )
+  {
+    init( function()
+    {
+      var height = 20 * maxBlockLength;
+      var $container = $( '#verses-blocks' );
+      $container.empty();
+      $.each( blocks, function()
+      {
+        $container.append( $( '<p/>' ).text( this ).height( height ) );
+      } );
+    } );
+  }
+
+  function init( func )
+  {
+    var $verses = $( '#verses' );
+    if ( $verses.length === 0 )
+    {
+      $verses = $( '<li id="verses"/>' ).load( 'modules/plugins/verses.html', function()
+      {
+        $verses.appendTo( $ADDONS );
+        $( '<div id="verses-blocks"/>' ).appendTo( $verses ).click( load );
+        $( '#verses-ok' ).click( function()
+        {
+          var content = getContentFromForm();
+          renderBlocks( content.blocks, content.maxBlockLength );
+          share.changedText( 'plugins/verses' );
+        } );
+        if ( func )
+        {
+          func();
+        }
+      } );
+    }
+    else
+    {
+      if ( func )
+      {
+        func();
+      }
+    }
   }
 
   function load()
   {
-    console.log( 'LOADING!' );
+    init( function()
+    {
+      $( '#verses-content' ).val( getContentFromContainer().join( '\n' ) );
+      $( '#verses-form' ).modal().on( 'shown', function()
+      {
+        $( '#verses-content' ).focus();
+      } );
+    } );
   }
 
   return {
