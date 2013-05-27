@@ -206,6 +206,11 @@ function Chords( $, functions, share, toolbar, resizer )
     };
   }
 
+  function clear()
+  {
+    $PARENT.empty();
+  }
+
   function ChordBeat( chord, beats )
   {
     this.chord = chord;
@@ -508,6 +513,7 @@ function Chords( $, functions, share, toolbar, resizer )
     'render' : render,
     'serialize' : serialize,
     'setData' : setData,
+    'clear' : clear,
     'registerContentExtractor' : registerContentExtractor,
     'addPostRenderer' : addPostRenderer,
     'registerChordMenuMember' : registerChordMenuMember

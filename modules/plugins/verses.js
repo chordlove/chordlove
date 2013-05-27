@@ -23,12 +23,9 @@
  * @requires jquery
  * @requires functions
  * @requires share
- * @requires toolbar
- * @requires resizer
- * @requires plugins
  */
 
-function Verses( $, functions, share, toolbar, resizer, plugins )
+function Verses( $, functions, share )
 {
   'use strict';
   if ( Verses.prototype._instance )
@@ -83,11 +80,12 @@ function Verses( $, functions, share, toolbar, resizer, plugins )
   function serialize()
   {
     var content = getContentFromContainer();
-    return PLUGIN_ID + DEFAULT_FORMAT + functions.writeStringArray( {
+    var serialized = PLUGIN_ID + DEFAULT_FORMAT + functions.writeStringArray( {
       'items' : content,
       'countSize' : 1,
       'itemLengthSize' : 2
     } );
+    return serialized.length > 4 ? serialized : '';
   }
 
   function getContentFromForm()
@@ -200,19 +198,25 @@ function Verses( $, functions, share, toolbar, resizer, plugins )
     } );
   }
 
+  function clear()
+  {
+    $( '#verses-content' ).val( '' );
+    $( '#verses-blocks' ).empty();
+  }
+
   return {
     'render' : render,
     'serialize' : serialize,
     'setData' : setData,
-    'load' : load
+    'load' : load,
+    'clear' : clear
   };
 }
 
-define( 'plugins/verses', [ 'plugins', 'jquery', 'functions', 'share', 'toolbar', 'resizer' ], function( plugins, $,
-    functions, share, toolbar, resizer )
+define( 'plugins/verses', [ 'plugins', 'jquery', 'functions', 'share' ], function( plugins, $, functions, share )
 {
   'use strict';
-  var instance = new Verses( $, functions, share, toolbar, resizer, plugins );
+  var instance = new Verses( $, functions, share );
   plugins.register( {
     'name' : 'verses',
     'instance' : instance,

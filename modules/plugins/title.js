@@ -75,6 +75,11 @@ function Title( $, plugins, share, functions )
     return result;
   }
 
+  function clear()
+  {
+    $( '#title' ).val( '' ).focus();
+  }
+
   function getTitle()
   {
     return functions.encode( $( '#title' ).val() );
@@ -109,7 +114,8 @@ function Title( $, plugins, share, functions )
   return {
     'render' : render,
     'serialize' : serialize,
-    'setData' : setData
+    'setData' : setData,
+    'clear' : clear
   };
 }
 

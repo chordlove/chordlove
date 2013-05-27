@@ -38,7 +38,8 @@ function Plugins( $, pluginlist, functions, toolbar )
     'register' : register,
     'serialize' : serialize,
     'init' : parseHash,
-    'exec' : exec
+    'exec' : exec,
+    'clear' : clear
   };
 
   var FORMAT = '0';
@@ -206,9 +207,29 @@ function Plugins( $, pluginlist, functions, toolbar )
         }
       }
     } );
+    // TODO remove the sorting?
     data.sort( compare );
     var result = '!' + FORMAT + data.join( PLUGIN_END_MARKER );
     return result.length < 3 ? '' : result;
+  }
+
+  function performOnAll( func )
+  {
+    $.each( plugins, function( name, pluginInfo )
+    {
+      func( pluginInfo.instance, pluginInfo );
+    } );
+  }
+
+  function clear()
+  {
+    performOnAll( function( instance )
+    {
+      if ( 'clear' in instance )
+      {
+        instance.clear();
+      }
+    } );
   }
 
   function compare( a, b )

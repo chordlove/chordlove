@@ -128,12 +128,22 @@ function Share( plugins )
     writeUri();
   }
 
+  /**
+   * Kicks off a clear command to all plugins.
+   */
+  function clear()
+  {
+    plugins.clear();
+    changedStructure( 'share/clear' );
+  }
+
   return {
     'addTextChangeListener' : addTextChangeListener,
     'addStructureChangeListener' : addStructureChangeListener,
     'changedText' : changedText,
     'changedStructure' : changedStructure,
-    'changed' : changed
+    'changed' : changed,
+    'clear' : clear
   };
 }
 

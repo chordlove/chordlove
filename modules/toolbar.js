@@ -51,11 +51,7 @@ function Toolbar( $, functions, share )
 
     function clear()
     {
-      $PARENT.empty();
-      // TODO: can't just rip it out like this
-      $PARENT.removeClass( 'has-text' );
-      $( '#title' ).val( '' ).focus();
-      share.changedStructure( 'toolbar/clear' );
+      share.clear();
       return false;
     }
 
@@ -144,7 +140,8 @@ function Toolbar( $, functions, share )
   return {
     'hideOrShow' : hideOrShow,
     'setEditMode' : setEditMode,
-    'registerAddonsMenuMember' : registerAddonsMenuMember
+    'registerAddonsMenuMember' : registerAddonsMenuMember,
+    'clear' : clear
   };
 }
 
