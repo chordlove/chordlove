@@ -36,28 +36,28 @@ define( 'resizer', [ 'jquery' ], function( $ )
    * @method
    * @name module:resizer.prepareResize
    * @param {HTMLElement}
-   *          wrapper The container which will be later resized.
+   *          $wrapper The container which will be later resized.
    */
-  function prepareResize( wrapper )
+  function prepareResize( $wrapper )
   {
-    $( FILTER, wrapper ).each( function()
+    $( FILTER, $wrapper ).each( function()
     {
-      var input = $( this );
-      if ( !input.data( 'testSubject' ) )
+      var $input = $( this );
+      if ( !$input.data( 'testSubject' ) )
       {
-        var testSubject = $( '<div/>' ).css( {
+        var $testSubject = $( '<div/>' ).css( {
           position : 'absolute',
           top : -9999,
           left : -9999,
           width : 'auto',
-          fontSize : input.css( 'fontSize' ),
-          fontFamily : input.css( 'fontFamily' ),
-          fontWeight : input.css( 'fontWeight' ),
-          letterSpacing : input.css( 'letterSpacing' ),
+          fontSize : $input.css( 'fontSize' ),
+          fontFamily : $input.css( 'fontFamily' ),
+          fontWeight : $input.css( 'fontWeight' ),
+          letterSpacing : $input.css( 'letterSpacing' ),
           whiteSpace : 'nowrap'
         } );
-        testSubject.insertAfter( input );
-        input.data( 'testSubject', testSubject );
+        $testSubject.insertAfter( $input );
+        $input.data( 'testSubject', $testSubject );
       }
     } );
   }
@@ -70,33 +70,33 @@ define( 'resizer', [ 'jquery' ], function( $ )
    * @param {HTMLElement}
    *          wrapper The container which will be resized as needed.
    */
-  function performResize( wrapper )
+  function performResize( $wrapper )
   {
     var minWidth = MIN_WIDTH;
-    $( FILTER, wrapper ).each( function()
+    $( FILTER, $wrapper ).each( function()
     {
-      var input = $( this );
-      if ( input.data( 'testSubject' ) )
+      var $input = $( this );
+      if ( $input.data( 'testSubject' ) )
       {
-        var otherMinWidth = calculateResize( input );
+        var otherMinWidth = calculateResize( $input );
         if ( otherMinWidth > minWidth )
         {
           minWidth = otherMinWidth;
         }
       }
     } );
-    wrapper.width( minWidth + WRAPPER_MARGIN );
+    $wrapper.width( minWidth + WRAPPER_MARGIN );
   }
 
-  function calculateResize( input )
+  function calculateResize( $input )
   {
     var val = '';
-    if ( val === ( val = input.val() ) )
+    if ( val === ( val = $input.val() ) )
     {
       return MIN_WIDTH;
     }
 
-    var testSubject = input.data( "testSubject" );
+    var testSubject = $input.data( "testSubject" );
 
     // Enter new content into testSubject
     var escaped = val.replace( /&/g, '&amp;' ).replace( /\s/g, '&nbsp;' ).replace( /</g, '&lt;' )

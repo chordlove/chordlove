@@ -43,6 +43,7 @@ function Lyrics( $, functions, share, toolbar, resizer, plugins )
 
   var $PARENT = $( '#items' );
   var $VIEW_BUTTON = $( '#view-lyrics' );
+  var $TEXT_INPUT = $( '<input class="song-text resize-trigger" type="text" id="song-text" title="Add song text" placeholder="Text…" />' );
 
   plugins.exec( 'chords', function( chords )
   {
@@ -106,25 +107,23 @@ function Lyrics( $, functions, share, toolbar, resizer, plugins )
     {
       return;
     }
-    $( 'div.chord input.chord-text' )
-        .each(
-            function()
-            {
-              var chordInput = $( this );
-              var wrapper = chordInput.parents( 'li.item' ).first();
-              if ( chordInput.siblings( 'input.song-text' ).length )
-              {
-                return;
-              }
-              var textInput = $( '<input class="song-text resize-trigger" type="text" id="song-text" title="Add song text" placeholder="Text…" />' );
-              textInput.appendTo( chordInput.parent() ).keydown( functions.handleInputKeyEvent ).blur( {
-                'item' : wrapper
-              }, function( event )
-              {
-                share.changedText( event );
-              } );
-              resizer.prepareResize( wrapper );
-            } );
+    $( 'div.chord input.chord-text' ).each( function()
+    {
+      var $chordInput = $( this );
+      var $wrapper = $chordInput.parents( 'li.item' ).first();
+      if ( $chordInput.siblings( 'input.song-text' ).length )
+      {
+        return;
+      }
+      var $textInput = $TEXT_INPUT.clone();
+      $textInput.appendTo( $chordInput.parent() ).keydown( functions.handleInputKeyEvent ).blur( {
+        'item' : $wrapper
+      }, function( event )
+      {
+        share.changedText( event );
+      } );
+      resizer.prepareResize( $wrapper );
+    } );
   }
 
   /**

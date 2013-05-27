@@ -322,30 +322,30 @@ define(
        */
       function handleInputKeyEvent( event )
       {
-        var target = $( event.target );
+        var $target = $( event.target );
         if ( event.which === 13 || event.which === 9 )
         {
           event.preventDefault();
-          target.blur();
+          $target.blur();
           // TODO handle tab + shift
           if ( event.which === 9 )
           {
             var backwards = 'shiftKey' in event && event.shiftKey === true;
-            var siblings = target[backwards ? 'prevAll' : 'nextAll']( 'input' );
-            if ( siblings.length )
+            var $siblings = $target[backwards ? 'prevAll' : 'nextAll']( 'input' );
+            if ( $siblings.length )
             {
-              siblings.first().focus();
+              $siblings.first().focus();
             }
             else
             {
-              var wrapper = target.parents( 'li.item' ).first();
-              var next = wrapper[backwards ? 'prevAll' : 'nextAll']( 'li.item' );
-              if ( next.length )
+              var $wrapper = $target.parents( 'li.item' ).first();
+              var $next = $wrapper[backwards ? 'prevAll' : 'nextAll']( 'li.item' );
+              if ( $next.length )
               {
-                var input = next.first().find( 'input' );
-                if ( input.length )
+                var $input = $next.first().find( 'input' );
+                if ( $input.length )
                 {
-                  input[backwards ? 'last' : 'first']().focus();
+                  $input[backwards ? 'last' : 'first']().focus();
                 }
               }
             }

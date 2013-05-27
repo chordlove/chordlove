@@ -376,50 +376,50 @@ function Chords( $, functions, share, toolbar, resizer )
         before = inputData.before;
       }
     }
-    var handle = $HANDLE.clone();
-    var wrapper = $LI.clone().append( handle );
-    var menu = $MENU.clone();
-    var menuList = $( 'ul', menu );
-    addChordMenuItems( menuList, wrapper );
-    handle.append( menu );
-    var input = $INPUT.clone();
+    var $handle = $HANDLE.clone();
+    var $wrapper = $LI.clone().append( $handle );
+    var $menu = $MENU.clone();
+    var $menuList = $( 'ul', $menu );
+    addChordMenuItems( $menuList, $wrapper );
+    $handle.append( $menu );
+    var $input = $INPUT.clone();
     if ( chordText )
     {
-      input.val( chordText );
+      $input.val( chordText );
     }
     var div = $CHORD.clone();
-    input.appendTo( div );
-    wrapper.append( div );
+    $input.appendTo( div );
+    $wrapper.append( div );
     if ( before )
     {
-      wrapper.insertBefore( before );
+      $wrapper.insertBefore( before );
     }
     else
     {
-      wrapper.appendTo( $PARENT );
+      $wrapper.appendTo( $PARENT );
     }
 
-    beatsHandler.createBeats( beats, wrapper );
+    beatsHandler.createBeats( beats, $wrapper );
 
-    $( input ).keydown( functions.handleInputKeyEvent ).blur( {
-      'item' : wrapper
+    $( $input ).keydown( functions.handleInputKeyEvent ).blur( {
+      'item' : $wrapper
     }, function( event )
     {
-      input.val( transformChordString( input.val() ) );
+      $input.val( transformChordString( $input.val() ) );
       share.changedText( event );
     } );
 
-    addPinEvents( wrapper );
+    addPinEvents( $wrapper );
 
-    resizer.prepareResize( wrapper );
+    resizer.prepareResize( $wrapper );
     if ( inputData === undefined )
     {
       // create a blank item
-      input.focus();
+      $input.focus();
       share.changedStructure( 'chords/new' );
     }
 
-    return wrapper;
+    return $wrapper;
   }
 
   /**
@@ -430,10 +430,10 @@ function Chords( $, functions, share, toolbar, resizer )
    * needed. Something along the lines of:
    * 
    * <pre><code>
-   * function menuMember( wrapper, li, a )
+   * function menuMember( $wrapper, $li, $a )
    * {
-   *   a.html( '&lt;i class=&quot;icon-paste&quot;&gt;&lt;/i&gt; Paste before' ).click( {
-   *     'li' : wrapper.get( 0 )
+   *   $a.html( '&lt;i class=&quot;icon-paste&quot;&gt;&lt;/i&gt; Paste before' ).click( {
+   *     'li' : $wrapper.get( 0 )
    *   }, function( event )
    *   {
    *     event.preventDefault();
@@ -453,23 +453,23 @@ function Chords( $, functions, share, toolbar, resizer )
     chordMenuMembers.push( menuMember );
   }
 
-  function addChordMenuItems( menuList, wrapper )
+  function addChordMenuItems( $menuList, $wrapper )
   {
     for ( var i = 0; i < chordMenuMembers.length; i++ )
     {
       var menuMember = chordMenuMembers[i];
-      var menuLi = $MENU_LI.clone();
-      var menuA = $MENU_A.clone();
-      menuMember( wrapper, menuLi, menuA );
-      menuLi.append( menuA );
-      menuList.append( menuLi );
+      var $menuLi = $MENU_LI.clone();
+      var $menuA = $MENU_A.clone();
+      menuMember( $wrapper, $menuLi, $menuA );
+      $menuLi.append( $menuA );
+      $menuList.append( $menuLi );
     }
   }
 
-  function pasteBeforeMenu( wrapper, li, a )
+  function pasteBeforeMenu( $wrapper, $li, $a )
   {
-    a.html( MENU_PASTE_BEFORE ).click( {
-      'li' : wrapper.get( 0 )
+    $a.html( MENU_PASTE_BEFORE ).click( {
+      'li' : $wrapper.get( 0 )
     }, function( event )
     {
       event.preventDefault();
@@ -534,7 +534,7 @@ function Beats( $TIME_SIGNATURE, share )
     BULLETS.push( BULLET_STRING.substr( 0, len ) );
   }
 
-  function createBeats( beats, wrapper )
+  function createBeats( beats, $wrapper )
   {
 
     var defaultBeats = parseInt( $TIME_SIGNATURE.val() );
@@ -543,35 +543,35 @@ function Beats( $TIME_SIGNATURE, share )
     {
       num = beats;
     }
-    var beatsWrapper = $BEATS_WRAPPER.clone();
-    var currentBeats = $BEATS_LINK.clone();
-    currentBeats.appendTo( beatsWrapper );
-    currentBeats.text( BULLETS[num] );
-    currentBeats.dropdown();
+    var $beatsWrapper = $BEATS_WRAPPER.clone();
+    var $currentBeats = $BEATS_LINK.clone();
+    $currentBeats.appendTo( $beatsWrapper );
+    $currentBeats.text( BULLETS[num] );
+    $currentBeats.dropdown();
     var list = $BEATS_LIST.clone();
-    list.appendTo( beatsWrapper );
+    list.appendTo( $beatsWrapper );
 
     for ( var len = defaultBeats; len > 0; len-- )
     {
       var beatString = BULLETS[len];
-      var option = $( '<li><a href="#">' + beatString + '</a></li>' );
-      option.appendTo( list );
-      option.click( {
+      var $option = $( '<li><a href="#">' + beatString + '</a></li>' );
+      $option.appendTo( list );
+      $option.click( {
         'beatString' : beatString
       }, function( event )
       {
-        currentBeats.dropdown( 'toggle' );
-        if ( currentBeats.text() !== event.data.beatString )
+        $currentBeats.dropdown( 'toggle' );
+        if ( $currentBeats.text() !== event.data.beatString )
         {
-          currentBeats.text( event.data.beatString );
-          currentBeats.blur();
+          $currentBeats.text( event.data.beatString );
+          $currentBeats.blur();
           share.changedStructure( 'chords/beats' );
         }
         return false;
       } );
     }
 
-    beatsWrapper.appendTo( wrapper );
+    $beatsWrapper.appendTo( $wrapper );
   }
 
   return {
@@ -623,10 +623,10 @@ function CopyPaste( chords, share, functions, $PARENT )
     } : undefined;
     $( copiedItems ).each( function()
     {
-      var li = chords.createItem( before );
+      var $li = chords.createItem( before );
       for ( var i = 0; i < this.length; i++ )
       {
-        this[i]( li );
+        this[i]( $li );
       }
     } );
     $( 'li.ui-selected', $PARENT ).removeClass( 'ui-selected' );
@@ -638,19 +638,19 @@ function CopyPaste( chords, share, functions, $PARENT )
   };
 }
 
-function addPinEvents( wrapper )
+function addPinEvents( $wrapper )
 {
   'use strict';
-  $( 'i.icon-pushpin', wrapper ).mousedown( function( event )
+  $( 'i.icon-pushpin', $wrapper ).mousedown( function( event )
   {
     event.stopImmediatePropagation();
-    if ( wrapper.hasClass( 'ui-selected' ) )
+    if ( $wrapper.hasClass( 'ui-selected' ) )
     {
-      wrapper.removeClass( 'ui-selected' );
+      $wrapper.removeClass( 'ui-selected' );
     }
     else
     {
-      wrapper.addClass( 'ui-selected' );
+      $wrapper.addClass( 'ui-selected' );
     }
     return false;
   } );

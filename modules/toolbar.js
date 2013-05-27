@@ -33,7 +33,6 @@ function Toolbar( $, functions, share )
   }
   Toolbar.prototype._instance = this;
 
-  var $PARENT = $( '#items' );
   var $ADDONS_MENU = $( '#addons-list' );
   var $MENU_LI = $( '<li />' );
   var $MENU_A = $( '<a href="#"/>' );
@@ -102,14 +101,14 @@ function Toolbar( $, functions, share )
   {
     $( '#items input, #title' ).each( function()
     {
-      var element = $( this );
-      if ( element.val() === '' )
+      var $element = $( this );
+      if ( $element.val() === '' )
       {
-        element[action]();
+        $element[action]();
       }
       else
       {
-        element.prop( 'readonly', action === 'hide' );
+        $element.prop( 'readonly', action === 'hide' );
       }
     } );
   }
@@ -130,11 +129,11 @@ function Toolbar( $, functions, share )
    */
   function registerAddonsMenuMember( menuMember )
   {
-    var menuLi = $MENU_LI.clone();
-    var menuA = $MENU_A.clone();
-    menuMember( menuLi, menuA );
-    menuLi.append( menuA );
-    $ADDONS_MENU.append( menuLi );
+    var $menuLi = $MENU_LI.clone();
+    var $menuA = $MENU_A.clone();
+    menuMember( $menuLi, $menuA );
+    $menuLi.append( $menuA );
+    $ADDONS_MENU.append( $menuLi );
   }
 
   return {

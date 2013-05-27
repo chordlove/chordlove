@@ -113,10 +113,10 @@ function Structure( $, share, functions )
     } );
   }
 
-  function startOfLineMenu( wrapper, li, a )
+  function startOfLineMenu( $wrapper, $li, $a )
   {
-    a.html( MENU_START_OF_LINE ).click( {
-      'li' : wrapper
+    $a.html( MENU_START_OF_LINE ).click( {
+      'li' : $wrapper
     }, function( event )
     {
       event.preventDefault();

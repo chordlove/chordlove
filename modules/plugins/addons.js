@@ -56,9 +56,9 @@ function Addons( $, toolbar, plugins )
   {
     for ( var i = 0; i < addons.length; i++ )
     {
-      toolbar.registerAddonsMenuMember( function( li, a )
+      toolbar.registerAddonsMenuMember( function( $li, $a )
       {
-        a.html( addons[i].menuHtml ).click( addons[i].func );
+        $a.html( addons[i].menuHtml ).click( addons[i].func );
       } );
     }
   }
