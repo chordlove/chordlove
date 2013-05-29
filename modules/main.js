@@ -56,6 +56,7 @@ require( [ 'jquery', 'plugins', 'share', 'plugins/title', 'plugins/chords', 'plu
       }
     } );
 
+    $( '#intro' ).load( 'intro.html' );
     plugins.init();
 
   } );
