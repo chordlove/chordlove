@@ -43,15 +43,12 @@ function Lyrics( $, functions, share, toolbar, resizer, plugins )
 
   var $PARENT = $( '#items' );
   var $VIEW_BUTTON = $( '#view-lyrics' );
-  var $TEXT_INPUT = $( '<input class="song-text resize-trigger" type="text" id="song-text" title="Add song text" placeholder="Text…" />' );
+  var $TEXT_INPUT = $( '<input class="song-text resize-trigger empty-input" type="text" id="song-text" title="Add song text" placeholder="Text…" />' );
 
   plugins.exec( 'chords', function( chords )
   {
     chords.registerContentExtractor( extract );
   } );
-
-  var visibleText = false;
-  var hasText = false;
 
   functions.bindButton( '#view-lyrics', visibleLyrics );
 
@@ -59,22 +56,15 @@ function Lyrics( $, functions, share, toolbar, resizer, plugins )
 
   function visibleLyrics()
   {
-    if ( visibleText )
+    if ( $PARENT.hasClass( 'has-text' ) )
     {
       $PARENT.removeClass( 'has-text' );
       $VIEW_BUTTON.removeClass( 'active' );
-      visibleText = false;
-      return;
     }
     else
     {
       $PARENT.addClass( 'has-text' );
-      if ( !hasText )
-      {
-        hasText = true;
-        addTextInput();
-      }
-      visibleText = true;
+      addTextInput();
       $VIEW_BUTTON.addClass( 'active' );
     }
   }
@@ -86,7 +76,9 @@ function Lyrics( $, functions, share, toolbar, resizer, plugins )
 
   function setLyrics( item, text )
   {
-    $( 'input.song-text', item ).val( text );
+    var $element = $( 'input.song-text', item );
+    $element.val( text );
+    functions.emptyOrNot( $element, text );
   }
 
   function extract( item )
@@ -103,7 +95,7 @@ function Lyrics( $, functions, share, toolbar, resizer, plugins )
 
   function addTextInput()
   {
-    if ( !hasText )
+    if ( !$PARENT.hasClass( 'has-text' ) )
     {
       return;
     }
@@ -121,7 +113,7 @@ function Lyrics( $, functions, share, toolbar, resizer, plugins )
       }, function( event )
       {
         share.changedText( event );
-      } );
+      } ).bind( 'input', functions.handleInputChangeEvent );
       resizer.prepareResize( $wrapper );
     } );
   }
@@ -150,8 +142,6 @@ function Lyrics( $, functions, share, toolbar, resizer, plugins )
       'data' : data,
       'countSize' : 2
     } ).array;
-    hasText = true;
-    visibleText = true;
     $PARENT.addClass( 'has-text' );
     $VIEW_BUTTON.addClass( 'active' );
     addTextInput();
@@ -168,23 +158,20 @@ function Lyrics( $, functions, share, toolbar, resizer, plugins )
   function serialize()
   {
     var result = '';
-    if ( hasText )
+    result += PLUGIN_ID + DEFAULT_FORMAT;
+    var items = [];
+    $( '#items > li.item' ).each( function()
     {
-      result += PLUGIN_ID + DEFAULT_FORMAT;
-      var items = [];
-      $( '#items > li.item' ).each( function()
-      {
-        items.push( getLyrics( this ) );
-      } );
-      result += functions.writeStringArray( {
-        'items' : items,
-        'countSize' : 2
-      } );
-      if ( result.length < 6 + items.length )
-      {
-        // all items have zero length
-        result = '';
-      }
+      items.push( getLyrics( this ) );
+    } );
+    result += functions.writeStringArray( {
+      'items' : items,
+      'countSize' : 2
+    } );
+    if ( result.length < 6 + items.length )
+    {
+      // all items have zero length
+      result = '';
     }
     return result;
   }
@@ -193,8 +180,6 @@ function Lyrics( $, functions, share, toolbar, resizer, plugins )
   {
     $PARENT.removeClass( 'has-text' );
     $VIEW_BUTTON.removeClass( 'active' );
-    hasText = false;
-    visibleText = false;
   }
 
   return {

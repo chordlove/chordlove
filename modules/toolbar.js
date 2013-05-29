@@ -90,7 +90,7 @@ function Toolbar( $, functions, share )
   }
 
   /**
-   * Hide or show empty input elements. Make all input elements read-only in the case of hiding.
+   * Hide or show the empty title input elements. Make the title input element read-only in the case of hiding.
    * 
    * @method
    * @name module:toolbar.hideOrShow
@@ -99,7 +99,7 @@ function Toolbar( $, functions, share )
    */
   function hideOrShow( action )
   {
-    $( '#items input, #title' ).each( function()
+    $( '#title' ).each( function()
     {
       var $element = $( this );
       if ( $element.val() === '' )

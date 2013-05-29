@@ -57,7 +57,7 @@ function Chords( $, functions, share, toolbar, resizer )
   var $MENU_LI = $( '<li />' );
   var $MENU_A = $( '<a href="#"/>' );
   var MENU_PASTE_BEFORE = '<i class="icon-paste"></i> Paste before';
-  var $INPUT = $( '<input class="chord-text resize-trigger" type="text" title="Add a chord" placeholder="Chord…" />' );
+  var $INPUT = $( '<input class="chord-text resize-trigger empty-input" type="text" title="Add a chord" placeholder="Chord…" />' );
   var $CHORD = $( '<div class="chord"/>' );
 
   var beatsHandler = new Beats( $TIME_SIGNATURE, share );
@@ -318,7 +318,9 @@ function Chords( $, functions, share, toolbar, resizer )
     var beats = getBeats( li );
     return function( theItem )
     {
-      $( 'input.chord-text', theItem ).val( chord );
+      var $element = $( 'input.chord-text', theItem );
+      $element.val( chord );
+      functions.emptyOrNot( $element, chord );
       $( 'div.duration > a', theItem ).text( beats );
     };
   }
@@ -386,6 +388,7 @@ function Chords( $, functions, share, toolbar, resizer )
     if ( chordText )
     {
       $input.val( chordText );
+      functions.emptyOrNot( $input, chordText );
     }
     var div = $CHORD.clone();
     $input.appendTo( div );
@@ -407,7 +410,7 @@ function Chords( $, functions, share, toolbar, resizer )
     {
       $input.val( transformChordString( $input.val() ) );
       share.changedText( event );
-    } );
+    } ).bind( 'input', functions.handleInputChangeEvent );
 
     addPinEvents( $wrapper );
 

@@ -311,6 +311,24 @@ define(
         return string;
       }
 
+      function handleInputChangeEvent( event )
+      {
+        var $target = $( event.target );
+        emptyOrNot( $target, $target.val() !== '' );
+      }
+
+      function emptyOrNot( $input, content )
+      {
+        if ( content )
+        {
+          $input.removeClass( 'empty-input' );
+        }
+        else
+        {
+          $input.addClass( 'empty-input' );
+        }
+      }
+
       /**
        * Event handler for handling key events in <code>input</code> elements. It makes sure the <kbd>TAB</kbd> key
        * works correctly.
@@ -327,7 +345,6 @@ define(
         {
           event.preventDefault();
           $target.blur();
-          // TODO handle tab + shift
           if ( event.which === 9 )
           {
             var backwards = 'shiftKey' in event && event.shiftKey === true;
@@ -362,6 +379,8 @@ define(
         'readChunkArray' : readChunkArray,
         'encode' : encode,
         'decode' : decode,
-        'handleInputKeyEvent' : handleInputKeyEvent
+        'handleInputChangeEvent' : handleInputChangeEvent,
+        'handleInputKeyEvent' : handleInputKeyEvent,
+        'emptyOrNot' : emptyOrNot
       };
     } );
