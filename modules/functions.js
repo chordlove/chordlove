@@ -370,6 +370,41 @@ define(
         }
       }
 
+      /**
+       * Helper function to add dialogs to the page.
+       * 
+       * @param {Function}
+       *          executeFunc A function to execute which depends on the dialog being loaded.
+       * @param {String}
+       *          elementId The id of an element in the dialog, so we can check if it's loaded using it.
+       * @param {String}
+       *          name of the dialog to load.
+       * @param {Function}
+       *          initFunc Function used to initialize the dialog after load.
+       */
+      function dialog( executeFunc, elementId, name, initFunc )
+      {
+        var $element = $( '#' + elementId );
+        if ( $element.length === 0 )
+        {
+          $( '#dialogs' ).load( 'modules/dialogs/' + name + '.html', function()
+          {
+            initFunc();
+            if ( executeFunc )
+            {
+              executeFunc();
+            }
+          } );
+        }
+        else
+        {
+          if ( executeFunc )
+          {
+            executeFunc();
+          }
+        }
+      }
+
       return {
         'getNumber' : getNumber,
         'getCharacters' : getCharacters,
@@ -381,6 +416,7 @@ define(
         'decode' : decode,
         'handleInputChangeEvent' : handleInputChangeEvent,
         'handleInputKeyEvent' : handleInputKeyEvent,
-        'emptyOrNot' : emptyOrNot
+        'emptyOrNot' : emptyOrNot,
+        'dialog' : dialog
       };
     } );

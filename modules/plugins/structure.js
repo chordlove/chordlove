@@ -40,7 +40,8 @@ function Structure( $, share, functions )
   var data = null;
 
   var $PARENT = $( '#items' );
-  var MENU_START_OF_LINE = '<i class="icon-hand-left"></i> Put on new line (toggle)';
+  var $TIME_SIGNATURE = $( '#time-signature' );
+  var MENU_START_OF_LINE = '<i class="icon-hand-left"></i> Line break (toggle)';
 
   /**
    * @method
@@ -125,11 +126,55 @@ function Structure( $, share, functions )
     } );
   }
 
+  function setBarBreaks()
+  {
+    init( function()
+    {
+      $( '#structure-barbreak-form' ).modal().on( 'shown', function()
+      {
+        $( '#structure-barbreak' ).focus();
+      } );
+    } );
+  }
+
+  function getBeats( li )
+  {
+    return $( 'div.duration > a', li ).text();
+  }
+
+  function init( func )
+  {
+    functions.dialog( func, 'structure-barbreak', 'structure', function()
+    {
+      $( '#structure-barbreak-ok' ).click( function()
+      {
+        var breakAfterBars = $( '#structure-barbreak' ).val();
+        var timeSignature = $TIME_SIGNATURE.val();
+        var beatsToBreakAfter = breakAfterBars * timeSignature;
+        var beatsSum = 0;
+        $PARENT.children( 'li.item' ).each( function()
+        {
+          if ( beatsSum !== 0 && ( beatsSum % beatsToBreakAfter === 0 ) )
+          {
+            $( this ).addClass( 'start-of-line' );
+          }
+          else
+          {
+            $( this ).removeClass( 'start-of-line' );
+          }
+          beatsSum += getBeats( this ).length;
+        } );
+        share.changedStructure( 'plugins/structure' );
+      } );
+    } );
+  }
+
   return {
     'render' : render,
     'serialize' : serialize,
     'setData' : setData,
-    'startOfLineMenu' : startOfLineMenu
+    'startOfLineMenu' : startOfLineMenu,
+    'setBarBreaks' : setBarBreaks
   };
 }
 

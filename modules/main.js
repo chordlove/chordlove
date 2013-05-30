@@ -36,9 +36,12 @@ define( 'jquery', [], function()
  * @requires plugins/title
  * @requires plugins/chords
  * @requires plugins/lyrics
+ * @requires plugins/structure
+ * @requires plugins/addons
+ * @requires plugins/tools
  */
 require( [ 'jquery', 'plugins', 'share', 'plugins/title', 'plugins/chords', 'plugins/lyrics', 'plugins/structure',
-    'plugins/addons' ], function( $, plugins, share )
+    'plugins/addons', 'plugins/tools' ], function( $, plugins, share )
 {
   'use strict';
   $( function()

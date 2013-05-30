@@ -158,32 +158,18 @@ function Verses( $, functions, share )
 
   function init( func )
   {
-    var $verses = $( '#verses' );
-    if ( $verses.length === 0 )
+    functions.dialog( func, 'verses', 'verses', function()
     {
-      $verses = $( '<li id="verses"/>' ).load( 'modules/plugins/verses.html', function()
+      var $verses = $( '<li id="verses"/>' );
+      $( '<div id="verses-blocks"/>' ).appendTo( $verses ).click( load );
+      $verses.appendTo( $ADDONS );
+      $( '#verses-ok' ).click( function()
       {
-        $verses.appendTo( $ADDONS );
-        $( '<div id="verses-blocks"/>' ).appendTo( $verses ).click( load );
-        $( '#verses-ok' ).click( function()
-        {
-          var content = getContentFromForm();
-          renderBlocks( content.blocks, content.maxBlockLength );
-          share.changedText( 'plugins/verses' );
-        } );
-        if ( func )
-        {
-          func();
-        }
+        var content = getContentFromForm();
+        renderBlocks( content.blocks, content.maxBlockLength );
+        share.changedText( 'plugins/verses' );
       } );
-    }
-    else
-    {
-      if ( func )
-      {
-        func();
-      }
-    }
+    } );
   }
 
   function load()

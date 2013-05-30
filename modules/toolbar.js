@@ -34,14 +34,12 @@ function Toolbar( $, functions, share )
   Toolbar.prototype._instance = this;
 
   var $ADDONS_MENU = $( '#addons-list' );
+  var $TOOLS_MENU = $( '#tools-list' );
   var $MENU_LI = $( '<li />' );
   var $MENU_A = $( '<a href="#"/>' );
 
   function prepareCpanel()
   {
-    // TODO this is a backwards compat hack.
-    var bindButton = functions.bindButton;
-
     function editMode()
     {
       var currentState = $( '#edit' ).hasClass( 'active' );
@@ -54,8 +52,8 @@ function Toolbar( $, functions, share )
       return false;
     }
 
-    bindButton( '#edit', editMode );
-    bindButton( '#clear', clear );
+    functions.bindButton( '#edit', editMode );
+    functions.bindButton( '#clear', clear );
 
     $( '#time-signature' ).change( function()
     {
@@ -117,7 +115,7 @@ function Toolbar( $, functions, share )
    * Register a member in the addons menu.
    * <p>
    * The registered function will be provided the <code>LI</code> and <code>A</code> element going into the menu,
-   * bot wrapped as jQuery objects. Manipulate the menu elements as needed. Something along the lines of:
+   * both wrapped as jQuery objects. Manipulate the menu elements as needed. Something along the lines of:
    * 
    * <pre><code>
    * </code></pre>
@@ -129,17 +127,42 @@ function Toolbar( $, functions, share )
    */
   function registerAddonsMenuMember( menuMember )
   {
+    registerMenuMember( $ADDONS_MENU, menuMember );
+  }
+
+  /**
+   * Register a member in the tools menu.
+   * <p>
+   * The registered function will be provided the <code>LI</code> and <code>A</code> element going into the menu,
+   * both wrapped as jQuery objects. Manipulate the menu elements as needed. Something along the lines of:
+   * 
+   * <pre><code>
+   * </code></pre>
+   * 
+   * @method
+   * @name module:toolbar.registerAddonsMenuMember
+   * @param {Function}
+   *          menuMember The menu member function to register.
+   */
+  function registerToolsMenuMember( menuMember )
+  {
+    registerMenuMember( $TOOLS_MENU, menuMember );
+  }
+
+  function registerMenuMember( $menu, menuMember )
+  {
     var $menuLi = $MENU_LI.clone();
     var $menuA = $MENU_A.clone();
     menuMember( $menuLi, $menuA );
     $menuLi.append( $menuA );
-    $ADDONS_MENU.append( $menuLi );
+    $menu.append( $menuLi );
   }
 
   return {
     'hideOrShow' : hideOrShow,
     'setEditMode' : setEditMode,
     'registerAddonsMenuMember' : registerAddonsMenuMember,
+    'registerToolsMenuMember' : registerToolsMenuMember,
     'clear' : clear
   };
 }
