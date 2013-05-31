@@ -23,12 +23,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 <title>alpha.chordlove.com</title>
 <script src="//use.edgefonts.net/neuton-cursive:n4:all.js"></script>
 <link href="style.css" rel="stylesheet">
-<link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap.no-icons.min.css" rel="stylesheet">
+<link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
 <link href="//netdna.bootstrapcdn.com/font-awesome/3.1.1/css/font-awesome.css" rel="stylesheet">
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.0/jquery.min.js"></script>
 <script src="jquery.ba-hashchange.min.js"></script>
 <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
-<script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/js/bootstrap.min.js"></script>
+<script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="inject.min.js"></script>
 <script type="text/javascript">
   Inject.setModuleRoot( "modules" );
@@ -77,7 +77,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
       </form>
     </div>
     <div class="modal-footer">
-      <button class="btn" data-dismiss="modal" aria-hidden="true">Ok</button>
+      <button class="btn" data-dismiss="modal">Ok</button>
     </div>
   </div>
   <div class="navbar">
@@ -158,6 +158,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <ul id="tools-list" class="dropdown-menu">
             </ul>
           </div>
+          <span id="save-load" class="btn-group NIY">
+            <button id="save" class="btn" title="Save">
+              <i class="icon-save"></i>
+            </button>
+            <button id="open" class="btn" title="Open">
+              <i class="icon-folder-open-alt"></i>
+            </button>
+          </span>
           <span class="btn-group always-visible">
             <button id="share" class="btn" title="Share this page">
               <i class="icon-share-alt"></i>
