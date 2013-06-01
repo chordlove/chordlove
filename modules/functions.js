@@ -348,10 +348,11 @@ define(
           if ( event.which === 9 )
           {
             var backwards = 'shiftKey' in event && event.shiftKey === true;
-            var $siblings = $target[backwards ? 'prevAll' : 'nextAll']( 'input' );
+            var $siblings = $target[backwards ? 'prevAll' : 'nextAll']( 'input' ).filter( noHiddenElements );
             if ( $siblings.length )
             {
               $siblings.first().focus();
+              return;
             }
             else
             {
@@ -359,15 +360,22 @@ define(
               var $next = $wrapper[backwards ? 'prevAll' : 'nextAll']( 'li.item' );
               if ( $next.length )
               {
-                var $input = $next.first().find( 'input' );
+                var $input = $next.first().find( 'input' ).filter( noHiddenElements );
                 if ( $input.length )
                 {
                   $input[backwards ? 'last' : 'first']().focus();
+                  return;
                 }
               }
             }
+            $( backwards ? '#title' : '#edit' ).focus();
           }
         }
+      }
+
+      function noHiddenElements()
+      {
+        return $( this ).css( 'visibility' ) !== 'hidden';
       }
 
       /**

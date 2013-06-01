@@ -91,8 +91,19 @@ function Title( $, plugins, share, functions )
     {
       event.preventDefault();
       $( this ).blur();
-      $( '#share' ).focus();
       setPageTitle( $( '#title' ).val() );
+      if ( event.which === 9 )
+      {
+        var backwards = 'shiftKey' in event && event.shiftKey === true;
+        if ( backwards )
+        {
+          $( '#help-btn' ).focus();
+        }
+        else
+        {
+          $( '#items input' ).first().focus();
+        }
+      }
     }
   } ).change( function()
   {

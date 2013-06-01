@@ -34,11 +34,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   Inject.setModuleRoot( "modules" );
   if ( window.location.hostname == "localhost" )
   {
-    Inject.setExpires( -1 );
+    Inject.setExpires( 1 );
   }
   else
   {
-    Inject.setExpires( 3 );
+    Inject.setExpires( 1 );
   }
   require.run( "main" );
 </script>

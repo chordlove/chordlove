@@ -104,10 +104,6 @@ function Toolbar( $, functions, share )
       {
         $element[action]();
       }
-      else
-      {
-        $element.prop( 'readonly', action === 'hide' );
-      }
     } );
   }
 
