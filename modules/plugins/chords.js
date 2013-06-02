@@ -621,6 +621,10 @@ function Beats( $PARENT, $TIME_SIGNATURE, share, functions )
 
       } );
     }
+    else
+    {
+      $TIME_SIGNATURE.data( 'previous', parseInt( $TIME_SIGNATURE.val() ) );
+    }
   } );
 
   function getBeats( li )
