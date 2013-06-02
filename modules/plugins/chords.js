@@ -28,9 +28,10 @@
  * @requires share
  * @requires toolbar
  * @requires resizer
+ * @requires beats
  */
 
-function Chords( $, functions, share, toolbar, resizer )
+function Chords( $, functions, share, toolbar, resizer, beatsHandler )
 {
   'use strict';
   if ( Chords.prototype._instance )
@@ -59,8 +60,6 @@ function Chords( $, functions, share, toolbar, resizer )
   var MENU_PASTE_BEFORE = '<i class="icon-paste"></i> Paste before';
   var $INPUT = $( '<input class="chord-text resize-trigger empty-input" type="text" title="Add a chord" placeholder="Chord…" />' );
   var $CHORD = $( '<div class="chord"/>' );
-
-  var beatsHandler = new Beats( $PARENT, $TIME_SIGNATURE, share, functions );
 
   var postRenderers = [];
   var contentExtractors = [];
@@ -143,6 +142,7 @@ function Chords( $, functions, share, toolbar, resizer )
       $PARENT.addClass( 'has-text' );
     }
     var beatsSum = 0;
+    $TIME_SIGNATURE.val( '' + deserializedData.timeSignature ).data( 'previous', deserializedData.timeSignature );
     $.each( chordItems, function()
     {
       createItem( {
@@ -154,7 +154,6 @@ function Chords( $, functions, share, toolbar, resizer )
         $SINGLE_BARLINE.clone().appendTo( $PARENT );
       }
     } );
-    $TIME_SIGNATURE.val( '' + deserializedData.timeSignature );
     $.each( postRenderers, function()
     {
       this();
@@ -277,7 +276,7 @@ function Chords( $, functions, share, toolbar, resizer )
     var beatsSum = 0;
     $PARENT.children( 'li.item' ).each( function( index )
     {
-      beatsSum += getBeats( this ).length;
+      beatsSum += beatsHandler.getBeats( this ).length;
       if ( beatsSum % timeSignature === 0 )
       {
         $SINGLE_BARLINE.clone().insertAfter( this );
@@ -315,7 +314,7 @@ function Chords( $, functions, share, toolbar, resizer )
   function extract( li )
   {
     var chord = getChord( li );
-    var beats = getBeats( li );
+    var beats = beatsHandler.getBeats( li );
     return function( theItem )
     {
       var $element = $( 'input.chord-text', theItem );
@@ -344,11 +343,6 @@ function Chords( $, functions, share, toolbar, resizer )
     return extracts;
   }
 
-  function getBeats( li )
-  {
-    return $( 'div.duration > a', li ).text();
-  }
-
   function getChord( li )
   {
     return $( 'input.chord-text', li ).val();
@@ -357,7 +351,7 @@ function Chords( $, functions, share, toolbar, resizer )
   function getChordData( li )
   {
     var chordText = getChord( li );
-    var beatCount = getBeats( li ).length;
+    var beatCount = beatsHandler.getBeats( li ).length;
     return new ChordBeat( chordText, beatCount );
   }
 
@@ -523,160 +517,6 @@ function Chords( $, functions, share, toolbar, resizer )
   };
 }
 
-function Beats( $PARENT, $TIME_SIGNATURE, share, functions )
-{
-  'use strict';
-  var MAX_BULLETS = 16;
-  var $BEATS_WRAPPER = $( '<div class="btn-group duration">' );
-  var $BEATS_LINK = $( '<a class="btn dropdown-toggle" data-toggle="dropdown" href="#" title="Beats for this chord"/>' );
-  var $BEATS_LIST = $( '<ul class="dropdown-menu"/>' );
-  var BULLET_STRING = '••••••••••••••••';
-  var BULLETS = [];
-  for ( var len = 0; len <= MAX_BULLETS; len++ )
-  {
-    BULLETS.push( BULLET_STRING.substr( 0, len ) );
-  }
-
-  $TIME_SIGNATURE.data( 'previous', parseInt( $TIME_SIGNATURE.val() ) ).change( function()
-  {
-    if ( $PARENT.children( 'li.item' ).length > 0 )
-    {
-      var previous = $TIME_SIGNATURE.data( 'previous' );
-      var current = parseInt( $TIME_SIGNATURE.val() );
-      var multiplier = current / previous;
-      var canTransform = true;
-      $PARENT.children( 'li.item' ).each( function( index )
-      {
-        var beats = getBeats( this ).length;
-        var result = beats * multiplier;
-        var isInt = result % 1 === 0;
-        if ( !isInt )
-        {
-          canTransform = false;
-          return false;
-        }
-      } );
-      functions.dialog( function()
-      {
-        var $modal = $( '#time-signature-form' );
-        $( '#time-signature-actions-default' ).prop( 'checked', true );
-        var $transformInput = $( '#time-signature-actions-transform' );
-        var $transformLabel = $( '#time-signature-actions-transform-label' );
-        var $transformAlert = $( '#time-signature-alert' );
-        var $transformAlertYes = $( '#time-signature-alert-yes' );
-        var $transformAlertNo = $( '#time-signature-alert-no' );
-        if ( canTransform )
-        {
-          $transformInput.removeAttr( 'disabled' );
-          $transformLabel.removeClass( 'disabled' );
-          $transformAlert.removeClass( 'alert-block' );
-          $transformAlert.addClass( 'alert-success' );
-          $transformAlertYes.show();
-          $transformAlertNo.hide();
-        }
-        else
-        {
-          $transformInput.attr( 'disabled', 'disabled' );
-          $transformLabel.addClass( 'disabled' );
-          $transformAlert.removeClass( 'alert-success' );
-          $transformAlert.addClass( 'alert-block' );
-          $transformAlertNo.show();
-          $transformAlertYes.hide();
-        }
-        $modal.modal().data( 'saved', false );
-      }, 'time-signature-form', 'time-signature', function()
-      {
-        var $modal = $( '#time-signature-form' );
-        $( '#time-signature-ok' ).click( function()
-        {
-          $modal.data( 'saved', true );
-          var transform = $( '#time-signature-actions-transform' ).prop( 'checked' );
-          var previous = $TIME_SIGNATURE.data( 'previous' );
-          var current = parseInt( $TIME_SIGNATURE.val() );
-          var multiplier = current / previous;
-          $TIME_SIGNATURE.data( 'previous', current );
-          $PARENT.children( 'li.item' ).each( function( index )
-          {
-            var beats = getBeats( this ).length;
-            if ( transform )
-            {
-              beats *= multiplier;
-            }
-            $( 'div.duration', this ).remove();
-            createBeats( beats, this );
-          } );
-          share.changedStructure( 'toolbar/timesignature' );
-        } );
-        $modal.on( 'hidden', function()
-        {
-          if ( !$modal.data( 'saved' ) )
-          {
-            $TIME_SIGNATURE.val( $TIME_SIGNATURE.data( 'previous' ) );
-          }
-        } );
-        $( '#time-signature-close,#time-signature-close-header' ).click( function()
-        {
-          $TIME_SIGNATURE.val( $TIME_SIGNATURE.data( 'previous' ) );
-        } );
-
-      } );
-    }
-    else
-    {
-      $TIME_SIGNATURE.data( 'previous', parseInt( $TIME_SIGNATURE.val() ) );
-    }
-  } );
-
-  function getBeats( li )
-  {
-    return $( 'div.duration > a', li ).text();
-  }
-
-  function createBeats( beats, wrapper )
-  {
-    var defaultBeats = parseInt( $TIME_SIGNATURE.val() );
-    var num = defaultBeats;
-    if ( beats !== undefined )
-    {
-      num = beats;
-    }
-    var $beatsWrapper = $BEATS_WRAPPER.clone();
-    var $currentBeats = $BEATS_LINK.clone();
-    $currentBeats.appendTo( $beatsWrapper );
-    $currentBeats.text( BULLETS[num] );
-    $currentBeats.dropdown();
-
-    var list = $BEATS_LIST.clone();
-    list.appendTo( $beatsWrapper );
-
-    for ( var len = defaultBeats; len > 0; len-- )
-    {
-      var beatString = BULLETS[len];
-      var $option = $( '<li><a href="#">' + beatString + '</a></li>' );
-      $option.appendTo( list );
-      $option.click( {
-        'beatString' : beatString
-      }, function( event )
-      {
-        $currentBeats.dropdown( 'toggle' );
-        if ( $currentBeats.text() !== event.data.beatString )
-        {
-          $currentBeats.text( event.data.beatString );
-          $currentBeats.blur();
-          share.changedStructure( 'chords/beats' );
-        }
-        return false;
-      } );
-    }
-
-    $beatsWrapper.appendTo( wrapper );
-  }
-
-  return {
-    'createBeats' : createBeats
-  };
-}
-
 function CopyPaste( chords, share, functions, $PARENT )
 {
   'use strict';
@@ -754,16 +594,16 @@ function addPinEvents( $wrapper )
   } );
 }
 
-define( 'plugins/chords', [ 'plugins', 'jquery', 'functions', 'share', 'toolbar', 'resizer' ], function( plugins, $,
-    functions, share, toolbar, resizer )
-{
-  'use strict';
-  var instance = new Chords( $, functions, share, toolbar, resizer );
-  plugins.register( {
-    'name' : 'chords',
-    'instance' : instance,
-    'render' : true,
-    'serialize' : true
-  } );
-  return instance;
-} );
+define( 'plugins/chords', [ 'plugins', 'jquery', 'functions', 'share', 'toolbar', 'resizer', 'plugins/beats' ],
+    function( plugins, $, functions, share, toolbar, resizer, beats )
+    {
+      'use strict';
+      var instance = new Chords( $, functions, share, toolbar, resizer, beats );
+      plugins.register( {
+        'name' : 'chords',
+        'instance' : instance,
+        'render' : true,
+        'serialize' : true
+      } );
+      return instance;
+    } );
