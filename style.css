@@ -349,6 +349,10 @@ body.edit-mode #tools span.btn-group,body.edit-mode #tools div.btn-group {
     'Arial Unicode MS', serif;
 }
 
+label.disabled {
+  color: #666666;
+}
+
 #footer {
   float: none;
   font-size: 12px;

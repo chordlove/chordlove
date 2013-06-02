@@ -54,11 +54,6 @@ function Toolbar( $, functions, share )
 
     functions.bindButton( '#edit', editMode );
     functions.bindButton( '#clear', clear );
-
-    $( '#time-signature' ).change( function()
-    {
-      share.changedStructure( 'toolbar/timesignature' );
-    } );
   }
 
   prepareCpanel();

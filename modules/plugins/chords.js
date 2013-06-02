@@ -60,7 +60,7 @@ function Chords( $, functions, share, toolbar, resizer )
   var $INPUT = $( '<input class="chord-text resize-trigger empty-input" type="text" title="Add a chord" placeholder="Chord…" />' );
   var $CHORD = $( '<div class="chord"/>' );
 
-  var beatsHandler = new Beats( $TIME_SIGNATURE, share );
+  var beatsHandler = new Beats( $PARENT, $TIME_SIGNATURE, share, functions );
 
   var postRenderers = [];
   var contentExtractors = [];
@@ -523,7 +523,7 @@ function Chords( $, functions, share, toolbar, resizer )
   };
 }
 
-function Beats( $TIME_SIGNATURE, share )
+function Beats( $PARENT, $TIME_SIGNATURE, share, functions )
 {
   'use strict';
   var MAX_BULLETS = 16;
@@ -537,9 +537,99 @@ function Beats( $TIME_SIGNATURE, share )
     BULLETS.push( BULLET_STRING.substr( 0, len ) );
   }
 
-  function createBeats( beats, $wrapper )
+  $TIME_SIGNATURE.data( 'previous', parseInt( $TIME_SIGNATURE.val() ) ).change( function()
   {
+    if ( $PARENT.children( 'li.item' ).length > 0 )
+    {
+      var previous = $TIME_SIGNATURE.data( 'previous' );
+      var current = parseInt( $TIME_SIGNATURE.val() );
+      var multiplier = current / previous;
+      var canTransform = true;
+      $PARENT.children( 'li.item' ).each( function( index )
+      {
+        var beats = getBeats( this ).length;
+        var result = beats * multiplier;
+        var isInt = result % 1 === 0;
+        if ( !isInt )
+        {
+          canTransform = false;
+          return false;
+        }
+      } );
+      functions.dialog( function()
+      {
+        var $modal = $( '#time-signature-form' );
+        $( '#time-signature-actions-default' ).prop( 'checked', true );
+        var $transformInput = $( '#time-signature-actions-transform' );
+        var $transformLabel = $( '#time-signature-actions-transform-label' );
+        var $transformAlert = $( '#time-signature-alert' );
+        var $transformAlertYes = $( '#time-signature-alert-yes' );
+        var $transformAlertNo = $( '#time-signature-alert-no' );
+        if ( canTransform )
+        {
+          $transformInput.removeAttr( 'disabled' );
+          $transformLabel.removeClass( 'disabled' );
+          $transformAlert.removeClass( 'alert-block' );
+          $transformAlert.addClass( 'alert-success' );
+          $transformAlertYes.show();
+          $transformAlertNo.hide();
+        }
+        else
+        {
+          $transformInput.attr( 'disabled', 'disabled' );
+          $transformLabel.addClass( 'disabled' );
+          $transformAlert.removeClass( 'alert-success' );
+          $transformAlert.addClass( 'alert-block' );
+          $transformAlertNo.show();
+          $transformAlertYes.hide();
+        }
+        $modal.modal().data( 'saved', false );
+      }, 'time-signature-form', 'time-signature', function()
+      {
+        var $modal = $( '#time-signature-form' );
+        $( '#time-signature-ok' ).click( function()
+        {
+          $modal.data( 'saved', true );
+          var transform = $( '#time-signature-actions-transform' ).prop( 'checked' );
+          var previous = $TIME_SIGNATURE.data( 'previous' );
+          var current = parseInt( $TIME_SIGNATURE.val() );
+          var multiplier = current / previous;
+          $TIME_SIGNATURE.data( 'previous', current );
+          $PARENT.children( 'li.item' ).each( function( index )
+          {
+            var beats = getBeats( this ).length;
+            if ( transform )
+            {
+              beats *= multiplier;
+            }
+            $( 'div.duration', this ).remove();
+            createBeats( beats, this );
+          } );
+          share.changedStructure( 'toolbar/timesignature' );
+        } );
+        $modal.on( 'hidden', function()
+        {
+          if ( !$modal.data( 'saved' ) )
+          {
+            $TIME_SIGNATURE.val( $TIME_SIGNATURE.data( 'previous' ) );
+          }
+        } );
+        $( '#time-signature-close,#time-signature-close-header' ).click( function()
+        {
+          $TIME_SIGNATURE.val( $TIME_SIGNATURE.data( 'previous' ) );
+        } );
 
+      } );
+    }
+  } );
+
+  function getBeats( li )
+  {
+    return $( 'div.duration > a', li ).text();
+  }
+
+  function createBeats( beats, wrapper )
+  {
     var defaultBeats = parseInt( $TIME_SIGNATURE.val() );
     var num = defaultBeats;
     if ( beats !== undefined )
@@ -551,6 +641,7 @@ function Beats( $TIME_SIGNATURE, share )
     $currentBeats.appendTo( $beatsWrapper );
     $currentBeats.text( BULLETS[num] );
     $currentBeats.dropdown();
+
     var list = $BEATS_LIST.clone();
     list.appendTo( $beatsWrapper );
 
@@ -574,7 +665,7 @@ function Beats( $TIME_SIGNATURE, share )
       } );
     }
 
-    $beatsWrapper.appendTo( $wrapper );
+    $beatsWrapper.appendTo( wrapper );
   }
 
   return {

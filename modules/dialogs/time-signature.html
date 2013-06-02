@@ -1,0 +1,51 @@
+<!--
+Chordlove is a tool for sharing song chords and lyrics.
+Copyright (C) 2013 NA Konsult AB
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<div id="time-signature-form" class="modal hide fade" tabindex="-1">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true" id="time-signature-close-header">&times;</button>
+    <h3>
+      <i class="icon-time"></i> Change time signature
+    </h3>
+  </div>
+  <div class="modal-body">
+    <form>
+      <fieldset>
+        <label class="radio"> <input type="radio" name="time-signature-actions"
+          id="time-signature-actions-default" value="default" checked> Don't update the number of beats on
+          existing chords.
+        </label> <label class="radio" id="time-signature-actions-transform-label"> <input type="radio"
+          name="time-signature-actions" id="time-signature-actions-transform" value="transform">Update the
+          number of beats on existing chords to fit the new time signature.
+        </label>
+      </fieldset>
+    </form>
+    <div class="alert alert-block" id="time-signature-alert">
+      <h4>Update beats on chords</h4>
+      <span id="time-signature-alert-yes">In this case, the number of beats on all chords can be
+        &quot;scaled&quot; to fit the new time signature. This means that the bars will be the same. Select the second
+        option above if this is what you want.</span>
+      <span id="time-signature-alert-no">One or more chords have bets which can't be automatically
+        &quot;scaled&quot; to fit the new time signature. It's still fine to change the time signature, but the chords
+        will keep their current number of beats. This means that the bars will be different.</span>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn" type="button" data-dismiss="modal" id="time-signature-close">Close</button>
+    <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true" id="time-signature-ok">Ok</button>
+  </div>
+</div>
