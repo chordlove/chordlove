@@ -19,10 +19,12 @@
  * Creates sharable URLs and manages events connected to this.
  * 
  * @module share
+ * @requires jquery
  * @requires plugins
+ * @requires functions
  */
 
-function Share( plugins )
+function Share( $, plugins, functions )
 {
   'use strict';
   if ( Share.prototype._instance )
@@ -36,19 +38,22 @@ function Share( plugins )
   var textChangeListeners = [];
   var structureChangeListeners = [];
 
-  $( '#share-url' ).click( function()
+  functions.dialog( false, 'share-form', 'share', function()
   {
-    this.select();
-  } );
-
-  $( '#share' ).click( function()
-  {
-    var href = window.location.href.replace( '|', '%7C' ).replace( '—', '%E2%80%94' );
-    this.blur();
-    $( '#share-url' ).val( href );
-    $( '#share-form' ).modal().on( 'shown', function()
+    $( '#share-url' ).click( function()
     {
-      $( '#share-url' ).select();
+      this.select();
+    } );
+
+    $( '#share' ).click( function()
+    {
+      var href = window.location.href.replace( '|', '%7C' ).replace( '—', '%E2%80%94' );
+      this.blur();
+      $( '#share-url' ).val( href );
+      $( '#share-form' ).modal().on( 'shown', function()
+      {
+        $( '#share-url' ).select();
+      } );
     } );
   } );
 
@@ -147,8 +152,8 @@ function Share( plugins )
   };
 }
 
-define( 'share', [ 'plugins' ], function( plugins )
+define( 'share', [ 'plugins', 'jquery', 'functions' ], function( plugins, $, functions )
 {
   'use strict';
-  return new Share( plugins );
+  return new Share( $, plugins, functions );
 } );

@@ -28,6 +28,8 @@ define(
     {
       'use strict';
       var CHARACTERS = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-.!~*'()?", CHARACTERS_LEN = CHARACTERS.length;
+      var $DIV = $( '<div/>' );
+      var $DIALOGS = $( '#dialogs' );
 
       /**
        * Get a number encoded as characters.
@@ -395,7 +397,7 @@ define(
         var $element = $( '#' + elementId );
         if ( $element.length === 0 )
         {
-          $( '#dialogs' ).load( 'modules/dialogs/' + name + '.html', function()
+          $DIV.clone().appendTo( $DIALOGS ).load( 'modules/dialogs/' + name + '.html', function()
           {
             initFunc();
             if ( executeFunc )
