@@ -45,6 +45,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 <script type="text/javascript" src="modules/pluginlist.js"></script>
 </head>
 <body>
+  <div id="spinner">
+    <img src="images/loading.gif">
+  </div>
   <div id="help" class="modal hide fade" tabindex="-1">
     <div class="modal-header">
       <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -80,7 +83,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
       <button class="btn" data-dismiss="modal">Ok</button>
     </div>
   </div>
-  <div class="navbar">
+  <div class="navbar" id="navbar">
     <div class="navbar-inner">
       <div id="cpanel" class="btn-toolbar">
         <div id="tools">

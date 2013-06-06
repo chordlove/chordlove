@@ -32,6 +32,11 @@
   }
 }
 
+/* hide initially */
+#navbar, #title, #footer {
+  visibility: hidden;
+}
+
 body {
   padding: 8px;
   font-family: serif;

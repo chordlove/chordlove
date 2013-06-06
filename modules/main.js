@@ -40,27 +40,50 @@ define( 'jquery', [], function()
  * @requires plugins/addons
  * @requires plugins/tools
  */
-require( [ 'jquery', 'plugins', 'share', 'plugins/title', 'plugins/chords', 'plugins/lyrics', 'plugins/structure',
-    'plugins/addons', 'plugins/tools', 'storage' ], function( $, plugins, share )
-{
-  'use strict';
-  $( function()
-  {
-    $.ajaxSetup( {
-      cache : true
-    } );
-
-    $( '#items' ).sortable( {
-      'revert' : true,
-      'handle' : '.handle',
-      'stop' : function( event )
+require(
+    [ 'jquery', 'plugins', 'share', 'plugins/title', 'plugins/chords', 'plugins/lyrics', 'plugins/structure',
+        'plugins/addons', 'plugins/tools', 'storage' ],
+    function( $, plugins, share )
+    {
+      'use strict';
+      $( function()
       {
-        share.changedStructure( event );
-      }
+        $.ajaxSetup( {
+          cache : true
+        } );
+
+        $( '#items' ).sortable( {
+          'revert' : true,
+          'handle' : '.handle',
+          'stop' : function( event )
+          {
+            share.changedStructure( event );
+          }
+        } );
+
+        ( function()
+        {
+          if ( window.self === window.top )
+          {
+            $( '#intro' ).load( 'intro.html' );
+            $( '#spinner' ).remove();
+            $.each( [ 'navbar', 'title', 'footer' ], function()
+            {
+              document.getElementById( this ).style.visibility = 'visible';
+            } );
+            plugins.init();
+          }
+          else
+          {
+            $( 'body' )
+                .html(
+                    '<div id="framed" class="alert alert-error"><h4>The page can not be loaded!</h4><p>Use this link to open the page in a tab or new window: <a href=" '
+                        + window.location.href
+                        + '" target="_blank">'
+                        + window.location.hostname
+                        + ' <i class="icon-external-link"></i></a>.</p></div>' );
+          }
+        } )();
+
+      } );
     } );
-
-    $( '#intro' ).load( 'intro.html' );
-    plugins.init();
-
-  } );
-} );
