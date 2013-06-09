@@ -37,7 +37,8 @@ function Addons( $, toolbar, plugins )
 
   // var PLUGIN_ID = '05', DEFAULT_FORMAT = 0;
 
-  var addons = [ new AddonInfo( 'verses', 'icon-align-left', 'Add more verses' ) ];
+  var addons = [ new AddonInfo( 'verses', 'icon-align-left', 'Add more verses' ),
+      new AddonInfo( 'guitarchords', 'icon-table', 'Show guitar chords' ) ];
 
   function AddonInfo( name, icon, text )
   {

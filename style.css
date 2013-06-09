@@ -33,7 +33,7 @@
 }
 
 /* hide initially */
-#navbar, #title, #footer {
+#navbar,#title,#footer {
   visibility: hidden;
 }
 
@@ -146,6 +146,7 @@ body.edit-mode input[type="text"].empty-input.song-text {
 #items.has-text input[type="text"].empty-input.song-text {
   visibility: hidden;
 }
+
 body.edit-mode #items.has-text input[type="text"].empty-input.song-text {
   visibility: visible;
 }
@@ -356,6 +357,17 @@ body.edit-mode #tools span.btn-group,body.edit-mode #tools div.btn-group {
 
 label.disabled {
   color: #666666;
+}
+
+div.guitarchord {
+  float: left;
+}
+
+p.guitarchord {
+  font-family: 'DejaVuSerifBook', 'DejaVu Serif', 'DejaVu Sans', 'Lucida Sans Unicode',
+    'Arial Unicode MS', serif;
+  font-size: 24px;
+  text-align: center;
 }
 
 #footer {

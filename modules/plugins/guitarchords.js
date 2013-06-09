@@ -28,7 +28,7 @@
  * @requires plugins
  */
 
-function GuitarChords( $, functions, share, toolbar, resizer, plugins )
+function GuitarChords( $, chorddata, share )
 {
   'use strict';
   if ( GuitarChords.prototype._instance )
@@ -40,6 +40,27 @@ function GuitarChords( $, functions, share, toolbar, resizer, plugins )
   var PLUGIN_ID = '07', DEFAULT_FORMAT = 0;
   var data = null;
   var format = DEFAULT_FORMAT;
+
+  var $PARENT = $( '#items' );
+  var $GUITAR_CHORDS = $( '<div id="guitarchords"/>' );
+  var $CHORD_WRAPPER = $( '<div class="guitarchord"/>' );
+  var $CHORD_LABEL = $( '<p class="guitarchord"/>' );
+  $( '#addons' ).append( $GUITAR_CHORDS );
+
+  var renderOnce = true;
+
+  share.addStructureChangeListener( changeListener );
+  share.addTextChangeListener( changeListener );
+
+  if ( renderOnce )
+  {
+    render();
+  }
+
+  function changeListener()
+  {
+    render();
+  }
 
   /**
    * @method
@@ -57,10 +78,46 @@ function GuitarChords( $, functions, share, toolbar, resizer, plugins )
    */
   function render()
   {
-    if ( data === null )
+    renderOnce = false;
+    var seen = {};
+    $GUITAR_CHORDS.empty();
+    $PARENT.children( 'li.item' ).each( function()
     {
-      return;
-    }
+      var chord = $( 'input.chord-text', this ).val();
+      if ( !( chord in seen ) )
+      {
+        seen[chord] = true;
+        if ( chord.length )
+        {
+          var note = chord.charAt( 0 );
+          var chordName = '';
+          if ( chord.length > 1 )
+          {
+            var secondChar = chord.charAt( 1 );
+            if ( secondChar === '♯' || secondChar === '♭' )
+            {
+              note += secondChar;
+            }
+          }
+          if ( chord.length > note.length )
+          {
+            chordName = $.trim( chord.substr( note.length ) );
+          }
+          var guitarChords = chorddata.get( note, chordName );
+          if ( guitarChords.length )
+          {
+            var $wrapper = $CHORD_WRAPPER.clone();
+            var paper = Raphael( $wrapper[0], 150, 120 );
+            var chordbox = new ChordBox( paper, 30, 30 );
+            chordbox.setChord( dbToVexChords( guitarChords[0] ) );
+            chordbox.tuning = [];
+            chordbox.draw();
+            $CHORD_LABEL.clone().text( chord ).appendTo( $wrapper );
+            $wrapper.appendTo( $GUITAR_CHORDS );
+          }
+        }
+      }
+    } );
   }
 
   /**
@@ -69,7 +126,7 @@ function GuitarChords( $, functions, share, toolbar, resizer, plugins )
    */
   function serialize()
   {
-    var result = '';
+    var result = PLUGIN_ID + DEFAULT_FORMAT;
     return result;
   }
 
@@ -78,25 +135,42 @@ function GuitarChords( $, functions, share, toolbar, resizer, plugins )
     // not yet
   }
 
+  function dbToVexChords( db )
+  {
+    var vex = [];
+    for ( var i = 0; i < db.length; i++ )
+    {
+      var fret = db[i];
+      vex.push( [ 6 - i, fret === -1 ? 'x' : fret ] );
+    }
+    return vex;
+  }
+
+  function load()
+  {
+    // kick off rendering?
+  }
+
   return {
     'render' : render,
     'serialize' : serialize,
     'setData' : setData,
-    'clear' : clear
+    'clear' : clear,
+    'load' : load
   };
 }
 
-define( 'plugins/guitarchords', [ 'plugins', 'jquery', 'functions', 'share', 'toolbar', 'resizer', 'plugins/chords' ],
-    function( plugins, $, functions, share, toolbar, resizer, chords )
-    {
-      'use strict';
-      var instance = new GuitarChords( $, functions, share, toolbar, resizer, plugins );
-      chords.addPostRenderer( instance.render );
-      plugins.register( {
-        'name' : 'guitarchords',
-        'instance' : instance,
-        'render' : false,
-        'serialize' : true
-      } );
-      return instance;
-    } );
+define( 'plugins/guitarchords', [ 'plugins', 'jquery', 'chorddata', 'share', 'plugins/chords' ], function( plugins, $,
+    chorddata, share, chords )
+{
+  'use strict';
+  var instance = new GuitarChords( $, chorddata, share );
+  chords.addPostRenderer( instance.render );
+  plugins.register( {
+    'name' : 'guitarchords',
+    'instance' : instance,
+    'render' : false,
+    'serialize' : true
+  } );
+  return instance;
+} );

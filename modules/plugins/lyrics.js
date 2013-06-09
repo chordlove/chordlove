@@ -145,7 +145,7 @@ function Lyrics( $, functions, share, toolbar, resizer, plugins )
     $PARENT.addClass( 'has-text' );
     $VIEW_BUTTON.addClass( 'active' );
     addTextInput();
-    $( '#items > li.item' ).each( function()
+    $PARENT.children( 'li.item' ).each( function()
     {
       setLyrics( this, lyrics.shift() );
     } );
@@ -160,7 +160,7 @@ function Lyrics( $, functions, share, toolbar, resizer, plugins )
     var result = '';
     result += PLUGIN_ID + DEFAULT_FORMAT;
     var items = [];
-    $( '#items > li.item' ).each( function()
+    $PARENT.children( 'li.item' ).each( function()
     {
       items.push( getLyrics( this ) );
     } );
