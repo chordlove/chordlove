@@ -89,6 +89,39 @@ function ChordData()
     }
   }
 
+  function ChordShape( chordName, rootNote, stringFret, rootPosition, barres )
+  {
+    var name = chordName;
+    var root = rootNote;
+    var chord = stringFret;
+    var bars = barres;
+    var position = rootPosition;
+    var min = 24;
+
+    for ( var i = 0; i < chord.length; i++ )
+    {
+      if ( chord[i][1] !== -1 && chord[i][1] < min )
+      {
+        min = chord[i][1];
+      }
+    }
+
+    function getVexChord( note )
+    {
+      var realNote = normalizeNote( note );
+
+    }
+  }
+
+  function normalizeNote( note )
+  {
+    if ( note && note in notes )
+    {
+      return notes[note];
+    }
+    throw new 'Unknown note: "' + note + '".';
+  }
+
   aliases = {
     'M' : 'maj',
     'm' : 'min',

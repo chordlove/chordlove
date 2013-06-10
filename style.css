@@ -366,8 +366,9 @@ div.guitarchord {
 p.guitarchord {
   font-family: 'DejaVuSerifBook', 'DejaVu Serif', 'DejaVu Sans', 'Lucida Sans Unicode',
     'Arial Unicode MS', serif;
-  font-size: 24px;
+  font-size: 18px;
   text-align: center;
+  margin-right: -5px;
 }
 
 #footer {

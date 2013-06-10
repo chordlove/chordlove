@@ -107,8 +107,8 @@ function GuitarChords( $, chorddata, share )
           if ( guitarChords.length )
           {
             var $wrapper = $CHORD_WRAPPER.clone();
-            var paper = Raphael( $wrapper[0], 150, 120 );
-            var chordbox = new ChordBox( paper, 30, 30 );
+            var paper = Raphael( $wrapper[0], 110, 90 );
+            var chordbox = new ChordBox( paper, 25, 20, 80, 80 );
             chordbox.setChord( dbToVexChords( guitarChords[0] ) );
             chordbox.tuning = [];
             chordbox.draw();
@@ -148,7 +148,11 @@ function GuitarChords( $, chorddata, share )
 
   function load()
   {
-    // kick off rendering?
+    if ( renderOnce )
+    {
+      render();
+    }
+    share.changed();
   }
 
   return {
