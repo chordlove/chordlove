@@ -103,13 +103,22 @@ function GuitarChords( $, chorddata, share )
           {
             chordName = $.trim( chord.substr( note.length ) );
           }
+          var chordRenderers = chorddata.getVexChords( chordName );
+
           var guitarChords = chorddata.get( note, chordName );
           if ( guitarChords.length )
           {
             var $wrapper = $CHORD_WRAPPER.clone();
             var paper = Raphael( $wrapper[0], 110, 90 );
             var chordbox = new ChordBox( paper, 25, 20, 80, 80 );
-            chordbox.setChord( dbToVexChords( guitarChords[0] ) );
+            if ( chordRenderers.length )
+            {
+              chordRenderers[0]( note, chordbox );
+            }
+            else
+            {
+              chordbox.setChord( dbToVexChords( guitarChords[0] ) );
+            }
             chordbox.tuning = [];
             chordbox.draw();
             $CHORD_LABEL.clone().text( chord ).appendTo( $wrapper );

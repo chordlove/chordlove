@@ -57,7 +57,7 @@ function ChordData()
   }
   ChordData.prototype._instance = this;
 
-  var aliases = null, notes = null, data = null;
+  var aliases = null, notes = null, data = null, noteNumbers = null, vexData = null;
 
   function get( rootNote, chordName )
   {
@@ -89,28 +89,110 @@ function ChordData()
     }
   }
 
-  function ChordShape( chordName, rootNote, stringFret, rootPosition, barres )
+  function getVexChords( name )
   {
-    var name = chordName;
+    var realName = ( name in aliases ) ? aliases[name] : name;
+    if ( realName in vexData )
+    {
+      return vexData[realName];
+    }
+    else
+    {
+      return [];
+    }
+  }
+
+  function barre( from, to, fret )
+  {
+    return {
+      'from_string' : from,
+      'to_string' : to,
+      'fret' : fret
+    };
+  }
+
+  function ChordShape( rootNote, frets, rootPosition, barres )
+  {
     var root = rootNote;
-    var chord = stringFret;
+    var noteNumber = noteNumbers[root];
     var bars = barres;
     var position = rootPosition;
     var min = 24;
+    var max = 0;
 
-    for ( var i = 0; i < chord.length; i++ )
+    for ( var i = 0; i < frets.length; i++ )
     {
-      if ( chord[i][1] !== -1 && chord[i][1] < min )
+      var currentFret = frets[i];
+      if ( currentFret !== -1 )
       {
-        min = chord[i][1];
+        if ( currentFret < min )
+        {
+          min = currentFret;
+        }
+        if ( currentFret > max )
+        {
+          max = currentFret;
+        }
+      }
+    }
+    for ( var i = 0; i < bars.length; i++ )
+    {
+      if ( bars[i]['fret'] < min )
+      {
+        min = bars[i]['fret'];
       }
     }
 
-    function getVexChord( note )
+    function setVexChord( note, chordBox )
     {
+      var realChord = [];
+      var realBarre = [];
       var realNote = normalizeNote( note );
+      var diff = noteNumbers[realNote] - noteNumber;
+      var realPosition = diff - position;
+      var hidePosition = realPosition === 0;
+      if ( diff + min < 0 )
+      {
+        diff += 12;
+      }
+      else if ( diff + min > 12 )
+      {
+        diff -= 12;
+      }
+      var realDiff = diff === 0 ? 0 : 1;
+      if ( realPosition < 5 && diff + max < 6 )
+      {
+        realDiff = realPosition;
+        hidePosition = true;
+      }
 
+      for ( var string = 1; string < 7; string++ )
+      {
+        var fret = frets[string - 1];
+        realChord.push( [ string, fret === -1 ? "x" : fret + realDiff ] );
+      }
+      for ( var i = 0; i < bars.length; i++ )
+      {
+        var barItem = bars[i];
+        var realBar = {
+          'from_string' : barItem['from_string'],
+          'to_string' : barItem['to_string'],
+          'fret' : barItem['fret'] + realDiff
+        };
+        if ( realBar['fret'] !== 0 )
+        {
+          realBarre.push( realBar );
+        }
+      }
+
+      if ( hidePosition )
+      {
+        realPosition = undefined;
+      }
+      chordBox.setChord( realChord, realPosition, realBarre );
     }
+
+    return setVexChord;
   }
 
   function normalizeNote( note )
@@ -165,6 +247,26 @@ function ChordData()
     'G♯' : 'G#',
     'Ab' : 'G#',
     'A♭' : 'G#'
+  };
+
+  noteNumbers = {
+    'A' : 0,
+    'A#' : 1,
+    'B' : 2,
+    'C' : 3,
+    'C#' : 4,
+    'D' : 5,
+    'D#' : 6,
+    'E' : 7,
+    'F' : 8,
+    'F#' : 9,
+    'G' : 10,
+    'G#' : 11
+  };
+
+  vexData = {
+    'min' : [ new ChordShape( 'A', [ 0, 1, 2, 2, 0, -1 ], 0, [ barre( 5, 1, 0 ) ] ) ],
+    'dim' : [ new ChordShape( 'D', [ -1, 6, 4, 6, 5, -1 ], 5, [] ) ]
   };
 
   data = {
@@ -576,7 +678,8 @@ function ChordData()
   };
 
   return {
-    'get' : get
+    'get' : get,
+    'getVexChords' : getVexChords
   };
 }
 
