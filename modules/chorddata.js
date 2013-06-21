@@ -119,6 +119,11 @@ function ChordData()
     var position = rootPosition;
     var min = 24;
     var max = 0;
+    var calcFrets = [];
+    var calcFormattedFrets = [];
+    var calcBars = [];
+    var calcRoot;
+    var width;
 
     for ( var i = 0; i < frets.length; i++ )
     {
@@ -135,22 +140,52 @@ function ChordData()
         }
       }
     }
-    for ( var i = 0; i < bars.length; i++ )
+    width = max - min;
+    var calcPosition = ( width < 4 ) ? 2 : 1;
+    for ( var i = 0; i < frets.length; i++ )
     {
-      if ( bars[i]['fret'] < min )
+      var currentFret = frets[i];
+      if ( currentFret !== -1 )
       {
-        min = bars[i]['fret'];
+        calcFrets.push( currentFret - min + calcPosition );
+      }
+      else
+      {
+        calcFrets.push( -1 );
       }
     }
+    for ( var string = 1; string < 7; string++ )
+    {
+      var fret = calcFrets[string - 1];
+      calcFormattedFrets.push( [ string, fret === -1 ? "x" : fret ] );
+    }
+    for ( var i = 0; i < bars.length; i++ )
+    {
+      var barPos = bars[i]['fret'];
+      if ( barPos < min )
+      {
+        min = barPos;
+      }
+      if ( barPos > max )
+      {
+        max = barPos;
+      }
+    }
+    for ( var i = 0; i < bars.length; i++ )
+    {
+      var bar = bars[i];
+      calcBars.push( barre( bar['from_string'], bar['to_string'], bar['fret'] - min + calcPosition ) );
+    }
+    calcRoot = rootPosition - min + calcPosition;
 
     function setVexChord( note, chordBox )
     {
+      console.log( note );
       var realChord = [];
       var realBarre = [];
       var realNote = normalizeNote( note );
       var diff = noteNumbers[realNote] - noteNumber;
-      var realPosition = diff - position;
-      var hidePosition = realPosition === 0;
+      var realPosition = ( position + diff + 12 ) % 12;
       if ( diff + min < 0 )
       {
         diff += 12;
@@ -159,37 +194,39 @@ function ChordData()
       {
         diff -= 12;
       }
-      var realDiff = diff === 0 ? 0 : 1;
+      if ( min < position && realPosition < position - min )
+      {
+        // can't reach below fret zero.
+        realPosition += 12;
+      }
       if ( realPosition < 5 && diff + max < 6 )
       {
-        realDiff = realPosition;
-        hidePosition = true;
-      }
-
-      for ( var string = 1; string < 7; string++ )
-      {
-        var fret = frets[string - 1];
-        realChord.push( [ string, fret === -1 ? "x" : fret + realDiff ] );
-      }
-      for ( var i = 0; i < bars.length; i++ )
-      {
-        var barItem = bars[i];
-        var realBar = {
-          'from_string' : barItem['from_string'],
-          'to_string' : barItem['to_string'],
-          'fret' : barItem['fret'] + realDiff
-        };
-        if ( realBar['fret'] !== 0 )
+        realPosition = undefined;
+        for ( var string = 1; string < 7; string++ )
         {
-          realBarre.push( realBar );
+          var fret = frets[string - 1];
+          realChord.push( [ string, fret === -1 ? "x" : fret + diff ] );
+        }
+        for ( var i = 0; i < bars.length; i++ )
+        {
+          var barItem = bars[i];
+          var realBar = {
+            'from_string' : barItem['from_string'],
+            'to_string' : barItem['to_string'],
+            'fret' : barItem['fret'] + diff
+          };
+          if ( realBar['fret'] !== 0 )
+          {
+            realBarre.push( realBar );
+          }
         }
       }
-
-      if ( hidePosition )
+      else
       {
-        realPosition = undefined;
+        realBarre = calcBars;
+        realChord = calcFormattedFrets;
       }
-      chordBox.setChord( realChord, realPosition, realBarre );
+      chordBox.setChord( realChord, realPosition, realBarre, calcRoot - 1 );
     }
 
     return setVexChord;
@@ -266,7 +303,8 @@ function ChordData()
 
   vexData = {
     'min' : [ new ChordShape( 'A', [ 0, 1, 2, 2, 0, -1 ], 0, [ barre( 5, 1, 0 ) ] ) ],
-    'dim' : [ new ChordShape( 'D', [ -1, 6, 4, 6, 5, -1 ], 5, [] ) ]
+    'dim' : [ new ChordShape( 'D', [ -1, 6, 4, 6, 5, -1 ], 5, [] ) ],
+    'maj7' : [ new ChordShape( 'E', [ 4, 4, 4, 2, 2, 0 ], 0, [ barre( 5, 4, 2 ), barre( 3, 1, 4 ) ] ) ]
   };
 
   data = {
