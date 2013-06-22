@@ -113,7 +113,8 @@ function GuitarChords( $, chorddata, share )
             var chordbox = new ChordBox( paper, 25, 20, 80, 80 );
             if ( chordRenderers.length )
             {
-              chordRenderers[0]( note, chordbox );
+              var richChord = chordRenderers[0]( note );
+              richChord.render( chordbox );
             }
             else
             {

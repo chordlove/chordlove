@@ -111,24 +111,25 @@ function ChordData()
     };
   }
 
-  function ChordShape( rootNote, frets, rootPosition, barres )
+  function ChordShape( rootNote, rootPosition, fretsString, barresString )
   {
+    var frets = stringToFrets( fretsString );
+    var barres = stringToBarres( barresString );
     var root = rootNote;
-    var noteNumber = noteNumbers[root];
+    var rootNoteNumber = noteNumber( root );
     var bars = barres;
     var position = rootPosition;
     var min = 24;
     var max = 0;
     var calcFrets = [];
-    var calcFormattedFrets = [];
     var calcBars = [];
     var calcRoot;
     var width;
 
     for ( var i = 0; i < frets.length; i++ )
     {
-      var currentFret = frets[i];
-      if ( currentFret !== -1 )
+      var currentFret = frets[i][1];
+      if ( currentFret !== 'x' )
       {
         if ( currentFret < min )
         {
@@ -139,25 +140,6 @@ function ChordData()
           max = currentFret;
         }
       }
-    }
-    width = max - min;
-    var calcPosition = ( width < 4 ) ? 2 : 1;
-    for ( var i = 0; i < frets.length; i++ )
-    {
-      var currentFret = frets[i];
-      if ( currentFret !== -1 )
-      {
-        calcFrets.push( currentFret - min + calcPosition );
-      }
-      else
-      {
-        calcFrets.push( -1 );
-      }
-    }
-    for ( var string = 1; string < 7; string++ )
-    {
-      var fret = calcFrets[string - 1];
-      calcFormattedFrets.push( [ string, fret === -1 ? "x" : fret ] );
     }
     for ( var i = 0; i < bars.length; i++ )
     {
@@ -171,21 +153,20 @@ function ChordData()
         max = barPos;
       }
     }
-    for ( var i = 0; i < bars.length; i++ )
-    {
-      var bar = bars[i];
-      calcBars.push( barre( bar['from_string'], bar['to_string'], bar['fret'] - min + calcPosition ) );
-    }
-    calcRoot = rootPosition - min + calcPosition;
+    width = max - min;
 
-    function setVexChord( note, chordBox )
+    var calcPosition = ( width < 4 ? 2 : 1 ) - min;
+    calcFrets = moveFrets( frets, calcPosition );
+    calcBars = moveBarres( bars, calcPosition );
+    calcRoot = rootPosition + calcPosition;
+
+    function getChordForNote( note )
     {
-      console.log( note );
-      var realChord = [];
-      var realBarre = [];
+      // console.log( note );
       var realNote = normalizeNote( note );
-      var diff = noteNumbers[realNote] - noteNumber;
+      var diff = noteNumber( realNote ) - rootNoteNumber;
       var realPosition = ( position + diff + 12 ) % 12;
+      var renderPosition = undefined;
       if ( diff + min < 0 )
       {
         diff += 12;
@@ -199,37 +180,41 @@ function ChordData()
         // can't reach below fret zero.
         realPosition += 12;
       }
+      var realChord = [];
+      var realBarre = [];
       if ( realPosition < 5 && diff + max < 6 )
       {
-        realPosition = undefined;
-        for ( var string = 1; string < 7; string++ )
-        {
-          var fret = frets[string - 1];
-          realChord.push( [ string, fret === -1 ? "x" : fret + diff ] );
-        }
-        for ( var i = 0; i < bars.length; i++ )
-        {
-          var barItem = bars[i];
-          var realBar = {
-            'from_string' : barItem['from_string'],
-            'to_string' : barItem['to_string'],
-            'fret' : barItem['fret'] + diff
-          };
-          if ( realBar['fret'] !== 0 )
-          {
-            realBarre.push( realBar );
-          }
-        }
+        realChord = moveFrets( frets, diff );
+        realBarre = moveBarres( bars, diff );
       }
       else
       {
+        renderPosition = realPosition;
         realBarre = calcBars;
-        realChord = calcFormattedFrets;
+        realChord = calcFrets;
       }
-      chordBox.setChord( realChord, realPosition, realBarre, calcRoot - 1 );
+
+      var transformedBarres = barresToOpenStrings( realBarre, realChord );
+      realBarre = transformedBarres.barres;
+      realChord = transformedBarres.chords;
+
+      function render( chordBox )
+      {
+        chordBox.setChord( realChord, renderPosition, realBarre, calcRoot - 1 );
+      }
+
+      function rank()
+      {
+        return rankChord( realPosition, width, realBarre.length, realChord.length );
+      }
+
+      return {
+        'render' : render,
+        'rank' : rank
+      };
     }
 
-    return setVexChord;
+    return getChordForNote;
   }
 
   function normalizeNote( note )
@@ -239,6 +224,168 @@ function ChordData()
       return notes[note];
     }
     throw new 'Unknown note: "' + note + '".';
+  }
+
+  function noteNumber( note )
+  {
+    return noteNumbers[note];
+  }
+
+  function moveFrets( originalFrets, distance )
+  {
+    if ( distance === 0 )
+    {
+      return originalFrets;
+    }
+    var movedFrets = [];
+    for ( var i = 0; i < originalFrets.length; i++ )
+    {
+      var currentFret = originalFrets[i];
+      if ( currentFret[1] !== 'x' )
+      {
+        movedFrets.push( [ currentFret[0], currentFret[1] + distance ] );
+      }
+      else
+      {
+        movedFrets.push( [ currentFret[0], 'x' ] );
+      }
+    }
+    return movedFrets;
+  }
+
+  function moveBarres( originalBars, distance )
+  {
+    if ( distance === 0 )
+    {
+      return originalBars;
+    }
+    var newBars = [];
+    for ( var i = 0; i < originalBars.length; i++ )
+    {
+      var bar = originalBars[i];
+      newBars.push( barre( bar['from_string'], bar['to_string'], bar['fret'] + distance ) );
+    }
+    return newBars;
+  }
+
+  function barresToOpenStrings( originalBarres, originalChords )
+  {
+    var newBarres = [];
+    var newChords = originalChords;
+    for ( var barIndex = 0; barIndex < originalBarres.length; barIndex++ )
+    {
+      var realBar = originalBarres[barIndex];
+      if ( realBar['fret'] === 0 )
+      {
+        for ( var string = realBar['to_string']; string <= realBar['from_string']; string++ )
+        {
+          var found = false;
+          for ( var fretIndex = 0; fretIndex < originalChords.length; fretIndex++ )
+          {
+            if ( originalChords[fretIndex][0] === string )
+            {
+              found = true;
+              break;
+            }
+          }
+          if ( !found )
+          {
+            newChords.push( [ string, 0 ] );
+          }
+        }
+      }
+      else
+      {
+        newBarres.push( realBar );
+      }
+    }
+    return {
+      'barres' : newBarres,
+      'chords' : newChords
+    };
+  }
+
+  function rankChord( chordPosition, chordWidth, barresLength, chordLength )
+  {
+    var POSITION_WEIGHT = 1.0;
+    var BARRES_WEIGTH = 1.5;
+    var WIDTH_WEIGHT = 0.4;
+    var STRINGS_WEIGHT = 0.3;
+    var compensatedWidth = chordWidth;
+    if ( chordPosition === 0 )
+    {
+      compensatedWidth--;
+    }
+    return chordPosition * POSITION_WEIGHT + compensatedWidth * WIDTH_WEIGHT + barresLength * BARRES_WEIGTH
+        + chordLength * STRINGS_WEIGHT;
+  }
+
+  function stringToFrets( fretString )
+  {
+    if ( fretString.length !== 6 )
+    {
+      throw 'Chord string definition must have six characters.';
+    }
+    var frets = [];
+    for ( var i = 0; i < 6; i++ )
+    {
+      var fret = fretString.charAt( i );
+      if ( fret !== '-' )
+      {
+        if ( fret === 'x' )
+        {
+          frets.push( [ 6 - i, 'x' ] );
+        }
+        else
+        {
+          frets.push( [ 6 - i, parseInt( fret, 16 ) ] );
+        }
+      }
+    }
+    return frets;
+  }
+
+  function stringToBarres( barreString )
+  {
+    if ( barreString.length === 0 )
+    {
+      return [];
+    }
+    if ( barreString.length !== 6 )
+    {
+      throw 'Barre string definition must have six or zero characters.';
+    }
+    var barres = [];
+    var seen = {};
+    for ( var i = 0; i < 6; i++ )
+    {
+      var fret = barreString.charAt( i );
+      if ( fret !== '-' )
+      {
+        var fretNum = parseInt( fret, 16 );
+        if ( seen[fret] )
+        {
+          seen[fret]['to_string'] = 6 - i;
+        }
+        else
+        {
+          seen[fret] = {
+            'from_string' : 6 - i,
+            'fret' : fretNum
+          };
+        }
+      }
+    }
+    for ( var fretName in seen )
+    {
+      var barre = seen[fretName];
+      if ( !( 'to_string' in barre ) )
+      {
+        throw 'Invalid barre definition, all barres must end: ' + barreString;
+      }
+      barres.push( barre );
+    }
+    return barres;
   }
 
   aliases = {
@@ -302,9 +449,9 @@ function ChordData()
   };
 
   vexData = {
-    'min' : [ new ChordShape( 'A', [ 0, 1, 2, 2, 0, -1 ], 0, [ barre( 5, 1, 0 ) ] ) ],
-    'dim' : [ new ChordShape( 'D', [ -1, 6, 4, 6, 5, -1 ], 5, [] ) ],
-    'maj7' : [ new ChordShape( 'E', [ 4, 4, 4, 2, 2, 0 ], 0, [ barre( 5, 4, 2 ), barre( 3, 1, 4 ) ] ) ]
+    'min' : [ new ChordShape( 'A', 0, 'x-221-', '-00000' ) ],
+    'dim' : [ new ChordShape( 'D', 5, 'x5646x', '' ) ],
+    'maj7' : [ new ChordShape( 'E', 0, '0-----', '-22444' ) ]
   };
 
   data = {
