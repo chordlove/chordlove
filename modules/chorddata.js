@@ -210,7 +210,6 @@ function ChordData()
 
       function render( chordBox )
       {
-        chordBox.num_frets = 6;
         chordBox.setChord( realChord, renderPosition, realBarre, positionPosition );
       }
 
@@ -233,7 +232,6 @@ function ChordData()
           {
             cachedRank *= 0.1;
           }
-          console.log( cachedRank );
         }
         return cachedRank;
       }

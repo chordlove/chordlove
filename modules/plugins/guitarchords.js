@@ -109,8 +109,12 @@ function GuitarChords( $, chorddata, share )
           if ( guitarChords.length || chordRenderers.length )
           {
             var $wrapper = $CHORD_WRAPPER.clone();
+            // make the wrapper visible here because of:
+            // https://github.com/DmitryBaranovskiy/raphael/issues/491
+            $wrapper.appendTo( $GUITAR_CHORDS );
             var paper = Raphael( $wrapper[0], 110, 102 );
             var chordbox = new ChordBox( paper, 25, 20, 80, 80 );
+            chordbox.num_frets = 6;
             if ( chordRenderers.length )
             {
               var noteRenderers = [];
@@ -129,7 +133,6 @@ function GuitarChords( $, chorddata, share )
             chordbox.tuning = [];
             chordbox.draw();
             $CHORD_LABEL.clone().text( chord ).appendTo( $wrapper );
-            $wrapper.appendTo( $GUITAR_CHORDS );
           }
         }
       }
