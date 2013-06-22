@@ -106,14 +106,20 @@ function GuitarChords( $, chorddata, share )
           var chordRenderers = chorddata.getVexChords( chordName );
 
           var guitarChords = chorddata.get( note, chordName );
-          if ( guitarChords.length )
+          if ( guitarChords.length || chordRenderers.length )
           {
             var $wrapper = $CHORD_WRAPPER.clone();
-            var paper = Raphael( $wrapper[0], 110, 90 );
+            var paper = Raphael( $wrapper[0], 110, 102 );
             var chordbox = new ChordBox( paper, 25, 20, 80, 80 );
             if ( chordRenderers.length )
             {
-              var richChord = chordRenderers[0]( note );
+              var noteRenderers = [];
+              for ( var rendererIndex = 0; rendererIndex < chordRenderers.length; rendererIndex++ )
+              {
+                noteRenderers.push( chordRenderers[rendererIndex]( note ) );
+              }
+              noteRenderers.sort( compareChords );
+              var richChord = noteRenderers[0];
               richChord.render( chordbox );
             }
             else
@@ -128,6 +134,11 @@ function GuitarChords( $, chorddata, share )
         }
       }
     } );
+  }
+
+  function compareChords( a, b )
+  {
+    return a.rank() - b.rank();
   }
 
   /**

@@ -111,7 +111,7 @@ function ChordData()
     };
   }
 
-  function ChordShape( rootNote, rootPosition, fretsString, barresString )
+  function ChordShape( rootNote, rootPosition, fretsString, barresString, designedForRootPosition )
   {
     var frets = stringToFrets( fretsString );
     var barres = stringToBarres( barresString );
@@ -167,23 +167,26 @@ function ChordData()
       var diff = noteNumber( realNote ) - rootNoteNumber;
       var realPosition = ( position + diff + 12 ) % 12;
       var renderPosition = undefined;
-      if ( diff + min < 0 )
-      {
-        diff += 12;
-      }
-      else if ( diff + min > 12 )
-      {
-        diff -= 12;
-      }
-      if ( min < position && realPosition < position - min )
+      var realMin = realPosition + min - position;
+      if ( realMin < 0 )
       {
         // can't reach below fret zero.
         realPosition += 12;
+        realMin += 12;
       }
+      if ( realMin >= 12 )
+      {
+        // this fits in a lower position
+        realPosition -= 12;
+        realMin -= 12;
+      }
+      var realMax = realPosition + max - position;
       var realChord = [];
       var realBarre = [];
-      if ( realPosition < 5 && diff + max < 6 )
+      var positionPosition = calcRoot - 1;
+      if ( realMin < 7 && realMax < 7 )
       {
+        diff = realPosition - position;
         realChord = moveFrets( frets, diff );
         realBarre = moveBarres( bars, diff );
       }
@@ -192,6 +195,13 @@ function ChordData()
         renderPosition = realPosition;
         realBarre = calcBars;
         realChord = calcFrets;
+        // don't put the root position number outside the fretboard
+        // TODO this could be done in a better way
+        if ( positionPosition < 0 )
+        {
+          positionPosition += 2;
+          renderPosition += 2;
+        }
       }
 
       var transformedBarres = barresToOpenStrings( realBarre, realChord );
@@ -200,12 +210,32 @@ function ChordData()
 
       function render( chordBox )
       {
-        chordBox.setChord( realChord, renderPosition, realBarre, calcRoot - 1 );
+        chordBox.num_frets = 6;
+        chordBox.setChord( realChord, renderPosition, realBarre, positionPosition );
       }
 
+      var cachedRank = undefined;
       function rank()
       {
-        return rankChord( realPosition, width, realBarre.length, realChord.length );
+        if ( cachedRank === undefined )
+        {
+          var stringFactor = 0;
+          for ( var i = 0; i < realChord.length; i++ )
+          {
+            var fret = realChord[i][1];
+            if ( fret !== 0 && fret !== 'x' )
+            {
+              stringFactor++;
+            }
+          }
+          cachedRank = rankChord( realPosition, width, realBarre.length, stringFactor );
+          if ( designedForRootPosition && rootNote === realNote )
+          {
+            cachedRank *= 0.1;
+          }
+          console.log( cachedRank );
+        }
+        return cachedRank;
       }
 
       return {
@@ -307,17 +337,21 @@ function ChordData()
 
   function rankChord( chordPosition, chordWidth, barresLength, chordLength )
   {
-    var POSITION_WEIGHT = 1.0;
-    var BARRES_WEIGTH = 1.5;
-    var WIDTH_WEIGHT = 0.4;
-    var STRINGS_WEIGHT = 0.3;
+    var POSITION_WEIGHT = 0.7;
+    var BARRES_WEIGTH = 2.0;
+    var WIDTH_WEIGHT = 1.5;
+    var STRINGS_WEIGHT = 1.0;
     var compensatedWidth = chordWidth;
     if ( chordPosition === 0 )
     {
       compensatedWidth--;
     }
-    return chordPosition * POSITION_WEIGHT + compensatedWidth * WIDTH_WEIGHT + barresLength * BARRES_WEIGTH
+    // TODO barres + high width should add extra points
+    var value = chordPosition * POSITION_WEIGHT + compensatedWidth * WIDTH_WEIGHT + barresLength * BARRES_WEIGTH
         + chordLength * STRINGS_WEIGHT;
+    // console.log( chordPosition, chordPosition * POSITION_WEIGHT, chordWidth, compensatedWidth * WIDTH_WEIGHT,
+    // barresLength, barresLength * BARRES_WEIGTH, chordLength, chordLength * STRINGS_WEIGHT, value );
+    return value;
   }
 
   function stringToFrets( fretString )
@@ -388,6 +422,11 @@ function ChordData()
     return barres;
   }
 
+  function chord( rootNote, rootPosition, frets, barres, designedForRootPosition )
+  {
+    return new ChordShape( rootNote, rootPosition, frets, barres, designedForRootPosition );
+  }
+
   aliases = {
     'M' : 'maj',
     'm' : 'min',
@@ -449,9 +488,33 @@ function ChordData()
   };
 
   vexData = {
-    'min' : [ new ChordShape( 'A', 0, 'x-221-', '-00000' ) ],
-    'dim' : [ new ChordShape( 'D', 5, 'x5646x', '' ) ],
-    'maj7' : [ new ChordShape( 'E', 0, '0-----', '-22444' ) ]
+    'maj' : [ chord( 'A', 0, 'x-222-', '-0---0', true ), chord( 'A', 5, '54---x', '--222-' ),
+        chord( 'G', 3, '32---3', '--000-', true ), chord( 'E', 0, '-221--', '0----0', true ),
+        chord( 'D', 0, 'xx0232', '', true ), chord( 'D', 0, 'xxx232', '' ), chord( 'C', 3, 'x32-1-', '---0-0', true ),
+        chord( 'C', 3, '3x2-1-', '---0-0' ) ],
+    '5' : [ chord( 'E', 0, '0--xxx', '-22---' ), chord( 'A', 0, 'x0----', '--2255' ),
+        chord( 'A', 0, 'x0----', '--22--' ), chord( 'D', 0, 'xx023x', '' ) ],
+    '6' : [ chord( 'A', 0, 'x0----', '--2222', true ), chord( 'G', 3, '32----', '--0000', true ),
+        chord( 'E', 0, '-2212-', '0----0', true ), chord( 'E', 0, '-2212-', '' ),
+        chord( 'D', 0, 'xx-2-2', '--0--0', true ), chord( 'D', 5, 'x5443x', '' ) ],
+    '7' : [ chord( 'D', 0, 'xx0212', '', true ), chord( 'D', 0, 'xxx212', '' ),
+        chord( 'A', 0, 'x-2-2-', '-0---0', true ), chord( 'C', 3, 'x3231x', '' ),
+        chord( 'E', 0, '-2-1--', '0----0', true ), chord( 'E', 0, '-2213-', '0----0', true ),
+        chord( 'E', 0, 'xx-1--', '--0--0' ), chord( 'G', 3, '32---1', '--0-0-', true ), chord( 'G', 3, '3234xx', '' ) ],
+    'maj7' : [ chord( 'E', 0, '0-----', '-224-4' ), chord( 'A', 0, 'x-212-', '-0---0', true ),
+        chord( 'A', 0, 'x0---4', '--222-' ), chord( 'A', 0, 'xx---4', '--222-' ), chord( 'D', 0, 'xx0---', '---2-2' ),
+        chord( 'A', 7, 'xx7654', '' ), chord( 'E', 7, 'x76---', '---444' ) ],
+    '9' : [ chord( 'E', 0, '-2-1-2', '0---0-' ), chord( 'E', 0, 'xx2132', '' ), chord( 'C', 3, 'x3233x', '' ),
+        chord( 'C', 3, 'x32---', '---3-3' ), chord( 'A', 0, 'x0-4-3', '--2222' ), chord( 'A', 0, 'xx-4-3', '--2222' ) ],
+    'min' : [ chord( 'A', 0, 'x-221-', '-0---0', true ) ],
+    'dim' : [ chord( 'D', 5, 'x5646x', '' ) ],
+    'xyz' : [ chord( 'A', 0, 'xx-4-3', '--2222' ) ]
+  };
+
+  var dummyData = {
+    // TODO chords to try out
+    'maj' : [ chord( 'G', 3, '7x578x', '' ) ],
+    '6' : []
   };
 
   data = {
