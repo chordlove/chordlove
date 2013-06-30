@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Module: plugins/tools</title>
+    <title>JSDoc: Module: plugins/beats</title>
     
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">Module: plugins/tools</h1>
+    <h1 class="page-title">Module: plugins/beats</h1>
     
     
 
@@ -27,7 +27,7 @@
     
 <header>
     <h2>
-    plugins/tools
+    plugins/beats
     </h2>
     
 </header>  
@@ -38,8 +38,11 @@
     
     
         
-            <div class="description">Module to handle the tools menu. It contains a list of tools (including icon, menu text, plugin name and method to
-execute), but not their code.</div>
+            <div class="description">Render and serialize chords together with beats per chord and time signature. <i>The core</i> of the whole
+application.
+<p>
+There's three classes at play here, the core Chords class, the separate Beats class to manage beat counts and the
+CopyPaste class to handle copy/paste actions.</div>
         
         
         
@@ -65,7 +68,7 @@ execute), but not their code.</div>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        plugins/tools.js, line 2
+        plugins/beats.js, line 2
     </li></ul></dd>
     
     
@@ -93,9 +96,7 @@ execute), but not their code.</div>
         
             <li><a href="module-functions.html">module:functions</a></li>
         
-            <li><a href="module-toolbar.html">module:toolbar</a></li>
-        
-            <li><a href="module-plugins.html">module:plugins</a></li>
+            <li><a href="module-share.html">module:share</a></li>
         </ul>
     
     

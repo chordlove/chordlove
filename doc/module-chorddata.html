@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Module: plugins/tools</title>
+    <title>JSDoc: Module: chorddata</title>
     
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">Module: plugins/tools</h1>
+    <h1 class="page-title">Module: chorddata</h1>
     
     
 
@@ -27,7 +27,7 @@
     
 <header>
     <h2>
-    plugins/tools
+    chorddata
     </h2>
     
 </header>  
@@ -38,8 +38,7 @@
     
     
         
-            <div class="description">Module to handle the tools menu. It contains a list of tools (including icon, menu text, plugin name and method to
-execute), but not their code.</div>
+            <div class="description">Database of chords.</div>
         
         
         
@@ -65,7 +64,7 @@ execute), but not their code.</div>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        plugins/tools.js, line 2
+        chorddata.js, line 3
     </li></ul></dd>
     
     
@@ -86,25 +85,156 @@ execute), but not their code.</div>
     
     
     
-        <h3 class="subsection-title">Requires</h3>
+    
+    
+    
+    
+    
+    
+    
+    
+        <h3 class="subsection-title">Methods</h3>
         
-        <ul>
-            <li><a href="module-jquery.html">module:jquery</a></li>
+        <dl>
+            
+<dt>
+    <h4 class="name" id="get"><span class="type-signature">&lt;static> </span>get<span class="signature">(name)</span><span class="type-signature"> &rarr; {Array}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Get chord renderers for a chord.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
         
-            <li><a href="module-functions.html">module:functions</a></li>
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>name</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The name of the chord.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
         
-            <li><a href="module-toolbar.html">module:toolbar</a></li>
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        chorddata.js, line 35
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    ChordShape items are returned.
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">Array</span>
+
+
+	</dd>
+</dl>
+
         
-            <li><a href="module-plugins.html">module:plugins</a></li>
-        </ul>
     
     
-    
-    
-    
-    
-    
-    
+</dd>
+
+        </dl>
     
     
     

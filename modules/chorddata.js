@@ -32,6 +32,15 @@ function ChordData()
 
   var aliases = null, notes = null, noteNumbers = null, vexData = null;
 
+  /**
+   * Get chord renderers for a chord.
+   * 
+   * @method
+   * @name module:chorddata.get
+   * @param {string}
+   *          name The name of the chord.
+   * @returns {Array} ChordShape items are returned.
+   */
   function get( name )
   {
     var realName = ( name in aliases ) ? aliases[name] : name;
@@ -54,6 +63,9 @@ function ChordData()
     };
   }
 
+  /**
+   * Renderer for a chord. Renders chord in different positions. Also ranks chords according to difficulty.
+   */
   function ChordShape( rootNote, rootPosition, fretsString, barresString, rootPrio, otherPrio )
   {
     var frets = stringToFrets( fretsString );

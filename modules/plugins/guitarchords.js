@@ -16,16 +16,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- * Module to add guitarchords to the chord items. Hooks into the {@link module:plugins/chords} module to get rendering
- * executed and adds its own copy/paste extractor as well.
+ * Module to add guitar chords to a song. Hooks into the {@link module:plugins/chords} module to get rendering executed.
  * 
  * @module plugins/guitar-chords
  * @requires jquery
- * @requires functions
- * @requires share
- * @requires toolbar
- * @requires resizer
- * @requires plugins
+ * @requires chorddata
+ * @requires plugins/chords
  */
 
 function GuitarChords( $, chorddata, share )
