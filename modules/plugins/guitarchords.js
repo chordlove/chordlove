@@ -103,10 +103,8 @@ function GuitarChords( $, chorddata, share )
           {
             chordName = $.trim( chord.substr( note.length ) );
           }
-          var chordRenderers = chorddata.getVexChords( chordName );
-
-          var guitarChords = chorddata.get( note, chordName );
-          if ( guitarChords.length || chordRenderers.length )
+          var chordRenderers = chorddata.get( chordName );
+          if ( chordRenderers.length )
           {
             var $wrapper = $CHORD_WRAPPER.clone();
             // make the wrapper visible here because of:
@@ -125,10 +123,6 @@ function GuitarChords( $, chorddata, share )
               noteRenderers.sort( compareChords );
               var richChord = noteRenderers[0];
               richChord.render( chordbox );
-            }
-            else
-            {
-              chordbox.setChord( dbToVexChords( guitarChords[0] ) );
             }
             chordbox.tuning = [];
             chordbox.draw();
