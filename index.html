@@ -23,12 +23,24 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 <title>alpha.chordlove.com</title>
 <script src="//use.edgefonts.net/neuton-cursive:n4:all.js"></script>
 <link href="style.css" rel="stylesheet">
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script type="text/javascript">
+  if ( !window.jQuery )
+  {
+    document.write( '<script src="http://code.jquery.com/jquery-1.10.2.min.js">\x3C/script>' );
+  }
+</script>
+<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+<script type="text/javascript">
+  if ( !window.jQuery.ui )
+  {
+    document.write( '<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.min.js">\x3C/script>' );
+  }
+</script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
 <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
 <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
 <script src="jquery.ba-hashchange.min.js"></script>
-<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
 <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="inject.min.js"></script>
 <script type="text/javascript">
@@ -134,14 +146,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             </button>
           </span>
           <div id="addons-menu" class="btn-group">
-            <a class="btn dropdown-toggle" data-toggle="dropdown" href="#" title="More pieces"><i
-              class="icon-puzzle-piece"></i> <span class="caret"></span> </a>
+            <a class="btn dropdown-toggle" data-toggle="dropdown" href="#" title="More pieces">
+              <i class="icon-puzzle-piece"></i>
+              <span class="caret"></span>
+            </a>
             <ul id="addons-list" class="dropdown-menu">
             </ul>
           </div>
           <div id="tools-menu" class="btn-group">
-            <a class="btn dropdown-toggle" data-toggle="dropdown" href="#" title="Tools"><i class="icon-wrench"></i>
-              <span class="caret"></span> </a>
+            <a class="btn dropdown-toggle" data-toggle="dropdown" href="#" title="Tools">
+              <i class="icon-wrench"></i>
+              <span class="caret"></span>
+            </a>
             <ul id="tools-list" class="dropdown-menu">
             </ul>
           </div>
@@ -159,8 +175,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             </button>
           </span>
           <span class="btn-group always-visible">
-            <a href="#help" id="help-btn" role="button" class="btn" data-toggle="modal" title="About Chordlove"><i
-              class="icon-info-sign"></i></a>
+            <a href="#help" id="help-btn" role="button" class="btn" data-toggle="modal" title="About Chordlove">
+              <i class="icon-info-sign"></i>
+            </a>
           </span>
         </div>
       </div>
@@ -175,9 +192,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   <div id="footer">
     <a href="http://alpha.chordlove.com/">alpha.chordlove.com</a>
     <span class="hide-in-print">
-      source: <a href="https://github.com/chordlove/chordlove">github.com/chordlove/chordlove</a> by <a
-        href="https://twitter.com/nawroth">@nawroth</a> released under <a
-        href="http://www.gnu.org/licenses/agpl-3.0.html">AGPL v3</a>.
+      source:
+      <a href="https://github.com/chordlove/chordlove">github.com/chordlove/chordlove</a>
+      by
+      <a href="https://twitter.com/nawroth">@nawroth</a>
+      released under
+      <a href="http://www.gnu.org/licenses/agpl-3.0.html">AGPL v3</a>
+      .
     </span>
   </div>
   <script src="ga.min.js"></script>
