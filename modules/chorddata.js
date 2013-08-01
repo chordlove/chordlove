@@ -30,7 +30,7 @@ function ChordData()
   }
   ChordData.prototype._instance = this;
 
-  var aliases = null, notes = null, noteNumbers = null, vexData = null;
+  var aliases = null, notes = null, noteNumbers = null, numberNotes = null, baseTuning = null, vexData = null;
 
   /**
    * Get chord renderers for a chord.
@@ -170,6 +170,38 @@ function ChordData()
       function render( chordBox )
       {
         chordBox.setChord( realChord, renderPosition, realBarre, positionPosition );
+        var stringMax = [];
+        for ( var i = 0; i < realChord.length; i++ )
+        {
+          var stringData = realChord[i];
+          stringMax[stringData[0]] = stringData[1];
+        }
+        for ( i = 0; i < realBarre.length; i++ )
+        {
+          var barreData = realBarre[i];
+          var barreFret = barreData.fret;
+          for ( var j = barreData.to_string; j <= barreData.from_string; j++ )
+          {
+            if ( stringMax[j] === undefined || ( stringMax[j] !== 'x' && barreFret > stringMax[j] ) )
+            {
+              stringMax[j] = barreFret;
+            }
+          }
+        }
+        var tuning = [];
+        for ( i = 6; i > 0; i-- )
+        {
+          var noteNumber = stringMax[i];
+          if ( noteNumber === undefined || noteNumber === 'x' )
+          {
+            tuning.push( '' );
+          }
+          else
+          {
+            tuning.push( numberNotes[( noteNumber + baseTuning[6 - i] ) % 12] );
+          }
+        }
+        return tuning
       }
 
       var cachedRank = undefined;
@@ -458,6 +490,11 @@ function ChordData()
     'G' : 10,
     'G#' : 11
   };
+
+  numberNotes = [ 'A', 'A#', 'B', 'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#' ];
+
+  baseTuning = [ noteNumbers['E'], noteNumbers['A'], noteNumbers['D'], noteNumbers['G'], noteNumbers['B'],
+      noteNumbers['E'] ];
 
   vexData = {
     'maj' : [ A( 0, 'x-222-', '-0---0', 1, 2 ), A( 5, '54---x', '--222-' ), G( 3, '32---3', '--000-', 1 ),
