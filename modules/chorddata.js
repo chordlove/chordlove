@@ -201,7 +201,7 @@ function ChordData()
             tuning.push( numberNotes[( noteNumber + baseTuning[6 - i] ) % 12] );
           }
         }
-        return tuning
+        return tuning;
       }
 
       var cachedRank = undefined;
