@@ -198,7 +198,19 @@ function ChordData()
           }
           else
           {
-            tuning.push( numberNotes[( noteNumber + baseTuning[6 - i] ) % 12] );
+            var note = numberNotes[( noteNumber + baseTuning[6 - i] ) % 12];
+            if ( note.length > 1 )
+            {
+              if ( note.charAt( 1 ) === '#' )
+              {
+                note = note.charAt( 0 ) + '♯';
+              }
+              else if ( note.charAt( 1 ) === 'b' )
+              {
+                note = note.charAt( 0 ) + '♭';
+              }
+            }
+            tuning.push( note );
           }
         }
         return tuning;
