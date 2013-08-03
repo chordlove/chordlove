@@ -180,64 +180,7 @@ function ChordData()
       function render( chordBox )
       {
         chordBox.setChord( realChord, renderPosition, realBarre, positionPosition );
-        var stringMax = [];
-        for ( var i = 0; i < realChord.length; i++ )
-        {
-          var stringData = realChord[i];
-          stringMax[stringData[0]] = stringData[1];
-        }
-        for ( i = 0; i < realBarre.length; i++ )
-        {
-          var barreData = realBarre[i];
-          var barreFret = barreData.fret;
-          for ( var j = barreData.to_string; j <= barreData.from_string; j++ )
-          {
-            if ( stringMax[j] === undefined || ( stringMax[j] !== 'x' && barreFret > stringMax[j] ) )
-            {
-              stringMax[j] = barreFret;
-            }
-          }
-        }
-        var tuning = [];
-        var numberNotes = numberNotesFlat;
-        if ( note.length > 1 )
-        {
-          if ( note.charAt( 1 ) === '♯' )
-          {
-            numberNotes = numberNotesSharp;
-          }
-        }
-        else if ( chordName.length > 0
-            && ( chordName.charAt( 0 ) === 'm' && ( chordName.length === 1 || chordName.charAt( 1 ) !== 'a' ) ) )
-        {
-          // minors
-          if ( 'EAB'.indexOf( note ) !== -1 )
-          {
-            numberNotes = numberNotesSharp;
-          }
-        }
-        else
-        {
-          // majors
-          if ( 'GDAEB'.indexOf( note ) !== -1 )
-          {
-            numberNotes = numberNotesSharp;
-          }
-        }
-        for ( i = 6; i > 0; i-- )
-        {
-          var noteNumber = stringMax[i];
-          if ( noteNumber === undefined || noteNumber === 'x' )
-          {
-            tuning.push( '' );
-          }
-          else
-          {
-            var stringNote = numberNotes[( noteNumber + baseTuning[6 - i] ) % 12];
-            tuning.push( stringNote );
-          }
-        }
-        return tuning;
+        return getStringNotes( note, chordName, realChord, realBarre, renderPosition, diff, positionPosition );
       }
 
       var cachedRank = undefined;
@@ -383,6 +326,88 @@ function ChordData()
     // barresLength, barresLength * BARRES_WEIGTH, chordLength, chordLength *
     // STRINGS_WEIGHT, value );
     return value;
+  }
+
+  function getStringNotes( note, chordName, realChord, realBarre, renderPosition, diff, pp )
+  {
+    console.log( note, chordName, renderPosition, diff, pp );
+    var position = renderPosition === undefined ? 0 : renderPosition;
+    if ( position )
+    {
+      if ( position === diff )
+      {
+        position -= 2;
+      }
+      else
+      {
+        position = 0;
+        // position = diff + pp;
+      }
+    }
+    // position = position + 12 % 12;
+    var stringMax = [];
+    for ( var i = 0; i < realChord.length; i++ )
+    {
+      var stringData = realChord[i];
+      var actualStringData = stringData[1];
+      if ( actualStringData !== undefined && actualStringData !== 'x' )
+      {
+        actualStringData += position;
+      }
+      stringMax[stringData[0]] = actualStringData;
+    }
+    for ( i = 0; i < realBarre.length; i++ )
+    {
+      var barreData = realBarre[i];
+      var barreFret = barreData.fret + position;
+      for ( var j = barreData.to_string; j <= barreData.from_string; j++ )
+      {
+        if ( stringMax[j] === undefined || ( stringMax[j] !== 'x' && barreFret > stringMax[j] ) )
+        {
+          stringMax[j] = barreFret;
+        }
+      }
+    }
+    var tuning = [];
+    var numberNotes = numberNotesFlat;
+    if ( note.length > 1 )
+    {
+      if ( note.charAt( 1 ) === '♯' )
+      {
+        numberNotes = numberNotesSharp;
+      }
+    }
+    else if ( chordName.length > 0
+        && ( chordName.charAt( 0 ) === 'm' && ( chordName.length === 1 || chordName.charAt( 1 ) !== 'a' ) ) )
+    {
+      // minors
+      if ( 'EAB'.indexOf( note ) !== -1 )
+      {
+        numberNotes = numberNotesSharp;
+      }
+    }
+    else
+    {
+      // majors
+      if ( 'GDAEB'.indexOf( note ) !== -1 )
+      {
+        numberNotes = numberNotesSharp;
+      }
+    }
+    for ( i = 6; i > 0; i-- )
+    {
+      var noteNumber = stringMax[i];
+      if ( noteNumber === undefined || noteNumber === 'x' )
+      {
+        tuning.push( '' );
+      }
+      else
+      {
+        var stringNote = numberNotes[( noteNumber + baseTuning[6 - i] ) % 12];
+        tuning.push( stringNote );
+      }
+    }
+    return tuning;
   }
 
   function stringToFrets( fretString )
