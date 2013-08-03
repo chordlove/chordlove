@@ -115,7 +115,7 @@ function GuitarChords( $, chorddata, share )
               var noteRenderers = [];
               for ( var rendererIndex = 0; rendererIndex < chordRenderers.length; rendererIndex++ )
               {
-                noteRenderers.push( chordRenderers[rendererIndex]( note ) );
+                noteRenderers.push( chordRenderers[rendererIndex].getChordForNote( note ) );
               }
               noteRenderers.sort( compareChords );
               var richChord = noteRenderers[0];

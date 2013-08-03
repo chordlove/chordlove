@@ -30,7 +30,7 @@ function ChordData()
   }
   ChordData.prototype._instance = this;
 
-  var aliases = null, notes = null, noteNumbers = null, numberNotes = null, baseTuning = null, vexData = null;
+  var aliases = null, notes = null, noteNumbers = null, numberNotesSharp = null, numberNotesFlat = null, baseTuning = null, vexData = null;
 
   /**
    * Get chord renderers for a chord.
@@ -46,7 +46,12 @@ function ChordData()
     var realName = ( name in aliases ) ? aliases[name] : name;
     if ( realName in vexData )
     {
-      return vexData[realName];
+      var chordShapes = vexData[realName];
+      for ( var i = 0; i < chordShapes.length; i++ )
+      {
+        chordShapes[i].setChordName( realName );
+      }
+      return chordShapes;
     }
     else
     {
@@ -84,6 +89,12 @@ function ChordData()
     var calcBars = [];
     var calcRoot;
     var width;
+    var chordName = '';
+
+    function setChordName( name )
+    {
+      chordName = name;
+    }
 
     for ( var i = 0; i < frets.length; i++ )
     {
@@ -121,7 +132,6 @@ function ChordData()
 
     function getChordForNote( note )
     {
-      // console.log( note );
       var realNote = normalizeNote( note );
       var diff = noteNumber( realNote ) - rootNoteNumber;
       var realPosition = ( position + diff + 12 ) % 12;
@@ -189,6 +199,31 @@ function ChordData()
           }
         }
         var tuning = [];
+        var numberNotes = numberNotesFlat;
+        if ( note.length > 1 )
+        {
+          if ( note.charAt( 1 ) === '♯' )
+          {
+            numberNotes = numberNotesSharp;
+          }
+        }
+        else if ( chordName.length > 0
+            && ( chordName.charAt( 0 ) === 'm' && ( chordName.length === 1 || chordName.charAt( 1 ) !== 'a' ) ) )
+        {
+          // minors
+          if ( 'EAB'.indexOf( note ) !== -1 )
+          {
+            numberNotes = numberNotesSharp;
+          }
+        }
+        else
+        {
+          // majors
+          if ( 'GDAEB'.indexOf( note ) !== -1 )
+          {
+            numberNotes = numberNotesSharp;
+          }
+        }
         for ( i = 6; i > 0; i-- )
         {
           var noteNumber = stringMax[i];
@@ -198,19 +233,8 @@ function ChordData()
           }
           else
           {
-            var note = numberNotes[( noteNumber + baseTuning[6 - i] ) % 12];
-            if ( note.length > 1 )
-            {
-              if ( note.charAt( 1 ) === '#' )
-              {
-                note = note.charAt( 0 ) + '♯';
-              }
-              else if ( note.charAt( 1 ) === 'b' )
-              {
-                note = note.charAt( 0 ) + '♭';
-              }
-            }
-            tuning.push( note );
+            var stringNote = numberNotes[( noteNumber + baseTuning[6 - i] ) % 12];
+            tuning.push( stringNote );
           }
         }
         return tuning;
@@ -246,7 +270,10 @@ function ChordData()
       };
     }
 
-    return getChordForNote;
+    return {
+      'getChordForNote' : getChordForNote,
+      'setChordName' : setChordName
+    };
   }
 
   function normalizeNote( note )
@@ -255,7 +282,7 @@ function ChordData()
     {
       return notes[note];
     }
-    throw new 'Unknown note: "' + note + '".';
+    throw new Exception( 'Unknown note: "' + note + '".' );
   }
 
   function noteNumber( note )
@@ -465,6 +492,8 @@ function ChordData()
     'B♭' : 'A#',
     'B' : 'B',
     'H' : 'B',
+    'C♭' : 'B',
+    'Cb' : 'B',
     'C' : 'C',
     'C#' : 'C#',
     'C♯' : 'C#',
@@ -476,6 +505,8 @@ function ChordData()
     'Eb' : 'D#',
     'E♭' : 'D#',
     'E' : 'E',
+    'F♭' : 'E',
+    'Fb' : 'E',
     'F' : 'F',
     'F#' : 'F#',
     'F♯' : 'F#',
@@ -503,7 +534,8 @@ function ChordData()
     'G#' : 11
   };
 
-  numberNotes = [ 'A', 'A#', 'B', 'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#' ];
+  numberNotesSharp = [ 'A', 'A♯', 'B', 'C', 'C♯', 'D', 'D♯', 'E', 'F', 'F♯', 'G', 'G♯' ];
+  numberNotesFlat = [ 'A', 'B♭', 'B', 'C', 'D♭', 'D', 'E♭', 'E', 'F', 'G♭', 'G', 'A♭' ];
 
   baseTuning = [ noteNumbers['E'], noteNumbers['A'], noteNumbers['D'], noteNumbers['G'], noteNumbers['B'],
       noteNumbers['E'] ];
