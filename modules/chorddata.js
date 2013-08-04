@@ -177,10 +177,15 @@ function ChordData()
       realBarre = transformedBarres.barres;
       realChord = transformedBarres.chords;
 
+      var cachedStringNotes = undefined;
       function render( chordBox )
       {
         chordBox.setChord( realChord, renderPosition, realBarre, positionPosition );
-        return getStringNotes( note, chordName, realChord, realBarre, renderPosition, diff, positionPosition );
+        if ( cachedStringNotes === undefined )
+        {
+          cachedStringNotes = getStringNotes( note, chordName, frets, barres, diff );
+        }
+        return cachedStringNotes;
       }
 
       var cachedRank = undefined;
@@ -328,38 +333,19 @@ function ChordData()
     return value;
   }
 
-  function getStringNotes( note, chordName, realChord, realBarre, renderPosition, diff, pp )
+  function getStringNotes( note, chordName, frets, barres, diff )
   {
-    console.log( note, chordName, renderPosition, diff, pp );
-    var position = renderPosition === undefined ? 0 : renderPosition;
-    if ( position )
-    {
-      if ( position === diff )
-      {
-        position -= 2;
-      }
-      else
-      {
-        position = 0;
-        // position = diff + pp;
-      }
-    }
-    // position = position + 12 % 12;
     var stringMax = [];
-    for ( var i = 0; i < realChord.length; i++ )
+    for ( var i = 0; i < frets.length; i++ )
     {
-      var stringData = realChord[i];
+      var stringData = frets[i];
       var actualStringData = stringData[1];
-      if ( actualStringData !== undefined && actualStringData !== 'x' )
-      {
-        actualStringData += position;
-      }
       stringMax[stringData[0]] = actualStringData;
     }
-    for ( i = 0; i < realBarre.length; i++ )
+    for ( i = 0; i < barres.length; i++ )
     {
-      var barreData = realBarre[i];
-      var barreFret = barreData.fret + position;
+      var barreData = barres[i];
+      var barreFret = barreData.fret;
       for ( var j = barreData.to_string; j <= barreData.from_string; j++ )
       {
         if ( stringMax[j] === undefined || ( stringMax[j] !== 'x' && barreFret > stringMax[j] ) )
@@ -403,7 +389,7 @@ function ChordData()
       }
       else
       {
-        var stringNote = numberNotes[( noteNumber + baseTuning[6 - i] ) % 12];
+        var stringNote = numberNotes[( noteNumber + diff + baseTuning[6 - i] + 12 ) % 12];
         tuning.push( stringNote );
       }
     }
