@@ -40,6 +40,8 @@ function GuitarChords( $, chorddata, share )
   var $PARENT = $( '#items' );
   var $GUITAR_CHORDS = $( '<div id="guitarchords"/>' );
   var $CHORD_WRAPPER = $( '<div class="guitarchord"/>' );
+  var $NEXT_BTN = $( '<i class="icon-chevron-sign-right guitarchord-next"></i>' );
+  var $PREVIOUS_BTN = $( '<i class="icon-chevron-sign-left guitarchord-previous"></i>' );
   var $CHORD_LABEL = $( '<p class="guitarchord"/>' );
   $( '#addons' ).append( $GUITAR_CHORDS );
 
@@ -100,34 +102,99 @@ function GuitarChords( $, chorddata, share )
             chordName = $.trim( chord.substr( note.length ) );
           }
           var chordRenderers = chorddata.get( chordName );
+          if ( chordRenderers.length < 1 )
+          {
+            // TODO error handling
+            return;
+          }
+          var $wrapper = $CHORD_WRAPPER.clone();
+          // make the wrapper visible here because of:
+          // https://github.com/DmitryBaranovskiy/raphael/issues/491
+          $wrapper.appendTo( $GUITAR_CHORDS );
           if ( chordRenderers.length )
           {
-            var $wrapper = $CHORD_WRAPPER.clone();
-            // make the wrapper visible here because of:
-            // https://github.com/DmitryBaranovskiy/raphael/issues/491
-            $wrapper.appendTo( $GUITAR_CHORDS );
-            var paper = Raphael( $wrapper[0], 110, 120 ); // height 102 -> 120
-            var chordbox = new ChordBox( paper, 25, 20, 80, 80 );
-            var tuning = [];
-            chordbox.num_frets = 6;
-            if ( chordRenderers.length )
+            var noteRenderers = [];
+            for ( var rendererIndex = 0; rendererIndex < chordRenderers.length; rendererIndex++ )
             {
-              var noteRenderers = [];
-              for ( var rendererIndex = 0; rendererIndex < chordRenderers.length; rendererIndex++ )
-              {
-                noteRenderers.push( chordRenderers[rendererIndex].getChordForNote( note ) );
-              }
-              noteRenderers.sort( compareChords );
-              var richChord = noteRenderers[0];
-              tuning = richChord.render( chordbox );
+              noteRenderers.push( chordRenderers[rendererIndex].getChordForNote( note ) );
             }
-            chordbox.tuning = tuning;
-            chordbox.draw();
+            noteRenderers.sort( compareChords );
+
+            renderChord( noteRenderers, 0, $wrapper );
             $CHORD_LABEL.clone().text( chord ).appendTo( $wrapper );
           }
         }
       }
     } );
+
+    function renderChord( noteRenderers, currentIndex, $wrapper )
+    {
+      var index = currentIndex;
+      var $previous = $PREVIOUS_BTN.clone().appendTo( $wrapper ).click( function()
+      {
+        if ( index === 0 )
+        {
+          return;
+        }
+        index--;
+        update();
+      } );
+      var $next = $NEXT_BTN.clone().appendTo( $wrapper ).click( function()
+      {
+        if ( index === noteRenderers.length - 1 )
+        {
+          return;
+        }
+        index++;
+        update();
+      } );
+
+      var paper = Raphael( $wrapper[0], 110, 120 ); // height 102 -> 120
+      update();
+
+      function renderChordBox()
+      {
+        paper.clear();
+        var chordbox = new ChordBox( paper, 25, 20, 80, 80 );
+        chordbox.num_frets = 6;
+        var richChord = noteRenderers[index];
+        var tuning = richChord.render( chordbox );
+        chordbox.tuning = tuning;
+        chordbox.draw();
+      }
+
+      function muteIcons()
+      {
+        if ( index === 0 )
+        {
+          $previous.addClass( 'icon-muted' );
+        }
+        else
+        {
+          $previous.removeClass( 'icon-muted' );
+        }
+        if ( index === noteRenderers.length - 1 )
+        {
+          $next.addClass( 'icon-muted' );
+        }
+        else
+        {
+          $next.removeClass( 'icon-muted' );
+        }
+      }
+
+      function updateChordNumber()
+      {
+        $wrapper.data( 'chordNumber', noteRenderers[index].getChordNumber() );
+      }
+
+      function update()
+      {
+        renderChordBox();
+        muteIcons();
+        updateChordNumber();
+      }
+    }
   }
 
   function compareChords( a, b )

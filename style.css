@@ -361,6 +361,7 @@ label.disabled {
 
 div.guitarchord {
   float: left;
+  position: relative;
 }
 
 p.guitarchord {
@@ -369,6 +370,25 @@ p.guitarchord {
   font-size: 18px;
   text-align: center;
   margin-right: -5px;
+}
+
+i.guitarchord-next,i.guitarchord-previous {
+  visibility: hidden;
+  position: absolute;
+  top: 10px;
+  font-size: 16px;
+}
+
+i.guitarchord-next {
+  right: 0;  
+}
+
+i.guitarchord-previous {
+  left: 7px
+}
+
+body.edit-mode i.guitarchord-next,body.edit-mode i.guitarchord-previous {
+  visibility: visible;
 }
 
 #footer {

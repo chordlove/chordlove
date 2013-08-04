@@ -49,7 +49,9 @@ function ChordData()
       var chordShapes = vexData[realName];
       for ( var i = 0; i < chordShapes.length; i++ )
       {
-        chordShapes[i].setChordName( realName );
+        var chordShape = chordShapes[i];
+        chordShape.setChordName( realName );
+        chordShape.setChordNumber( i );
       }
       return chordShapes;
     }
@@ -90,10 +92,16 @@ function ChordData()
     var calcRoot;
     var width;
     var chordName = '';
+    var chordNumber = undefined;
 
     function setChordName( name )
     {
       chordName = name;
+    }
+
+    function setChordNumber( number )
+    {
+      chordNumber = number;
     }
 
     for ( var i = 0; i < frets.length; i++ )
@@ -212,15 +220,22 @@ function ChordData()
         return cachedRank;
       }
 
+      function getChordNumber()
+      {
+        return chordNumber;
+      }
+
       return {
         'render' : render,
-        'rank' : rank
+        'rank' : rank,
+        'getChordNumber' : getChordNumber
       };
     }
 
     return {
       'getChordForNote' : getChordForNote,
-      'setChordName' : setChordName
+      'setChordName' : setChordName,
+      'setChordNumber' : setChordNumber
     };
   }
 
@@ -551,6 +566,10 @@ function ChordData()
   baseTuning = [ noteNumbers['E'], noteNumbers['A'], noteNumbers['D'], noteNumbers['G'], noteNumbers['B'],
       noteNumbers['E'] ];
 
+  /*
+   * Note: Don't alter the order of the chord variants, it's used for persisting chord choices. New variants should be
+   * added at the end.
+   */
   vexData = {
     'maj' : [ A( 0, 'x-222-', '-0---0', 1, 2 ), A( 5, '54---x', '--222-' ), G( 3, '32---3', '--000-', 1 ),
         E( 0, '-221--', '0----0', 1, 2 ), D( 0, 'xx0232', '', 1 ), D( 0, 'xxx232', '', 4, 4 ),
