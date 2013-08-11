@@ -62,6 +62,7 @@ function Chords( $, functions, share, toolbar, resizer, beatsHandler )
   var $CHORD = $( '<div class="chord"/>' );
 
   var postRenderers = [];
+  var initialPostRenderingPerformed = false;
   var contentExtractors = [];
   var chordMenuMembers = [];
 
@@ -114,6 +115,10 @@ function Chords( $, functions, share, toolbar, resizer, beatsHandler )
   function addPostRenderer( renderer )
   {
     postRenderers.push( renderer );
+    if ( initialPostRenderingPerformed )
+    {
+      renderer();
+    }
   }
 
   /**
@@ -134,6 +139,7 @@ function Chords( $, functions, share, toolbar, resizer, beatsHandler )
       throw 'Unknown chords data format.';
     }
     var deserializedData = deserialize( data );
+    var chords = deserializedData.chords;
     var chordItems = deserializedData.chordItems;
     var timeSignature = deserializedData.timeSignature;
     var hasText = chordItems && chordItems[0] && chordItems[0].lyrics !== undefined;
@@ -156,8 +162,9 @@ function Chords( $, functions, share, toolbar, resizer, beatsHandler )
     } );
     $.each( postRenderers, function()
     {
-      this();
+      this( chords );
     } );
+    initialPostRenderingPerformed = true;
     $PARENT.children( 'li.item' ).each( function()
     {
       resizer.performResize( $( this ) );
@@ -201,7 +208,8 @@ function Chords( $, functions, share, toolbar, resizer, beatsHandler )
     }
     return {
       'chordItems' : chordItems,
-      'timeSignature' : timeSignature
+      'timeSignature' : timeSignature,
+      'chords' : chords
     };
   }
 

@@ -100,7 +100,7 @@ function Share( $, plugins, functions )
    * @method
    * @name module:share.changedText
    * @param event
-   *          The event object wich listeners will receive.
+   *          The event object which listeners will receive.
    */
   function changedText( event )
   {
@@ -117,7 +117,7 @@ function Share( $, plugins, functions )
    * @method
    * @name module:share.changedStructure
    * @param event
-   *          The event object wich listeners will receive.
+   *          The event object which listeners will receive.
    */
   function changedStructure( event )
   {
