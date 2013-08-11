@@ -69,6 +69,7 @@ function GuitarChords( $, chorddata, share, functions )
   {
     format = inputFormat;
     data = inputData;
+    previousSeen = undefined;
     if ( chordsPluginInitialized )
     {
       render();
@@ -93,7 +94,6 @@ function GuitarChords( $, chorddata, share, functions )
    */
   function render()
   {
-    chordsPluginInitialized = false;
     var chordNumbers = undefined;
     if ( data !== null && data.length > 1 )
     {
