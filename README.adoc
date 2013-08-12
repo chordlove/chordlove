@@ -1,6 +1,8 @@
 == Chordlove ==
 
-Chordlove is a tool that lets you write down the chords of your songs and share them with your friends.
+Chordlove is a tool for sharing song chords and lyrics.
+
+You can read our http://blog.chordlove.com/[blog] or follow us on https://twitter.com/ChordloveApp[Twitter].
 
 === Bugs ===
 
@@ -13,4 +15,9 @@ See https://github.com/chordlove/chordlove/blob/master/CONTRIBUTING.md[contribut
 === License ===
 
 The project is licensed under http://www.gnu.org/licenses/agpl.html[AGPL v3].
+
+=== Project ===
+
+Project lead: https://github.com/nawroth[Anders] https://twitter.com/nawroth[Nawroth]
+
 
