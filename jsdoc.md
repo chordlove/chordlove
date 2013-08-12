@@ -39,7 +39,7 @@ The actions are opt-in, there's flags in the plugin metadata to control this.
 
 Plugins register themselves with the [plugins module](module-plugins.html) at load time.
 
-PLugins can keep an internal state, but the general advice is to not do so. Other plugins my alter the DOM so that the internal state is out of sync with the page. Instead, read the state from the DOM as needed.
+Plugins can keep an internal state, but the general advice is to not do so. Other plugins my alter the DOM so that the internal state is out of sync with the page. Instead, read the state from the DOM as needed. In some places the `data` method is used to keep state information connected to the DOM.
 
 Dependencies
 ------------
@@ -50,6 +50,7 @@ Dependencies
 * [jQuery hashchange event](https://github.com/GerHobbelt/jquery-hashchange)
 * [jQuery UI](http://jqueryui.com/)
 * [Twitter Bootstrap](http://twitter.github.io/bootstrap/)
+* [Raphaël](http://raphaeljs.com/)
 
 Fonts
 -----
