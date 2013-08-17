@@ -84,7 +84,7 @@ function Chords( $, functions, share, toolbar, resizer, beatsHandler )
 
   share.addTextChangeListener( function( event )
   {
-    if ( event.data && event.data.item )
+    if ( event !== undefined && 'data' in event && 'item' in event.data )
     {
       resizer.performResize( $( event.data.item ) );
     }

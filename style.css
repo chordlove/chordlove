@@ -295,7 +295,6 @@ not sure why this is here, let's try removing it.
 li i {
   color: #666666;
 }*/
-
 div.chord-menu {
   position: absolute;
   bottom: 0;
@@ -382,7 +381,7 @@ i.guitarchord-next,i.guitarchord-previous {
 }
 
 i.guitarchord-next {
-  right: 0;  
+  right: 0;
 }
 
 i.guitarchord-previous {
@@ -400,6 +399,25 @@ body.edit-mode i.guitarchord-next,body.edit-mode i.guitarchord-previous {
   bottom: 4px;
   right: 4px;
   z-index: -1;
+}
+
+#fontsizer,#fontsize1,#fontsize2,#fontsize3 {
+  position: absolute;
+  top: -9999px;
+  left: -9999px;
+  width: auto;
+}
+
+#fontsize1 {
+  font-family: 'DejaVuSerifBook', monospace;
+}
+
+#fontsize2 {
+  font-family: 'DejaVuSerifBook', sans;
+}
+
+#fontsize3 {
+  font-family: 'DejaVuSerifBook';
 }
 
 @media print {

@@ -30,10 +30,58 @@ define( 'resizer', [ 'jquery' ], function( $ )
   var WRAPPER_MARGIN = 7;
   var WRAPPER_EXTRA_PERCENTAGE = 1.03;
   var FILTER = 'input.resize-trigger';
+  var $FONT_SPAN = $( '<span>BESbswy</span>' );
+  var $FONT_ROOT = $( '#fontsizer' );
+  var FONT_POLL_INTERVAL = 50;
+  var FONT_POLL_MAX_SECONDS = 10;
+  var FONT_POLL_COUNTER_MAX = Math.floor( FONT_POLL_MAX_SECONDS * 1000 / FONT_POLL_INTERVAL );
+
+  var isReadyToResize = false;
+  var resizeQueue = [];
 
   function getSafeWidth( width )
   {
     return Math.floor( WRAPPER_EXTRA_PERCENTAGE * width ) + WRAPPER_MARGIN;
+  }
+
+  function detectFontLoading()
+  {
+    var span1 = $FONT_SPAN.clone().attr( 'id', 'fontsize1' ).appendTo( $FONT_ROOT );
+    var span2 = $FONT_SPAN.clone().attr( 'id', 'fontsize2' ).appendTo( $FONT_ROOT );
+    var span3 = $FONT_SPAN.clone().attr( 'id', 'fontsize3' ).appendTo( $FONT_ROOT );
+    var counter = 0;
+
+    var callId = window.setInterval( checkIfFontIsUsed, FONT_POLL_INTERVAL );
+
+    function checkIfFontIsUsed()
+    {
+      var width1 = span1.width();
+      var width2 = span2.width();
+      var width3 = span3.width();
+      counter++;
+
+      if ( counter > FONT_POLL_COUNTER_MAX || ( width1 === width2 && width2 === width3 ) )
+      {
+        window.clearInterval( callId );
+        isReadyToResize = true;
+        var i = resizeQueue.length;
+        while ( --i >= 0 )
+        {
+          try
+          {
+            performResize( resizeQueue[i] );
+          }
+          catch ( e )
+          {
+            // could fail if the object was removed from the DOM,
+            // but we don't care enough to check.
+            // otherwise this could be used:
+            // if( $queuedWrapper.closest('body').length > 0 )
+          }
+        }
+        $FONT_ROOT.remove();
+      }
+    }
   }
 
   /**
@@ -78,6 +126,11 @@ define( 'resizer', [ 'jquery' ], function( $ )
    */
   function performResize( $wrapper )
   {
+    if ( !isReadyToResize )
+    {
+      resizeQueue.push( $wrapper );
+      return;
+    }
     var minWidth = MIN_WIDTH;
     $( FILTER, $wrapper ).each( function()
     {
@@ -118,6 +171,7 @@ define( 'resizer', [ 'jquery' ], function( $ )
   }
 
   return {
+    'detectFontLoading' : detectFontLoading,
     'prepareResize' : prepareResize,
     'performResize' : performResize
   };
