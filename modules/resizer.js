@@ -28,7 +28,13 @@ define( 'resizer', [ 'jquery' ], function( $ )
   var MIN_WIDTH = 100;
   var MAX_WIDTH = 1000;
   var WRAPPER_MARGIN = 7;
+  var WRAPPER_EXTRA_PERCENTAGE = 1.03;
   var FILTER = 'input.resize-trigger';
+
+  function getSafeWidth( width )
+  {
+    return Math.floor( WRAPPER_EXTRA_PERCENTAGE * width ) + WRAPPER_MARGIN;
+  }
 
   /**
    * Prepare input elements for resizing.
@@ -85,7 +91,7 @@ define( 'resizer', [ 'jquery' ], function( $ )
         }
       }
     } );
-    $wrapper.width( minWidth + WRAPPER_MARGIN );
+    $wrapper.width( getSafeWidth( minWidth ) );
   }
 
   function calculateResize( $input )
