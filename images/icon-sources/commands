@@ -1,0 +1,23 @@
+inkscape -e icon-16.png -w 16 -h 16 icon.svg
+# do some tweaking on the 16 px version.
+
+inkscape -e icon-24.png -w 24 -h 24 icon.svg
+inkscape -e icon-32.png -w 32 -h 32 icon.svg
+inkscape -e icon-48.png -w 48 -h 48 icon.svg
+inkscape -e icon-64.png -w 64 -h 64 icon.svg
+inkscape -e icon-256.png -w 256 -h 256 icon.svg
+
+inkscape -e apple-touch-icon-57x57.png -w 57 -h 57 icon.svg
+inkscape -e apple-touch-icon-114x114.png -w 114 -h 114 icon.svg
+inkscape -e apple-touch-icon-72x72.png -w 72 -h 72 icon.svg
+inkscape -e apple-touch-icon-144x144.png -w 144 -h 144 icon.svg
+
+pngcrush -brute -d ./compressed *.png
+
+
+convert icon-16.png icon-24.png icon-32.png icon-48.png icon-64.png icon-256.png -colors 16 favicon.ico
+
+
+# http://www.netmagazine.com/features/create-perfect-favicon
+# http://developer.apple.com/library/ios/documentation/AppleApplications/Reference/SafariWebContent/ConfiguringWebApplications/ConfiguringWebApplications.html
+
