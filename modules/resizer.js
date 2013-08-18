@@ -32,10 +32,10 @@ define( 'resizer', [ 'jquery' ], function( $ )
   var FILTER = 'input.resize-trigger';
   var $FONT_SPAN = $( '<span>BESbswy</span>' );
   var $FONT_ROOT = $( '#fontsizer' );
-  var FONT_POLL_INTERVAL = 35;
+  var FONT_POLL_INTERVAL = 50;
   var FONT_POLL_MAX_SECONDS = 10;
   var FONT_POLL_COUNTER_MAX = Math.floor( FONT_POLL_MAX_SECONDS * 1000 / FONT_POLL_INTERVAL );
-  var FONT_POLL_RESIZE_INTERVAL = 120;
+  var FONT_POLL_RESIZE_INTERVAL = 150;
   var FONT_POLL_RESIZE_COUNT = Math.floor( FONT_POLL_RESIZE_INTERVAL / FONT_POLL_INTERVAL );
 
   var isReadyToResize = false;
