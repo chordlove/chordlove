@@ -32,10 +32,11 @@ define( 'resizer', [ 'jquery' ], function( $ )
   var FILTER = 'input.resize-trigger';
   var $FONT_SPAN = $( '<span>BESbswy</span>' );
   var $FONT_ROOT = $( '#fontsizer' );
-  var FONT_POLL_INTERVAL = 50;
+  var FONT_POLL_INTERVAL = 35;
   var FONT_POLL_MAX_SECONDS = 10;
   var FONT_POLL_COUNTER_MAX = Math.floor( FONT_POLL_MAX_SECONDS * 1000 / FONT_POLL_INTERVAL );
-  var FONT_POLL_RESIZE_INTERVAL = 5;
+  var FONT_POLL_RESIZE_INTERVAL = 120;
+  var FONT_POLL_RESIZE_COUNT = Math.floor( FONT_POLL_RESIZE_INTERVAL / FONT_POLL_INTERVAL );
 
   var isReadyToResize = false;
   var resizeQueue = [];
@@ -75,7 +76,6 @@ define( 'resizer', [ 'jquery' ], function( $ )
       var width1 = span1.width();
       var width2 = span2.width();
       var width3 = span3.width();
-      console.log( width1, width2, width3, initialWidth4 );
       counter++;
 
       if ( counter > FONT_POLL_COUNTER_MAX || ( width1 === width2 && width2 === width3 ) )
@@ -88,7 +88,7 @@ define( 'resizer', [ 'jquery' ], function( $ )
           isReadyToResize = true;
           $FONT_ROOT.remove();
         }
-        else if ( counter % FONT_POLL_RESIZE_INTERVAL )
+        else if ( counter % FONT_POLL_RESIZE_COUNT )
         {
           return;
         }
