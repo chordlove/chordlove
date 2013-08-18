@@ -22,7 +22,66 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 <title>alpha.chordlove.com</title>
 <script src="//use.edgefonts.net/neuton-cursive:n4:all.js"></script>
-<link href="style.css" rel="stylesheet">
+<script src="//ajax.googleapis.com/ajax/libs/webfont/1.4.8/webfont.js"></script>
+<script type="text/javascript">
+  'use strict';
+  window.ChordloveFontLoading = ( function()
+  {
+    var fonts = {};
+    var listeners = {};
+
+    function registerActiveFont( name )
+    {
+      fonts[name] = true;
+      checkListeners( name );
+    }
+
+    function registerInactiveFont( name )
+    {
+      fonts[name] = false;
+      checkListeners( name );
+    }
+
+    function addListener( name, listener )
+    {
+      if ( !( name in listeners ) )
+      {
+        listeners[name] = [];
+      }
+      listeners[name].push( listener );
+      checkListeners( name );
+    }
+
+    function checkListeners( name )
+    {
+      if ( ( name in listeners ) && ( name in fonts ) )
+      {
+        var nameListeners = listeners[name];
+        for ( var i = 0; i < nameListeners.length; i++ )
+        {
+          var listener = nameListeners[i];
+          listener( fonts[name] );
+        }
+      }
+    }
+
+    return {
+      'registerActiveFont' : registerActiveFont,
+      'registerInactiveFont' : registerInactiveFont,
+      'addListener' : addListener
+    };
+  }() );
+
+  WebFont.load( {
+    custom : {
+      families : [ 'DejaVuSerifBook' ],
+      urls : [ 'style/fonts.css' ]
+    },
+    fontactive : window.ChordloveFontLoading.registerActiveFont,
+    fontinactive : window.ChordloveFontLoading.registerInactiveFont
+  } );
+</script>
+<link href="style/style.css" rel="stylesheet">
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 <script type="text/javascript">
   if ( !window.jQuery )
@@ -58,7 +117,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 <script type="text/javascript" src="modules/pluginlist.js"></script>
 <script type="text/javascript" src="vexchord.min.js"></script>
 <link rel="shortcut icon" href="favicon.ico" />
-<link rel="apple-touch-icon" sizes="144x144" href="apple-touch-icon-144x144.png" /></head>
+<link rel="apple-touch-icon" sizes="144x144" href="apple-touch-icon-144x144.png" />
+</head>
 <link rel="apple-touch-icon" sizes="114x114" href="apple-touch-icon-114x114.png" />
 <link rel="apple-touch-icon" sizes="72x72" href="apple-touch-icon-72x72.png" />
 <link rel="apple-touch-icon" sizes="57x57" href="apple-touch-icon-57x57.png" />

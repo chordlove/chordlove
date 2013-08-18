@@ -31,7 +31,6 @@ define( 'jquery', [], function()
  * 
  * @module main
  * @requires jquery
- * @requires resizer
  * @requires plugins
  * @requires share
  * @requires plugins/title
@@ -42,15 +41,13 @@ define( 'jquery', [], function()
  * @requires plugins/tools
  */
 require(
-    [ 'jquery', 'resizer', 'plugins', 'share', 'plugins/title', 'plugins/chords', 'plugins/lyrics',
-        'plugins/structure', 'plugins/addons', 'plugins/tools', 'storage' ],
-    function( $, resizer, plugins, share )
+    [ 'jquery', 'plugins', 'share', 'plugins/title', 'plugins/chords', 'plugins/lyrics', 'plugins/structure',
+        'plugins/addons', 'plugins/tools', 'storage' ],
+    function( $, plugins, share )
     {
       'use strict';
       $( function()
       {
-        resizer.detectFontLoading();
-
         $.ajaxSetup( {
           cache : true
         } );
