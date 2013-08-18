@@ -58,6 +58,7 @@ define( 'resizer', [ 'jquery' ], function( $ )
       var width1 = span1.width();
       var width2 = span2.width();
       var width3 = span3.width();
+      console.log( width1, width2, width3 );
       counter++;
 
       if ( counter > FONT_POLL_COUNTER_MAX || ( width1 === width2 && width2 === width3 ) )
