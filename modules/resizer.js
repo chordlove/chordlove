@@ -50,8 +50,7 @@ define( 'resizer', [ 'jquery' ], function( $ )
     var span2 = $FONT_SPAN.clone().attr( 'id', 'fontsize2' ).appendTo( $FONT_ROOT );
     var span3 = $FONT_SPAN.clone().attr( 'id', 'fontsize3' ).appendTo( $FONT_ROOT );
     var counter = 0;
-
-    var callId = window.setInterval( checkIfFontIsUsed, FONT_POLL_INTERVAL );
+    var callId;
 
     function checkIfFontIsUsed()
     {
@@ -82,6 +81,8 @@ define( 'resizer', [ 'jquery' ], function( $ )
         }
         $FONT_ROOT.remove();
       }
+
+      callId = window.setInterval( checkIfFontIsUsed, FONT_POLL_INTERVAL );
     }
   }
 
