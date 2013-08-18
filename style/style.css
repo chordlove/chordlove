@@ -27,7 +27,7 @@ body {
 }
 
 .navbar {
-  width: 12.3em;
+  width: 15.05em;
   margin-top: 0.5em;
 }
 
@@ -36,8 +36,15 @@ body.edit-mode .navbar {
 }
 
 div.navbar-inner {
-  padding-left: 10px;
+  padding-left: 54px;
   padding-right: 10px;
+}
+
+#chordlove-navbar-icon {
+  border-bottom-left-radius: 4px;
+  border-top-left-radius: 4px;
+  position: absolute;
+  cursor: pointer;
 }
 
 #cpanel {
@@ -52,6 +59,18 @@ div.navbar-inner {
 
 body .NIY {
   display: none !important;
+}
+
+.chordlove-color-dark {
+  color: #72377b;
+}
+
+.chordlove-color-light {
+  color: #9e76a4;
+}
+
+.img-rounded-small {
+  border-radius: 2px;
 }
 
 h1 input[type="text"],input[type="text"].chord-text,input[type="text"].song-text {

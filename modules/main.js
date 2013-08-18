@@ -83,6 +83,10 @@ require(
                         + window.location.hostname
                         + ' <i class="icon-external-link"></i></a>.</p></div>' );
           }
+          $( '#chordlove-navbar-icon' ).click( function()
+          {
+            $( '#help' ).modal();
+          } );
         } )();
       } );
     } );
