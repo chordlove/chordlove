@@ -35,6 +35,7 @@ define( 'resizer', [ 'jquery' ], function( $ )
   var FONT_POLL_INTERVAL = 50;
   var FONT_POLL_MAX_SECONDS = 10;
   var FONT_POLL_COUNTER_MAX = Math.floor( FONT_POLL_MAX_SECONDS * 1000 / FONT_POLL_INTERVAL );
+  var FONT_POLL_RESIZE_INTERVAL = 5;
 
   var isReadyToResize = false;
   var resizeQueue = [];
@@ -49,7 +50,23 @@ define( 'resizer', [ 'jquery' ], function( $ )
     var span1 = $FONT_SPAN.clone().attr( 'id', 'fontsize1' ).appendTo( $FONT_ROOT );
     var span2 = $FONT_SPAN.clone().attr( 'id', 'fontsize2' ).appendTo( $FONT_ROOT );
     var span3 = $FONT_SPAN.clone().attr( 'id', 'fontsize3' ).appendTo( $FONT_ROOT );
+    var span4 = $FONT_SPAN.clone().attr( 'id', 'fontsize4' ).appendTo( $FONT_ROOT );
     var counter = 0;
+    var avoidWidth = 0;
+
+    if ( navigator.userAgent.toLowerCase().indexOf( 'safari/' ) > -1 )
+    {
+      var initialWidth1 = span1.width();
+      var initialWidth2 = span2.width();
+      var initialWidth3 = span3.width();
+      var initialWidth4 = span4.width();
+      if ( initialWidth4 === initialWidth3 && initialWidth3 === initialWidth2 && initialWidth2 === initialWidth1 )
+      {
+        // this is probably just an old webkit version spooking us, see:
+        // http://blog.typekit.com/2013/02/05/more-reliable-font-events/
+        avoidWidth = initialWidth1;
+      }
+    }
 
     var callId = window.setInterval( checkIfFontIsUsed, FONT_POLL_INTERVAL );
 
@@ -58,13 +75,23 @@ define( 'resizer', [ 'jquery' ], function( $ )
       var width1 = span1.width();
       var width2 = span2.width();
       var width3 = span3.width();
-      console.log( width1, width2, width3 );
+      console.log( width1, width2, width3, initialWidth4 );
       counter++;
 
       if ( counter > FONT_POLL_COUNTER_MAX || ( width1 === width2 && width2 === width3 ) )
       {
-        window.clearInterval( callId );
-        isReadyToResize = true;
+        if ( width3 !== avoidWidth || counter > FONT_POLL_COUNTER_MAX )
+        {
+          // only stop if we think it's the real deal
+          // or we are timing out.
+          window.clearInterval( callId );
+          isReadyToResize = true;
+          $FONT_ROOT.remove();
+        }
+        else if ( counter % FONT_POLL_RESIZE_INTERVAL )
+        {
+          return;
+        }
         var i = resizeQueue.length;
         while ( --i >= 0 )
         {
@@ -80,7 +107,6 @@ define( 'resizer', [ 'jquery' ], function( $ )
             // if( $queuedWrapper.closest('body').length > 0 )
           }
         }
-        $FONT_ROOT.remove();
       }
     }
   }

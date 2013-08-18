@@ -420,6 +420,10 @@ body.edit-mode i.guitarchord-next,body.edit-mode i.guitarchord-previous {
   font-family: 'DejaVuSerifBook';
 }
 
+#fontsize4 {
+  font-family: 'ThisFontDoesNotExist';
+}
+
 @media print {
   #footer {
     font-family: 'DejaVuSerifBook', 'DejaVu Serif', 'DejaVu Sans', 'Lucida Sans Unicode',
