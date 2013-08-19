@@ -99,23 +99,23 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 <script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
 <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
 <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
-<script src="jquery.ba-hashchange.min.js"></script>
+<script src="libs/jquery.ba-hashchange.min.js"></script>
 <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="inject.min.js"></script>
+<script type="text/javascript" src="libs/inject.min.js"></script>
 <script type="text/javascript">
   Inject.setModuleRoot( "modules" );
-  if ( window.location.hostname == "localhost" )
-  {
-    Inject.setExpires( 1 );
-  }
-  else
-  {
-    Inject.setExpires( 1 );
-  }
+//   if ( window.location.hostname == "localhost" )
+//   {
+//     Inject.setExpires( 1 );
+//   }
+//   else
+//   {
+//     Inject.setExpires( 1 );
+//   }
   require.run( "main" );
 </script>
 <script type="text/javascript" src="modules/pluginlist.js"></script>
-<script type="text/javascript" src="vexchord.min.js"></script>
+<script type="text/javascript" src="libs/vexchord.min.js"></script>
 <link rel="shortcut icon" href="favicon.ico" />
 <link rel="apple-touch-icon" sizes="144x144" href="apple-touch-icon-144x144.png" />
 </head>
@@ -276,6 +276,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <a href=".">alpha.chordlove.com</a>
   </div>
   <div id="fontsizer"></div>
-  <script src="ga.min.js"></script>
+  <script src="libs/ga.min.js"></script>
 </body>
 </html>

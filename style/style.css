@@ -245,6 +245,10 @@ div.duration ul>li>a {
 
 #addons>li {
   list-style-type: none;
+  display: block;
+  float: left;
+  clear: both;
+  margin-top: 1.5em;
 }
 
 #items.has-text>li {

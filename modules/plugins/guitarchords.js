@@ -39,7 +39,7 @@ function GuitarChords( $, chorddata, share, functions )
   var format = DEFAULT_FORMAT;
 
   var $PARENT = $( '#items' );
-  var $GUITAR_CHORDS = $( '<div id="guitarchords"/>' );
+  var $GUITAR_CHORDS = $( '<li id="guitarchords"/>' );
   var $CHORD_WRAPPER = $( '<div class="guitarchord"/>' );
   var $NEXT_BTN = $( '<i class="icon-chevron-sign-right guitarchord-next"></i>' );
   var $PREVIOUS_BTN = $( '<i class="icon-chevron-sign-left guitarchord-previous"></i>' );
