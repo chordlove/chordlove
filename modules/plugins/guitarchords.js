@@ -41,6 +41,7 @@ function GuitarChords( $, chorddata, share, functions )
   var $PARENT = $( '#items' );
   var $GUITAR_CHORDS = $( '<li id="guitarchords"/>' );
   var $CHORD_WRAPPER = $( '<div class="guitarchord"/>' );
+  var $INNER_CHORD_WRAPPER = $( '<div class="guitarchord-inner"/>' );
   var $NEXT_BTN = $( '<i class="icon-chevron-sign-right guitarchord-next"></i>' );
   var $PREVIOUS_BTN = $( '<i class="icon-chevron-sign-left guitarchord-previous"></i>' );
   var $CHORD_LABEL = $( '<p class="guitarchord"/>' );
@@ -140,12 +141,13 @@ function GuitarChords( $, chorddata, share, functions )
         {
           result = chordMemory;
           var $wrapper = $CHORD_WRAPPER.clone();
+          $CHORD_LABEL.clone().text( chord ).appendTo( $wrapper );
+          var $innerWrapper = $INNER_CHORD_WRAPPER.clone().appendTo( $wrapper );
           // make the wrapper visible here because of:
           // https://github.com/DmitryBaranovskiy/raphael/issues/491
           $wrapper.appendTo( $GUITAR_CHORDS );
           seen[chord] = chordMemory;
-          renderChord( chordMemory, $wrapper );
-          $CHORD_LABEL.clone().text( chord ).appendTo( $wrapper );
+          renderChord( chordMemory, $innerWrapper );
         }
       }
       return result;

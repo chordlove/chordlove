@@ -369,6 +369,7 @@ label.disabled {
 div.guitarchord {
   float: left;
   position: relative;
+  margin-bottom: 6px;
 }
 
 p.guitarchord {
@@ -376,7 +377,13 @@ p.guitarchord {
     'Arial Unicode MS', serif;
   font-size: 18px;
   text-align: center;
-  margin-right: -5px;
+  position: relative;
+  left: 3px;
+}
+
+div.guitarchord-inner {
+  position: relative;
+  top: -18px;
 }
 
 i.guitarchord-next,i.guitarchord-previous {
