@@ -369,7 +369,7 @@ label.disabled {
 div.guitarchord {
   float: left;
   position: relative;
-  margin-bottom: 6px;
+  margin-bottom: 10px;
 }
 
 p.guitarchord {
@@ -382,8 +382,6 @@ p.guitarchord {
 }
 
 div.guitarchord-inner {
-  position: relative;
-  top: -18px;
 }
 
 i.guitarchord-next,i.guitarchord-previous {

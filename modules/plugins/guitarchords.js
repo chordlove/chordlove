@@ -147,7 +147,7 @@ function GuitarChords( $, chorddata, share, functions )
           // https://github.com/DmitryBaranovskiy/raphael/issues/491
           $wrapper.appendTo( $GUITAR_CHORDS );
           seen[chord] = chordMemory;
-          renderChord( chordMemory, $innerWrapper );
+          renderChord( chordMemory, $innerWrapper, $wrapper );
         }
       }
       return result;
@@ -210,7 +210,7 @@ function GuitarChords( $, chorddata, share, functions )
       this.currentIndex = currentIndex;
     }
 
-    function renderChord( chordMemory, $wrapper )
+    function renderChord( chordMemory, $wrapper, $outerWrapper )
     {
       var noteRenderers = chordMemory.renderers;
       var index = chordMemory.currentIndex;
@@ -235,13 +235,13 @@ function GuitarChords( $, chorddata, share, functions )
         share.changedText( 'guitarchords/renderChord' );
       } );
 
-      var paper = Raphael( $wrapper[0], 110, 120 ); // height 102 -> 120
+      var paper = Raphael( $wrapper[0], 110, 104 );
       update();
 
       function renderChordBox()
       {
         paper.clear();
-        var chordbox = new ChordBox( paper, 25, 20, 80, 80 );
+        var chordbox = new ChordBox( paper, 25, 2, 80, 80 );
         chordbox.num_frets = 6;
         var richChord = noteRenderers[index];
         var tuning = richChord.render( chordbox );
@@ -272,7 +272,7 @@ function GuitarChords( $, chorddata, share, functions )
       function updateChordNumber()
       {
         chordMemory.currentIndex = index;
-        $wrapper.data( 'chordNumber', noteRenderers[index].getChordNumber() );
+        $outerWrapper.data( 'chordNumber', noteRenderers[index].getChordNumber() );
       }
 
       function update()
