@@ -235,13 +235,13 @@ function GuitarChords( $, chorddata, share, functions )
         share.changedText( 'guitarchords/renderChord' );
       } );
 
-      var paper = Raphael( $wrapper[0], 110, 104 );
+      var paper = Raphael( $wrapper[0], 110, 116 );
       update();
 
       function renderChordBox()
       {
         paper.clear();
-        var chordbox = new ChordBox( paper, 25, 2, 80, 80 );
+        var chordbox = new ChordBox( paper, 25, 14, 80, 80 );
         chordbox.num_frets = 6;
         var richChord = noteRenderers[index];
         var tuning = richChord.render( chordbox );

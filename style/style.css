@@ -379,9 +379,11 @@ p.guitarchord {
   text-align: center;
   position: relative;
   left: 3px;
+  margin-bottom: 0;
 }
 
 div.guitarchord-inner {
+  
 }
 
 i.guitarchord-next,i.guitarchord-previous {
