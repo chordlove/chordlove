@@ -82,7 +82,9 @@ function Title( $, plugins, share, functions )
 
   function getTitle()
   {
-    return functions.encode( $( '#title' ).val() );
+    var val = $.trim( $( '#title' ).val() );
+    $( '#title' ).val( val );
+    return functions.encode( val );
   }
 
   $( '#title' ).keydown( function( event )

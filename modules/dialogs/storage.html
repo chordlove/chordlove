@@ -25,8 +25,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   <div class="modal-body">
     <form>
       <fieldset>
-        <label for="storage-save-name">Save the song with the following name:</label> <input type="text"
-          id="storage-save-name" autofocus required>
+        <div id="storage-save-status" class="control-group">
+          <label for="storage-save-name">Save the song with the following name:</label> <input type="text"
+            id="storage-save-name" autofocus required>
+          <span id="storage-save-help" class="help-inline"></span>
+        </div>
       </fieldset>
     </form>
     <div class="alert alert-info">

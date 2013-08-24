@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- * Store URLs in local storage.
+ * Store hashes in local storage.
  * 
  * @module storage
  * @requires jquery
@@ -48,20 +48,61 @@ function Storage( $, functions, share )
   {
     functions.dialog( func, 'storage-save-form', 'storage', function()
     {
+      var $form = $( '#storage-save-form' );
+      var $save = $( '#save' );
+      var $saveOk = $( '#storage-save-ok' );
+      var $status = $( '#storage-save-status' );
+      var $help = $( '#storage-save-help' );
       var $saveName = $( '#storage-save-name' );
-      $( '#save' ).click( function()
+
+      $saveName.keyup( function()
+      {
+        setSaveNameStatus();
+      } );
+
+      function setSaveNameStatus()
+      {
+        var value = $.trim( $saveName.val() );
+        $status.removeClass( 'error info' );
+        if ( value.length === 0 )
+        {
+          $status.addClass( 'error' );
+          $help.text( "The name can't be empty!" );
+          $saveOk.addClass( 'disabled' );
+        }
+        else if ( value in window.localStorage )
+        {
+          $status.addClass( 'info' );
+          $help.text( "The existing song will be overwritten." );
+          $saveOk.removeClass( 'disabled' );
+        }
+        else
+        {
+          $help.text( '' );
+          $saveOk.removeClass( 'disabled' );
+        }
+      }
+
+      $save.click( function()
       {
         $saveName.val( $( '#title' ).val() );
         $saveName.data( 'hash', window.location.hash );
-        $( '#storage-save-form' ).modal().on( 'shown', function()
-        {
-          $saveName.focus();
-        } );
+        setSaveNameStatus();
+        $form.modal();
       } );
 
-      $( '#storage-save-ok' ).click( function()
+      $form.on( 'shown', function()
       {
-        window.localStorage[$saveName.val()] = $saveName.data( 'hash' );
+        $saveName.focus();
+      } );
+
+      $saveOk.click( function()
+      {
+        if ( $status.hasClass( 'error' ) )
+        {
+          return false;
+        }
+        window.localStorage[$.trim( $saveName.val() )] = $saveName.data( 'hash' );
       } );
 
       var $openSelect = $( '#storage-open-select' );
@@ -90,7 +131,7 @@ function Storage( $, functions, share )
 
         $( '#storage-open-ok' ).click( function()
         {
-          share.changed(); // this stores the current location in history
+          share.changed( true ); // this stores the current location in history
           var selectedKey = $openSelect.val();
           var hash = window.localStorage[selectedKey];
           window.location.hash = hash;

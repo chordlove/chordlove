@@ -57,11 +57,11 @@ function Share( $, plugins, functions )
     } );
   } );
 
-  function writeUri()
+  function writeUri( force )
   {
     var status = plugins.serialize();
     var hash = '#' + encodeURIComponent( status );
-    if ( hash !== previousHash )
+    if ( force === true || hash !== previousHash )
     {
       window.history.pushState( status, window.document.title, hash );
       previousHash = hash;
@@ -128,9 +128,18 @@ function Share( $, plugins, functions )
     writeUri();
   }
 
-  function changed()
+  /**
+   * Tells the share module that there has been some change.
+   * 
+   * @method
+   * @name module:share.changed
+   * @param {boolean}
+   *          [force] Force a URI rewrite (this is useful for making sure the current state will be preserved in
+   *          history).
+   */
+  function changed( force )
   {
-    writeUri();
+    writeUri( force );
   }
 
   /**
