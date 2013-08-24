@@ -590,14 +590,7 @@ function addPinEvents( $wrapper )
   $( 'i.icon-pushpin', $wrapper ).mousedown( function( event )
   {
     event.stopImmediatePropagation();
-    if ( $wrapper.hasClass( 'ui-selected' ) )
-    {
-      $wrapper.removeClass( 'ui-selected' );
-    }
-    else
-    {
-      $wrapper.addClass( 'ui-selected' );
-    }
+    $wrapper.toggleClass( 'ui-selected' );
     return false;
   } );
 }

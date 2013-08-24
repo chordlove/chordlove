@@ -140,7 +140,10 @@ function GuitarChords( $, chorddata, share, functions )
         if ( chordMemory && chordMemory !== true )
         {
           result = chordMemory;
-          var $wrapper = $CHORD_WRAPPER.clone();
+          var $wrapper = $CHORD_WRAPPER.clone().mousedown( function( event )
+          {
+            event.preventDefault();
+          } );
           $CHORD_LABEL.clone().text( chord ).appendTo( $wrapper );
           var $innerWrapper = $INNER_CHORD_WRAPPER.clone().appendTo( $wrapper );
           // make the wrapper visible here because of:
