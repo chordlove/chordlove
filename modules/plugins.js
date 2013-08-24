@@ -15,6 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 /**
  * Load and execute operations from plugins.
  * 
@@ -24,7 +25,6 @@
  * @requires functions
  * @requires toolbar
  */
-
 function Plugins( $, pluginlist, functions, toolbar )
 {
   'use strict';
@@ -63,7 +63,14 @@ function Plugins( $, pluginlist, functions, toolbar )
    */
   function register( pluginInfo )
   {
-    plugins[pluginInfo.name] = pluginInfo;
+    if ( 'name' in pluginInfo && typeof pluginInfo.name === 'string' )
+    {
+      plugins[pluginInfo.name] = pluginInfo;
+    }
+    else
+    {
+      console.log( 'Could not register plugin.', pluginInfo );
+    }
   }
 
   function list()
@@ -93,7 +100,14 @@ function Plugins( $, pluginlist, functions, toolbar )
     else if ( plugins[name] )
     {
       // The script has been loaded and batched executions run.
-      func( plugins[name].instance, plugins[name], exports );
+      try
+      {
+        func( plugins[name].instance, plugins[name], exports );
+      }
+      catch ( ex )
+      {
+        functions.printError( ex, 'Could not execute function on plugin ' + name + '.' );
+      }
     }
     else
     {
@@ -102,10 +116,24 @@ function Plugins( $, pluginlist, functions, toolbar )
       require( [ 'plugins/' + name, 'plugins' ], function( dontUse, pluginsModule )
       {
         var instance = plugins[name].instance;
-        func( instance, plugins[name], pluginsModule );
+        try
+        {
+          func( instance, plugins[name], pluginsModule );
+        }
+        catch ( ex )
+        {
+          functions.printError( ex, 'Could not execute function on plugin ' + name + '.' );
+        }
         $.each( loading[name], function()
         {
-          this( instance, plugins[name], pluginsModule );
+          try
+          {
+            this( instance, plugins[name], pluginsModule );
+          }
+          catch ( ex )
+          {
+            functions.printError( ex, 'Could not execute function on plugin ' + name + '.' );
+          }
         } );
         delete loading[name];
       } );
@@ -156,25 +184,37 @@ function Plugins( $, pluginlist, functions, toolbar )
     var PLUGIN_END_MARKER = '_';
     var hash = window.location.hash;
     var readMode = false;
-    if ( hash.length )
+    if ( hash.length > 3 )
     {
       var topLevelFormat = hash.charAt( 2 );
       if ( topLevelFormat !== '0' )
       {
         // we'll handle this better when we're actually at format
         // version 1.
-        throw 'Unknown URL format.';
+        // this is fatal, so let's just throw it for now.
+        throw 'Error in address, can not render page.';
       }
       var pluginSections = decodeURIComponent( hash.substring( 3 ) ).split( PLUGIN_END_MARKER );
       var plugins = [];
       $.each( pluginSections, function()
       {
-        var pluginId = functions.getNumber( this.substr( 0, 2 ) );
-        var pluginFormat = functions.getNumber( this.substr( 2, 1 ) );
-        var pluginData = this.substr( 3 );
-        var pluginInput = new PluginInput( pluginId, pluginFormat, pluginData );
-        plugins.push( pluginInput );
-        setData( pluginInput );
+        if ( this.length > 2 )
+        {
+          var pluginId = undefined;
+          try
+          {
+            pluginId = functions.getNumber( this.substr( 0, 2 ) );
+            var pluginFormat = functions.getNumber( this.substr( 2, 1 ) );
+            var pluginData = this.substr( 3 );
+            var pluginInput = new PluginInput( pluginId, pluginFormat, pluginData );
+            plugins.push( pluginInput );
+            setData( pluginInput );
+          }
+          catch ( ex )
+          {
+            functions.printError( ex, 'Could not set data on plugin with id ' + pluginId + '.' );
+          }
+        }
       } );
       $.each( plugins, function()
       {
@@ -198,13 +238,20 @@ function Plugins( $, pluginlist, functions, toolbar )
     var data = [];
     $.each( plugins, function( name, pluginInfo )
     {
-      if ( 'serialize' in pluginInfo && pluginInfo['serialize'] === true )
+      try
       {
-        var serialized = pluginInfo.instance.serialize();
-        if ( serialized )
+        if ( 'serialize' in pluginInfo && pluginInfo['serialize'] === true )
         {
-          data.push( serialized );
+          var serialized = pluginInfo.instance.serialize();
+          if ( serialized )
+          {
+            data.push( serialized );
+          }
         }
+      }
+      catch ( ex )
+      {
+        functions.printError( ex, 'Could not serialize output from plugin ' + name + '.' );
       }
     } );
     // TODO remove the sorting?
@@ -227,7 +274,14 @@ function Plugins( $, pluginlist, functions, toolbar )
     {
       if ( 'clear' in instance )
       {
-        instance.clear();
+        try
+        {
+          instance.clear();
+        }
+        catch ( ex )
+        {
+          functions.printError( ex, 'Could not perform clear operation on plugin.' );
+        }
       }
     } );
   }

@@ -414,6 +414,39 @@ function functions( $ )
     }
   }
 
+  /**
+   * Helper function to print exceptions to the console.
+   * 
+   * @param {Error}
+   *          ex Error to print.
+   * @param {String}
+   *          [message] Optional message to print before the error.
+   * 
+   */
+  function printError( ex, message )
+  {
+    if ( typeof message === 'string' )
+    {
+      console.log( message );
+    }
+    if ( typeof ex === 'string' )
+    {
+      console.log( ex );
+    }
+    else if ( 'name' in ex && 'message' in ex )
+    {
+      console.log( ex.name, ex.message );
+      if ( 'fileName' in ex && 'lineNumber' in ex )
+      {
+        console.log( ex.fileName, ex.lineNumber );
+      }
+    }
+    else
+    {
+      console.log( ex );
+    }
+  }
+
   return {
     'getNumber' : getNumber,
     'getCharacters' : getCharacters,
@@ -426,6 +459,7 @@ function functions( $ )
     'handleInputChangeEvent' : handleInputChangeEvent,
     'handleInputKeyEvent' : handleInputKeyEvent,
     'emptyOrNot' : emptyOrNot,
-    'dialog' : dialog
+    'dialog' : dialog,
+    'printError' : printError
   };
 }

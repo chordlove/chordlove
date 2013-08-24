@@ -26,6 +26,31 @@ define( 'jquery', [], function()
   return jQuery;
 } );
 
+// shield from missing console.log().
+( function()
+{
+  try
+  {
+    if ( typeof window.console.log !== 'function' )
+    {
+      replaceConsole();
+    }
+  }
+  catch ( e )
+  {
+    replaceConsole();
+  }
+
+  function replaceConsole()
+  {
+    window.console = {};
+    window.console.log = function()
+    {
+      // do nothing
+    };
+  }
+} )();
+
 /**
  * Main module to bootstrap the application. Loads core plugins which should always be present.
  * 
