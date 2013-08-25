@@ -442,7 +442,11 @@ body.edit-mode i.guitarchord-next,body.edit-mode i.guitarchord-previous {
   #footer a[href]:after {
     content: "";
   }
-  .hide-in-print,.navbar {
-    display: none;
+  .hide-in-print,.navbar,#items>li div.handle,#tools span.btn-group,#tools div.btn-group {
+    display: none !important;
+  }
+  input[type="text"].empty-input,input[type="text"].empty-input.song-text,#items.has-text input[type="text"].empty-input.song-text,i.guitarchord-next,i.guitarchord-previous
+    {
+    visibility: hidden !important;
   }
 }
