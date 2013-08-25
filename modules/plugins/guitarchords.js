@@ -312,7 +312,7 @@ function GuitarChords( $, chorddata, share, functions )
 
   function clear()
   {
-    // TODO not yet
+    $GUITAR_CHORDS.empty();
   }
 
   function dbToVexChords( db )

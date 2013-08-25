@@ -22,9 +22,10 @@
  * @requires jquery
  * @requires functions
  * @requires share
+ * @requires plugins
  */
 
-function Storage( $, functions, share )
+function Storage( $, functions, share, plugins )
 {
   'use strict';
   if ( Storage.prototype._instance )
@@ -54,10 +55,27 @@ function Storage( $, functions, share )
       var $status = $( '#storage-save-status' );
       var $help = $( '#storage-save-help' );
       var $saveName = $( '#storage-save-name' );
+      var $deleteGroup = $( '#storage-delete-group' );
+      var $deleteConfirm = $( '#storage-delete-confirm' );
+      var deleteConfirm = $deleteConfirm[0];
+      var $deleteButton = $( '#storage-open-delete' );
+      var $openSelect = $( '#storage-open-select' );
+      var openSelect = $openSelect[0];
+      var $okButton = $( '#storage-open-ok' );
+      var $openForm = $( '#storage-open-form' );
 
       $saveName.keyup( function()
       {
         setSaveNameStatus();
+      } );
+
+      $saveName.keypress( function( event )
+      {
+        if ( event.keyCode === 13 )
+        {
+          event.preventDefault();
+          $saveOk.click();
+        }
       } );
 
       function setSaveNameStatus()
@@ -105,7 +123,6 @@ function Storage( $, functions, share )
         window.localStorage[$.trim( $saveName.val() )] = $saveName.data( 'hash' );
       } );
 
-      var $openSelect = $( '#storage-open-select' );
       $( '#open' ).click( function()
       {
         var items = [];
@@ -123,27 +140,74 @@ function Storage( $, functions, share )
           $openSelect.append( $OPTION.clone().text( items[i] ) );
         }
 
-        $( '#storage-open-form' ).modal().on( 'shown', function()
+        $openForm.modal().on( 'shown', function()
         {
           $openSelect.focus();
           $openSelect.children( 'option:first' ).attr( 'selected', 'selected' );
+          updateButtons();
         } );
 
-        $( '#storage-open-ok' ).click( function()
+        $okButton.click( function()
         {
+          if ( openSelect.selectedIndex === -1 )
+          {
+            return;
+          }
           share.changed( true ); // this stores the current location in history
           var selectedKey = $openSelect.val();
           var hash = window.localStorage[selectedKey];
+          plugins.clear();
           window.location.hash = hash;
         } );
 
-        $( '#storage-open-delete' ).click( function( event )
+        $deleteButton.click( function( event )
         {
           event.preventDefault();
           var selectedKey = $openSelect.val();
           delete window.localStorage[selectedKey];
           $( 'option:selected', $openSelect ).remove();
+          updateButtons();
         } );
+
+        $deleteConfirm.change( updateButtons );
+
+        $openSelect.change( updateButtons ).keypress( function( event )
+        {
+          if ( event.keyCode === 13 )
+          {
+            event.preventDefault();
+            $okButton.click();
+          }
+        } ).dblclick( function( event )
+        {
+          event.stopImmediatePropagation();
+          $okButton.click();
+        } );
+
+        function updateButtons()
+        {
+          var somethingIsSelected = openSelect.selectedIndex !== -1;
+          var doNotDelete = !deleteConfirm.checked;
+          $deleteButton.toggleClass( 'disabled', doNotDelete || !somethingIsSelected );
+          if ( doNotDelete || !somethingIsSelected )
+          {
+            $deleteButton.attr( 'disabled', 'disabled' );
+          }
+          else
+          {
+            $deleteButton.removeAttr( 'disabled' );
+          }
+          $deleteGroup.toggleClass( 'error', doNotDelete );
+          $okButton.toggleClass( 'disabled', !somethingIsSelected );
+          if ( somethingIsSelected )
+          {
+            $okButton.removeAttr( 'disabled' );
+          }
+          else
+          {
+            $okButton.attr( 'disabled', 'disabled' );
+          }
+        }
       } );
     } );
   }
@@ -166,8 +230,8 @@ function Storage( $, functions, share )
   return {};
 }
 
-define( 'storage', [ 'jquery', 'functions', 'share' ], function( $, functions, share )
+define( 'storage', [ 'jquery', 'functions', 'share', 'plugins' ], function( $, functions, share, plugins )
 {
   'use strict';
-  return new Storage( $, functions, share );
+  return new Storage( $, functions, share, plugins );
 } );

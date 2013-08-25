@@ -50,20 +50,30 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     </h3>
   </div>
   <div class="modal-body">
-    <form>
-      <fieldset>
-        <label for="storage-open-select">Select a song:</label> <select id="storage-open-select" autofocus required
-          size="12"></select>
-      </fieldset>
-    </form>
-    <div class="alert alert-block">
-      <h4>Warning</h4>
-      A deleted song can't be brought back, be careful!
+    <div class="row-fluid">
+      <form>
+        <div class="span6">
+          <fieldset>
+            <label for="storage-open-select">Select a song to open or delete:</label> <select id="storage-open-select"
+              autofocus required size="12"></select>
+          </fieldset>
+        </div>
+        <div class="span6">
+          <div class="control-group error" id="storage-delete-group">
+            <div class="controls">
+              <label for="storage-open-delete">Delete a song.</label>
+              <button class="btn btn-danger disabled" type="button" id="storage-open-delete">Delete</button>
+              <label class="checkbox"> <input type="checkbox" id="storage-delete-confirm"> A deleted
+                song can't be brought back.
+              </label>
+            </div>
+          </div>
+        </div>
+      </form>
     </div>
   </div>
   <div class="modal-footer">
     <button class="btn" type="button" data-dismiss="modal">Close</button>
-    <button class="btn btn-danger" type="button" id="storage-open-delete">Delete</button>
     <button class="btn btn-primary" type="submit" data-dismiss="modal" id="storage-open-ok">Open</button>
   </div>
 </div>
