@@ -415,7 +415,7 @@ function functions( $ )
   }
 
   /**
-   * Helper function to print exceptions to the console.
+   * Print exceptions to the console.
    * 
    * @param {Error}
    *          ex Error to print.
@@ -447,6 +447,37 @@ function functions( $ )
     }
   }
 
+  /**
+   * Show an alert.
+   * 
+   * @param {String}
+   *          type One of 'error', 'success', 'info', 'warning'.
+   * @param {String}
+   *          heading Heading of the message.
+   * @param {String}
+   *          text Text for the message.
+   * @param {String}
+   *          [icon] Class name of Font Awesome icon o use.
+   */
+  function alert( type, heading, text, icon )
+  {
+    var typeClass = 'alert-' + type;
+    var $alert = $( '#alert' );
+    var iconText = icon === undefined ? '' : '<i class="' + icon + '"></i> ';
+    if ( !$alert.length )
+    {
+      $alert = $( '<div id="alert" class="alert fade in" data-alert="alert"/>' ).appendTo( 'body' );
+    }
+    $alert.addClass( typeClass );
+    $alert.html( iconText + '<strong>' + heading + ':</strong> ' + text );
+    $alert.css( 'opacity', 1 );
+    window.setTimeout( function()
+    {
+      $alert.css( 'opacity', 0 );
+      $alert.removeClass( typeClass );
+    }, 5000 );
+  }
+
   return {
     'getNumber' : getNumber,
     'getCharacters' : getCharacters,
@@ -460,6 +491,7 @@ function functions( $ )
     'handleInputKeyEvent' : handleInputKeyEvent,
     'emptyOrNot' : emptyOrNot,
     'dialog' : dialog,
-    'printError' : printError
+    'printError' : printError,
+    'alert' : alert
   };
 }

@@ -39,176 +39,186 @@ function Storage( $, functions, share, plugins )
     return;
   }
 
-  var $OPTION = $( '<option/>' );
-
   $( '#save-load' ).removeClass( 'NIY' );
 
   init();
+
+  function initSaveForm()
+  {
+    var $form = $( '#storage-save-form' );
+    var $save = $( '#save' );
+    var $saveOk = $( '#storage-save-ok' );
+    var $status = $( '#storage-save-status' );
+    var $help = $( '#storage-save-help' );
+    var $saveName = $( '#storage-save-name' );
+
+    $saveName.keyup( function()
+    {
+      setSaveNameStatus();
+    } ).keypress( function( event )
+    {
+      if ( event.keyCode === 13 )
+      {
+        event.preventDefault();
+        $saveOk.click();
+      }
+    } );
+
+    function setSaveNameStatus()
+    {
+      var value = $.trim( $saveName.val() );
+      $status.removeClass( 'error info' );
+      if ( value.length === 0 )
+      {
+        $status.addClass( 'error' );
+        $help.text( "The name can't be empty!" );
+        $saveOk.addClass( 'disabled' );
+      }
+      else if ( value in window.localStorage )
+      {
+        $status.addClass( 'info' );
+        $help.text( "The existing song will be overwritten." );
+        $saveOk.removeClass( 'disabled' );
+      }
+      else
+      {
+        $help.text( '' );
+        $saveOk.removeClass( 'disabled' );
+      }
+    }
+
+    $save.click( function()
+    {
+      $saveName.val( $( '#title' ).val() );
+      $saveName.data( 'hash', window.location.hash );
+      setSaveNameStatus();
+      $form.modal();
+    } );
+
+    $form.on( 'shown', function()
+    {
+      $saveName.focus();
+    } );
+
+    $saveOk.click( function()
+    {
+      if ( $status.hasClass( 'error' ) )
+      {
+        return false;
+      }
+      window.localStorage[$.trim( $saveName.val() )] = $saveName.data( 'hash' );
+      functions.alert( 'success', 'Save', '"' + $saveName.val() + '" has been saved.', 'icon-save' );
+    } );
+  }
+
+  function initOpenDeleteForm()
+  {
+    var $OPTION = $( '<option/>' );
+
+    var $deleteGroup = $( '#storage-delete-group' );
+    var $deleteConfirm = $( '#storage-delete-confirm' );
+    var deleteConfirm = $deleteConfirm[0];
+    var $deleteButton = $( '#storage-open-delete' );
+    var $openSelect = $( '#storage-open-select' );
+    var openSelect = $openSelect[0];
+    var $okButton = $( '#storage-open-ok' );
+    var $openForm = $( '#storage-open-form' );
+
+    $( '#open' ).click( function()
+    {
+      var items = [];
+      for ( var key in window.localStorage )
+      {
+        if ( key.indexOf( 'lscache-INJECT' ) !== 0 )
+        {
+          items.push( key );
+        }
+      }
+      items.sort();
+      $openSelect.empty();
+      for ( var i = 0; i < items.length; i++ )
+      {
+        $openSelect.append( $OPTION.clone().text( items[i] ) );
+      }
+
+      $openForm.modal().on( 'shown', function()
+      {
+        $openSelect.focus();
+        $openSelect.children( 'option:first' ).attr( 'selected', 'selected' );
+        updateButtons();
+      } );
+
+      $okButton.click( function()
+      {
+        if ( openSelect.selectedIndex === -1 )
+        {
+          return;
+        }
+        share.changed( true ); // this stores the current location in history
+        var selectedKey = $openSelect.val();
+        var hash = window.localStorage[selectedKey];
+        plugins.clear();
+        window.location.hash = hash;
+        functions.alert( 'success', 'Open', '"' + selectedKey + '" has been opened.', 'icon-folder-open-alt' );
+      } );
+
+      $deleteButton.click( function( event )
+      {
+        event.preventDefault();
+        var selectedKey = $openSelect.val();
+        delete window.localStorage[selectedKey];
+        $( 'option:selected', $openSelect ).remove();
+        updateButtons();
+      } );
+
+      $deleteConfirm.change( updateButtons );
+
+      $openSelect.change( updateButtons ).keypress( function( event )
+      {
+        if ( event.keyCode === 13 )
+        {
+          event.preventDefault();
+          $okButton.click();
+        }
+      } ).dblclick( function( event )
+      {
+        event.stopImmediatePropagation();
+        $okButton.click();
+      } );
+
+      function updateButtons()
+      {
+        var somethingIsSelected = openSelect.selectedIndex !== -1;
+        var doNotDelete = !deleteConfirm.checked;
+        $deleteButton.toggleClass( 'disabled', doNotDelete || !somethingIsSelected );
+        if ( doNotDelete || !somethingIsSelected )
+        {
+          $deleteButton.attr( 'disabled', 'disabled' );
+        }
+        else
+        {
+          $deleteButton.removeAttr( 'disabled' );
+        }
+        $deleteGroup.toggleClass( 'error', doNotDelete );
+        $okButton.toggleClass( 'disabled', !somethingIsSelected );
+        if ( somethingIsSelected )
+        {
+          $okButton.removeAttr( 'disabled' );
+        }
+        else
+        {
+          $okButton.attr( 'disabled', 'disabled' );
+        }
+      }
+    } );
+  }
 
   function init( func )
   {
     functions.dialog( func, 'storage-save-form', 'storage', function()
     {
-      var $form = $( '#storage-save-form' );
-      var $save = $( '#save' );
-      var $saveOk = $( '#storage-save-ok' );
-      var $status = $( '#storage-save-status' );
-      var $help = $( '#storage-save-help' );
-      var $saveName = $( '#storage-save-name' );
-      var $deleteGroup = $( '#storage-delete-group' );
-      var $deleteConfirm = $( '#storage-delete-confirm' );
-      var deleteConfirm = $deleteConfirm[0];
-      var $deleteButton = $( '#storage-open-delete' );
-      var $openSelect = $( '#storage-open-select' );
-      var openSelect = $openSelect[0];
-      var $okButton = $( '#storage-open-ok' );
-      var $openForm = $( '#storage-open-form' );
-
-      $saveName.keyup( function()
-      {
-        setSaveNameStatus();
-      } );
-
-      $saveName.keypress( function( event )
-      {
-        if ( event.keyCode === 13 )
-        {
-          event.preventDefault();
-          $saveOk.click();
-        }
-      } );
-
-      function setSaveNameStatus()
-      {
-        var value = $.trim( $saveName.val() );
-        $status.removeClass( 'error info' );
-        if ( value.length === 0 )
-        {
-          $status.addClass( 'error' );
-          $help.text( "The name can't be empty!" );
-          $saveOk.addClass( 'disabled' );
-        }
-        else if ( value in window.localStorage )
-        {
-          $status.addClass( 'info' );
-          $help.text( "The existing song will be overwritten." );
-          $saveOk.removeClass( 'disabled' );
-        }
-        else
-        {
-          $help.text( '' );
-          $saveOk.removeClass( 'disabled' );
-        }
-      }
-
-      $save.click( function()
-      {
-        $saveName.val( $( '#title' ).val() );
-        $saveName.data( 'hash', window.location.hash );
-        setSaveNameStatus();
-        $form.modal();
-      } );
-
-      $form.on( 'shown', function()
-      {
-        $saveName.focus();
-      } );
-
-      $saveOk.click( function()
-      {
-        if ( $status.hasClass( 'error' ) )
-        {
-          return false;
-        }
-        window.localStorage[$.trim( $saveName.val() )] = $saveName.data( 'hash' );
-      } );
-
-      $( '#open' ).click( function()
-      {
-        var items = [];
-        for ( var key in window.localStorage )
-        {
-          if ( key.indexOf( 'lscache-INJECT' ) !== 0 )
-          {
-            items.push( key );
-          }
-        }
-        items.sort();
-        $openSelect.empty();
-        for ( var i = 0; i < items.length; i++ )
-        {
-          $openSelect.append( $OPTION.clone().text( items[i] ) );
-        }
-
-        $openForm.modal().on( 'shown', function()
-        {
-          $openSelect.focus();
-          $openSelect.children( 'option:first' ).attr( 'selected', 'selected' );
-          updateButtons();
-        } );
-
-        $okButton.click( function()
-        {
-          if ( openSelect.selectedIndex === -1 )
-          {
-            return;
-          }
-          share.changed( true ); // this stores the current location in history
-          var selectedKey = $openSelect.val();
-          var hash = window.localStorage[selectedKey];
-          plugins.clear();
-          window.location.hash = hash;
-        } );
-
-        $deleteButton.click( function( event )
-        {
-          event.preventDefault();
-          var selectedKey = $openSelect.val();
-          delete window.localStorage[selectedKey];
-          $( 'option:selected', $openSelect ).remove();
-          updateButtons();
-        } );
-
-        $deleteConfirm.change( updateButtons );
-
-        $openSelect.change( updateButtons ).keypress( function( event )
-        {
-          if ( event.keyCode === 13 )
-          {
-            event.preventDefault();
-            $okButton.click();
-          }
-        } ).dblclick( function( event )
-        {
-          event.stopImmediatePropagation();
-          $okButton.click();
-        } );
-
-        function updateButtons()
-        {
-          var somethingIsSelected = openSelect.selectedIndex !== -1;
-          var doNotDelete = !deleteConfirm.checked;
-          $deleteButton.toggleClass( 'disabled', doNotDelete || !somethingIsSelected );
-          if ( doNotDelete || !somethingIsSelected )
-          {
-            $deleteButton.attr( 'disabled', 'disabled' );
-          }
-          else
-          {
-            $deleteButton.removeAttr( 'disabled' );
-          }
-          $deleteGroup.toggleClass( 'error', doNotDelete );
-          $okButton.toggleClass( 'disabled', !somethingIsSelected );
-          if ( somethingIsSelected )
-          {
-            $okButton.removeAttr( 'disabled' );
-          }
-          else
-          {
-            $okButton.attr( 'disabled', 'disabled' );
-          }
-        }
-      } );
+      initSaveForm();
+      initOpenDeleteForm();
     } );
   }
 

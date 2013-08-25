@@ -420,27 +420,11 @@ body.edit-mode i.guitarchord-next,body.edit-mode i.guitarchord-previous {
   z-index: -1;
 }
 
-#fontsizer,#fontsize1,#fontsize2,#fontsize3 {
+#alert {
   position: absolute;
-  top: -9999px;
-  left: -9999px;
-  width: auto;
-}
-
-#fontsize1 {
-  font-family: 'DejaVuSerifBook', monospace;
-}
-
-#fontsize2 {
-  font-family: 'DejaVuSerifBook', sans;
-}
-
-#fontsize3 {
-  font-family: 'DejaVuSerifBook';
-}
-
-#fontsize4 {
-  font-family: 'ThisFontDoesNotExist';
+  top: 0;
+  right: 0;
+  display: inline-block;
 }
 
 @media print {
