@@ -34,7 +34,7 @@ function Storage( $, functions, share, plugins )
   }
   Storage.prototype._instance = this;
 
-  if ( !hasLocalStorage() )
+  if ( !functions.hasLocalStorage() )
   {
     return;
   }
@@ -43,9 +43,9 @@ function Storage( $, functions, share, plugins )
 
   init();
 
-  function initSaveForm()
+  function initSaveForm( form )
   {
-    var $form = $( '#storage-save-form' );
+    var $form = $( form );
     var $save = $( '#save' );
     var $saveOk = $( '#storage-save-ok' );
     var $status = $( '#storage-save-status' );
@@ -111,7 +111,7 @@ function Storage( $, functions, share, plugins )
     } );
   }
 
-  function initOpenDeleteForm()
+  function initOpenDeleteForm( form )
   {
     var $OPTION = $( '<option/>' );
 
@@ -122,7 +122,7 @@ function Storage( $, functions, share, plugins )
     var $openSelect = $( '#storage-open-select' );
     var openSelect = $openSelect[0];
     var $okButton = $( '#storage-open-ok' );
-    var $openForm = $( '#storage-open-form' );
+    var $openForm = $( form );
 
     $( '#open' ).click( function()
     {
@@ -215,26 +215,14 @@ function Storage( $, functions, share, plugins )
 
   function init( func )
   {
-    functions.dialog( func, 'storage-save-form', 'storage', function()
+    functions.dialog( func, 'storage-save-form', 'save', function( form )
     {
-      initSaveForm();
-      initOpenDeleteForm();
+      initSaveForm( form );
     } );
-  }
-
-  function hasLocalStorage()
-  {
-    var key = '_local_storage_test_';
-    try
+    functions.dialog( func, 'storage-open-form', 'open', function( form )
     {
-      window.localStorage.setItem( key, key );
-      window.localStorage.removeItem( key );
-      return true;
-    }
-    catch ( e )
-    {
-      return false;
-    }
+      initOpenDeleteForm( form );
+    } );
   }
 
   return {};

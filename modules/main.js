@@ -64,6 +64,7 @@ define( 'jquery', [], function()
  * @requires plugins/structure
  * @requires plugins/addons
  * @requires plugins/tools
+ * @requires storage
  */
 require(
     [ 'jquery', 'plugins', 'share', 'plugins/title', 'plugins/chords', 'plugins/lyrics', 'plugins/structure',

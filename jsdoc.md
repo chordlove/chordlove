@@ -1,5 +1,5 @@
-Chordlove documentation
-=======================
+Chordlove developer documentation
+=================================
 
 Chordlove is client-side application written in JavaScript (and HTML5 + CSS).
 The source code is found at [GitHub](https://github.com/chordlove/chordlove).

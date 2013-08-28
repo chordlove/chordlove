@@ -422,8 +422,8 @@ body.edit-mode i.guitarchord-next,body.edit-mode i.guitarchord-previous {
 
 #alert {
   position: absolute;
-  top: 0;
-  right: 0;
+  bottom: 2px;
+  left: 2px;
   display: inline-block;
 }
 

@@ -380,7 +380,9 @@ function functions( $ )
   }
 
   /**
-   * Helper function to add dialogs to the page.
+   * Helper function to add dialogs to the page. The init function will be called with the form HTMLElement as
+   * parameter. Note that the init function is only called once, and only intended for initializing the form. Use
+   * executeFunc to perform other actions.
    * 
    * @param {Function}
    *          executeFunc A function to execute which depends on the dialog being loaded.
@@ -398,7 +400,10 @@ function functions( $ )
     {
       $DIV.clone().appendTo( $DIALOGS ).load( 'modules/dialogs/' + name + '.html', function()
       {
-        initFunc();
+        if ( initFunc )
+        {
+          initFunc( this.firstChild );
+        }
         if ( executeFunc )
         {
           executeFunc();
@@ -478,6 +483,31 @@ function functions( $ )
     }, 5000 );
   }
 
+  var hasLocalStore = undefined;
+  /**
+   * Check if browser has Local Storage accessible.
+   * 
+   * @returns {Boolean} Is local storage working?
+   */
+  function hasLocalStorage()
+  {
+    if ( hasLocalStore === undefined )
+    {
+      var key = '_local_storage_test_';
+      try
+      {
+        window.localStorage.setItem( key, key );
+        window.localStorage.removeItem( key );
+        hasLocalStore = true;
+      }
+      catch ( e )
+      {
+        hasLocalStore = false;
+      }
+    }
+    return hasLocalStore;
+  }
+
   return {
     'getNumber' : getNumber,
     'getCharacters' : getCharacters,
@@ -492,6 +522,7 @@ function functions( $ )
     'emptyOrNot' : emptyOrNot,
     'dialog' : dialog,
     'printError' : printError,
-    'alert' : alert
+    'alert' : alert,
+    'hasLocalStorage' : hasLocalStorage
   };
 }
