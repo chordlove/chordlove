@@ -167,7 +167,11 @@ function Storage( $, functions, share, plugins )
         event.preventDefault();
         var selectedKey = $openSelect.val();
         delete window.localStorage[selectedKey];
-        $( 'option:selected', $openSelect ).remove();
+        var selected = openSelect.selectedIndex;
+        if ( selected !== -1 )
+        {
+          openSelect.remove( selected );
+        }
         updateButtons();
       } );
 

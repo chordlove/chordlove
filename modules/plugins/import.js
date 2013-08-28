@@ -61,17 +61,37 @@ function Import( $, functions )
       file = $file[0];
       $importButton = $( '#import-button' ).click( function()
       {
-        if ( !importButton.disabled && currentResult )
+        if ( !importButton.disabled && currentResult.length )
         {
+          var success = true;
           var strings = currentResult.split( "\n" );
           var max = strings.length - 1;
           for ( var i = 0; i < max; i += 2 )
           {
             var key = strings[i];
             var value = strings[i + 1];
-            window.localStorage[key] = value;
+            if ( key.length && value.length )
+            {
+              window.localStorage[key] = value;
+            }
+            else
+            {
+              success = false;
+              break;
+            }
           }
-          functions.alert( 'success', 'Import', 'All songs have been imported.', 'icon-upload-alt' );
+          if ( success )
+          {
+            functions.alert( 'success', 'Import', 'All songs have been imported.', 'icon-upload-alt' );
+          }
+          else
+          {
+            functions.alert( 'warning', 'Import', 'Some songs may not have been imported.', 'icon-upload-alt' );
+          }
+        }
+        else
+        {
+          functions.alert( 'error', 'Import', 'There were no songs to import.', 'icon-upload-alt' );
         }
       } );
       importButton = $importButton[0];
@@ -107,22 +127,6 @@ function Import( $, functions )
       importButton.disabled = true;
       $importButton.addClass( 'disabled' );
     }
-  }
-
-  function buildImportData()
-  {
-    var strings = [];
-    for ( var key in window.localStorage )
-    {
-      if ( key.indexOf( 'lscache-INJECT' ) !== 0 )
-      {
-        strings.push( key );
-        strings.push( "\n" );
-        strings.push( window.localStorage[key] );
-        strings.push( "\n" );
-      }
-    }
-    return strings;
   }
 
   return {
