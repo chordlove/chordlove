@@ -379,6 +379,8 @@ function functions( $ )
     return $( this ).css( 'visibility' ) !== 'hidden';
   }
 
+  var queuedDialogs = {};
+
   /**
    * Helper function to add dialogs to the page. The init function will be called with the form HTMLElement as
    * parameter. Note that the init function is only called once, and only intended for initializing the form. Use
@@ -395,14 +397,31 @@ function functions( $ )
    */
   function dialog( executeFunc, elementId, name, initFunc )
   {
+    if ( name in queuedDialogs )
+    {
+      if ( executeFunc )
+      {
+        queuedDialogs[name].push( executeFunc );
+      }
+      return;
+    }
     var $element = $( '#' + elementId );
     if ( $element.length === 0 )
     {
+      queuedDialogs[name] = [];
       $DIV.clone().appendTo( $DIALOGS ).load( 'modules/dialogs/' + name + '.html', function()
       {
         if ( initFunc )
         {
           initFunc( this.firstChild );
+        }
+        if ( name in queuedDialogs )
+        {
+          for ( var i = 0; i < queuedDialogs[name].length; i++ )
+          {
+            queuedDialogs[name][i]();
+          }
+          delete queuedDialogs[name];
         }
         if ( executeFunc )
         {

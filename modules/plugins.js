@@ -106,7 +106,8 @@ function Plugins( $, pluginlist, functions, toolbar )
       }
       catch ( ex )
       {
-        functions.printError( ex, 'Could not execute function on plugin ' + name + '.' );
+        functions.printError( ex, 'Could not execute function on plugin "' + name + '".' );
+        throw ex;
       }
     }
     else
@@ -122,7 +123,8 @@ function Plugins( $, pluginlist, functions, toolbar )
         }
         catch ( ex )
         {
-          functions.printError( ex, 'Could not execute function on plugin ' + name + '.' );
+          functions.printError( ex, 'Could not execute function on plugin "' + name + '".' );
+          throw ex;
         }
         $.each( loading[name], function()
         {
@@ -132,7 +134,8 @@ function Plugins( $, pluginlist, functions, toolbar )
           }
           catch ( ex )
           {
-            functions.printError( ex, 'Could not execute function on plugin ' + name + '.' );
+            functions.printError( ex, 'Could not execute function on plugin "' + name + '".' );
+            throw ex;
           }
         } );
         delete loading[name];

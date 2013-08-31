@@ -38,7 +38,7 @@ function Tools( $, toolbar, plugins )
   // var PLUGIN_ID = '06', DEFAULT_FORMAT = 0;
 
   var tools = [
-      new ToolInfo( 'structure', 'init', 'icon-th', 'Organize chords …', true ),
+      new ToolInfo( 'structure', 'setBarBreaks', 'icon-th', 'Organize bars …', true ),
       new ToolInfo( 'export', 'init', 'icon-download-alt', 'Export songs …', window.Blob && window.URL
           && window.URL.createObjectURL ),
       new ToolInfo( 'import', 'init', 'icon-upload-alt', 'Import songs …', window.FileReader ) ];

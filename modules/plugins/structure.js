@@ -43,10 +43,15 @@ function Structure( $, share, functions )
   var $TIME_SIGNATURE = $( '#time-signature' );
   var MENU_START_OF_LINE = '<i class="icon-arrow-left"></i> Put on new line / back';
 
+  var START_OF_LINE = 'start-of-line';
+  var INDIVIDUAL_BAR_BREAK = 'inidividual-bar-break';
+
   var $form = undefined;
 
-  var currentBreakBarNumber = undefined;
-  var startOfLineItems = [];
+  var $barBreakNumberSelect = undefined;
+  var barBreakNumberSelect = undefined;
+
+  initForm();
 
   /**
    * @method
@@ -64,10 +69,6 @@ function Structure( $, share, functions )
    */
   function render()
   {
-    if ( data )
-    {
-      setStructure( data );
-    }
     performRendering();
   }
 
@@ -87,19 +88,16 @@ function Structure( $, share, functions )
 
   function getStructure()
   {
+    var currentBreakBarNumber = $barBreakNumberSelect.val();
     var timeSig = currentBreakBarNumber ? functions.getCharacters( currentBreakBarNumber, 1 ) : '0';
     var startOfLineItems = '';
-    var timeSignature = $TIME_SIGNATURE.val();
-    var beatsToBreakAfter = currentBreakBarNumber * timeSignature;
-    var beatsSum = 0;
     $PARENT.children( 'li.item' ).each( function( ix, li )
     {
-      if ( beatsSum % beatsToBreakAfter !== 0 && $( li ).hasClass( 'start-of-line' ) )
+      if ( $( li ).data( INDIVIDUAL_BAR_BREAK ) )
       {
         var item = functions.getCharacters( ix, 2 );
         startOfLineItems += item;
       }
-      beatsSum += getBeats( li ).length;
     } );
     var count = functions.getCharacters( startOfLineItems.length / 2, 1 );
     if ( count === '0' )
@@ -109,16 +107,16 @@ function Structure( $, share, functions )
     return timeSig + count + startOfLineItems;
   }
 
-  function setStructure( input )
+  function parseInput( input )
   {
-    currentBreakBarNumber = functions.getNumber( input.charAt( 0 ) );
-    startOfLineItems = functions.readChunkArray( {
+    barBreakNumberSelect.value = functions.getNumber( input.charAt( 0 ) );
+
+    return functions.readChunkArray( {
       'data' : input,
       'currentPos' : 1,
       'chunkSize' : 2,
       'countSize' : 1
     } );
-    data = null;
   }
 
   function startOfLineMenu( $wrapper, $li, $a )
@@ -128,8 +126,16 @@ function Structure( $, share, functions )
     }, function( event )
     {
       event.preventDefault();
-      event.data.li.toggleClass( 'start-of-line' );
-      share.changed();
+      var $item = event.data.li;
+      if ( $item.hasClass( START_OF_LINE ) )
+      {
+        $item.removeClass( START_OF_LINE ).data( INDIVIDUAL_BAR_BREAK, false );
+      }
+      else
+      {
+        $item.addClass( START_OF_LINE ).data( INDIVIDUAL_BAR_BREAK, true );
+      }
+      share.changedStructure( 'plugins/structure/individualBreak' );
     } );
   }
 
@@ -143,54 +149,79 @@ function Structure( $, share, functions )
     return $( 'div.duration > a', li ).text();
   }
 
-  function init()
+  function performOnForm( func )
   {
-    functions.dialog( setBarBreaks, 'structure-barbreak', 'structure', function( form )
+    functions.dialog( func, 'structure-barbreak', 'structure', function( form )
     {
-      $form = $( form ).modal().on( 'shown', function()
+      $barBreakNumberSelect = $( '#structure-barbreak' );
+      barBreakNumberSelect = $barBreakNumberSelect[0];
+      $form = $( form ).on( 'shown', function()
       {
-        $( '#structure-barbreak' ).focus();
+        $barBreakNumberSelect.focus();
       } );
       $( '#structure-barbreak-ok' ).click( function()
       {
-        currentBreakBarNumber = $( '#structure-barbreak' ).val();
         performRendering();
         share.changedStructure( 'plugins/structure/breakbars' );
       } );
     } );
   }
 
-  function performRendering()
+  function initForm()
   {
-    var items = $PARENT.children( 'li.item' ).toArray();
-    if ( currentBreakBarNumber )
+    performOnForm( null );
+  }
+
+  function performRendering( startOfLineItems )
+  {
+    performOnForm( function()
     {
-      var timeSignature = $TIME_SIGNATURE.val();
-      var beatsToBreakAfter = currentBreakBarNumber * timeSignature;
-      var beatsSum = 0;
-      for ( var i = 0; i < items.length; i++ )
+      var startOfLineItems = undefined;
+      if ( data )
       {
-        var item = items[i];
-        if ( beatsSum !== 0 && ( beatsSum % beatsToBreakAfter === 0 ) )
-        {
-          $( item ).addClass( 'start-of-line' );
-        }
-        else
-        {
-          $( item ).removeClass( 'start-of-line' );
-        }
-        beatsSum += getBeats( item ).length;
+        startOfLineItems = parseInput( data );
+        data = null;
       }
-    }
-    $.each( startOfLineItems, function()
-    {
-      var position = functions.getNumber( this );
-      $( items[position] ).addClass( 'start-of-line' );
+      var items = $PARENT.children( 'li.item' ).toArray();
+      var currentBreakBarNumber = $barBreakNumberSelect.val();
+      if ( currentBreakBarNumber )
+      {
+        var timeSignature = $TIME_SIGNATURE.val();
+        var beatsToBreakAfter = currentBreakBarNumber * timeSignature;
+        var beatsSum = 0;
+        for ( var i = 0; i < items.length; i++ )
+        {
+          var item = items[i];
+          var $item = $( item );
+          if ( beatsSum !== 0 && ( beatsSum % beatsToBreakAfter === 0 ) || $item.data( INDIVIDUAL_BAR_BREAK ) )
+          {
+            $item.addClass( START_OF_LINE );
+          }
+          else
+          {
+            $item.removeClass( START_OF_LINE );
+          }
+          beatsSum += getBeats( item ).length;
+        }
+      }
+      if ( startOfLineItems )
+      {
+        $.each( startOfLineItems, function()
+        {
+          var position = functions.getNumber( this );
+          $( items[position] ).addClass( START_OF_LINE ).data( INDIVIDUAL_BAR_BREAK, true );
+        } );
+      }
     } );
   }
 
   function structureChanged( event )
   {
+    if ( event && typeof event === 'string'
+        && ( event === 'plugins/structure/breakbars' || event === 'plugins/structure/individualBreak' ) )
+    {
+      return;
+    }
     performRendering();
   }
 
@@ -199,7 +230,7 @@ function Structure( $, share, functions )
     'serialize' : serialize,
     'setData' : setData,
     'startOfLineMenu' : startOfLineMenu,
-    'init' : init,
+    'setBarBreaks' : setBarBreaks,
     'structureChanged' : structureChanged
   };
 }
