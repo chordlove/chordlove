@@ -38,7 +38,7 @@ function Verses( $, functions, share )
   var data = null;
   var format = DEFAULT_FORMAT;
 
-  var $ADDONS = $( '#addons' );
+  var $ADDONS = $( '#addons-core' );
 
   /**
    * @method

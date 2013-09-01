@@ -49,7 +49,7 @@ function GuitarChords( $, chorddata, share, functions )
   var chordsPluginInitialized = false;
   var previousSeen = undefined;
 
-  $( '#addons' ).append( $GUITAR_CHORDS );
+  $( '#addons-core' ).append( $GUITAR_CHORDS );
 
   share.addStructureChangeListener( changeListener );
   share.addTextChangeListener( changeListener );

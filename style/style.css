@@ -224,7 +224,7 @@ div.duration ul>li>a {
   padding: 2px 4px;
 }
 
-#items,#addons {
+#items,#addons,#addons-core {
   padding-left: 0;
   clear: left;
 }
@@ -243,7 +243,7 @@ div.duration ul>li>a {
   background: #ffffff;
 }
 
-#addons>li {
+#addons>li,#addons-core>li {
   list-style-type: none;
   display: block;
   float: left;
