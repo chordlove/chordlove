@@ -118,10 +118,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 <script type="text/javascript" src="libs/vexchord.min.js"></script>
 <link rel="shortcut icon" href="favicon.ico" />
 <link rel="apple-touch-icon" sizes="144x144" href="apple-touch-icon-144x144.png" />
-</head>
 <link rel="apple-touch-icon" sizes="114x114" href="apple-touch-icon-114x114.png" />
 <link rel="apple-touch-icon" sizes="72x72" href="apple-touch-icon-72x72.png" />
 <link rel="apple-touch-icon" sizes="57x57" href="apple-touch-icon-57x57.png" />
+<link href="style/jquery.oembed.css" rel="stylesheet">
+<script type="text/javascript" src="libs/jquery.oembed.js"></script>
+</head>
 <body>
   <div id="spinner">
     <img src="images/loading.gif">
@@ -275,7 +277,21 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   <div id="footer">
     <a href=".">chordlove.com</a>
   </div>
-  <div id="fontsizer"></div>
+  <script>
+      $( document ).ready( function()
+      {
+        $( "#embeds" ).oembed( "http://soundcloud.com/forss/flickermood", {
+          includeHandle : false,
+          embedMethod : "append",
+          apikeys : {
+            soundcloud : '11ff8985d647e9561c7881d1e3b0baee'
+          },
+          onError : function( container, externalUrl, embedProvider )
+          {
+          }
+        } );
+      } );
+    </script>
   <script src="libs/ga.min.js"></script>
 </body>
 </html>

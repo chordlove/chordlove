@@ -172,7 +172,7 @@ function Structure( $, share, functions )
     performOnForm( null );
   }
 
-  function performRendering( startOfLineItems )
+  function performRendering()
   {
     performOnForm( function()
     {
