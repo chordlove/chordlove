@@ -18,13 +18,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 <!DOCTYPE html>
 <html>
 <head>
-<title>Chordlove Tests</title>
+<meta charset="utf-8">
+<title>QUnit basic example</title>
+<link rel="stylesheet" href="http://code.jquery.com/qunit/qunit-1.12.0.css">
 </head>
 <body>
-  <ul>
-    <li><a href="framed.html">Framed</a></li>
-    <li><a href="guitar-chords.html">Guitar Chords</a></li>
-    <li><a href="unit/">Unit</a></li>
-  </ul>
+  <div id="qunit"></div>
+  <div id="qunit-fixture"></div>
+  <script src="http://code.jquery.com/qunit/qunit-1.12.0.js"></script>
+  <script>
+      test( "a basic test example", function()
+      {
+        var value = "hello";
+        equal( value, "hello", "We expect value to be hello" );
+      } );
+    </script>
 </body>
 </html>
