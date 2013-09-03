@@ -19,18 +19,59 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 <html>
 <head>
 <meta charset="utf-8">
-<title>QUnit basic example</title>
+<title>functions</title>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 <link rel="stylesheet" href="http://code.jquery.com/qunit/qunit-1.12.0.css">
+<script src="http://code.jquery.com/qunit/qunit-1.12.0.js"></script>
+<script>
+  function define()
+  {
+    // do nothing
+  }
+</script>
+<script src="../../modules/functions.js"></script>
 </head>
 <body>
   <div id="qunit"></div>
   <div id="qunit-fixture"></div>
-  <script src="http://code.jquery.com/qunit/qunit-1.12.0.js"></script>
   <script>
-      test( "a basic test example", function()
+      var functions = new functions( jQuery );
+
+      test( 'encode specials', function()
       {
-        var value = "hello";
-        equal( value, "hello", "We expect value to be hello" );
+        var value = functions.encode( '~ \n♭♯_' );
+        strictEqual( value, '~~~0~1~b~s~-' );
+      } );
+
+      test( 'decode specials', function()
+      {
+        var value = functions.decode( '~~~0~1~b~s~-' );
+        strictEqual( value, '~ \n♭♯_' );
+      } );
+
+      test( 'number encoding and decoding', function()
+      {
+        var number = 55;
+
+        var equivalent = functions.getCharacters( number, 1 );
+        strictEqual( typeof equivalent, 'string' );
+        strictEqual( equivalent.length, 1 );
+        var backToNumber = functions.getNumber( equivalent );
+        strictEqual( typeof backToNumber, 'number' );
+        strictEqual( number, backToNumber );
+
+        var equivalent2 = functions.getCharacters( number, 10 );
+        strictEqual( typeof equivalent2, 'string' );
+        strictEqual( equivalent2.length, 10 );
+        strictEqual( equivalent2.charAt( 9 ), equivalent );
+        var backToNumber2 = functions.getNumber( equivalent2 );
+        strictEqual( typeof backToNumber2, 'number' );
+        strictEqual( number, backToNumber2 );
+
+        throws( function()
+        {
+          functions.getCharacters( 1000, 1 );
+        }, 'Should throw EncodingError' );
       } );
     </script>
 </body>
