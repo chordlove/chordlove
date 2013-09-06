@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 <title>alpha.chordlove.com</title>
 <script src="//use.edgefonts.net/neuton-cursive:n4:all.js"></script>
-<script src="//ajax.googleapis.com/ajax/libs/webfont/1.4.8/webfont.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/webfont/1.4.10/webfont.js"></script>
 <script type="text/javascript">
   'use strict';
   window.ChordloveFontLoading = ( function()
@@ -82,6 +82,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   } );
 </script>
 <link href="style/style.css" rel="stylesheet">
+<!--[if lt IE 9]>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 <script type="text/javascript">
   if ( !window.jQuery )
@@ -89,6 +90,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     document.write( '<script src="http://code.jquery.com/jquery-1.10.2.min.js">\x3C/script>' );
   }
 </script>
+<![endif]-->
+<!--[if gte IE 9]><!-->
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script type="text/javascript">
+  if ( !window.jQuery )
+  {
+    document.write( '<script src="http://code.jquery.com/jquery-2.0.3.min.js">\x3C/script>' );
+  }
+</script>
+<!--<![endif]-->
 <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
 <script type="text/javascript">
   if ( !window.jQuery.ui )
@@ -278,21 +289,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   <div id="footer">
     <a href=".">chordlove.com</a>
   </div>
-  <script>
-      $( document ).ready( function()
-      {
-        $( "#embeds" ).oembed( "http://soundcloud.com/forss/flickermood", {
-          includeHandle : false,
-          embedMethod : "append",
-          apikeys : {
-            soundcloud : '11ff8985d647e9561c7881d1e3b0baee'
-          },
-          onError : function( container, externalUrl, embedProvider )
-          {
-          }
-        } );
-      } );
-    </script>
   <script src="libs/ga.min.js"></script>
 </body>
 </html>
