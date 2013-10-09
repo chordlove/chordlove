@@ -20,7 +20,24 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 <head>
 <meta charset="utf-8">
 <title>functions</title>
+<!--[if lt IE 9]>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script type="text/javascript">
+  if ( !window.jQuery )
+  {
+    document.write( '<script src="http://code.jquery.com/jquery-1.10.2.min.js">\x3C/script>' );
+  }
+</script>
+<![endif]-->
+<!--[if gte IE 9]><!-->
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script type="text/javascript">
+  if ( !window.jQuery )
+  {
+    document.write( '<script src="http://code.jquery.com/jquery-2.0.3.min.js">\x3C/script>' );
+  }
+</script>
+<!--<![endif]-->
 <link rel="stylesheet" href="http://code.jquery.com/qunit/qunit-1.12.0.css">
 <script src="http://code.jquery.com/qunit/qunit-1.12.0.js"></script>
 <script>
@@ -72,6 +89,33 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         {
           functions.getCharacters( 1000, 1 );
         }, 'Should throw EncodingError' );
+      } );
+
+      test( 'string array encoding and decoding', function()
+      {
+        var strings = [ 'A♭m7', 'G♯-5' ];
+        var stringified = functions.writeStringArray( {
+          'items' : strings
+        } );
+        strictEqual( typeof stringified, 'string' );
+        var CHARACTERS = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-.!~*'()?";
+        for ( var i = 0; i < stringified.length; i++ )
+        {
+          ok( CHARACTERS.indexOf( stringified.charAt( i ) ) !== -1 );
+        }
+        var array = functions.readStringArray( {
+          'data' : stringified,
+          'countSize' : 1
+        } ).array;
+        deepEqual( array, strings );
+      } );
+
+      test( 'read chunk array', function()
+      {
+		var strings = ['abc', 'def'];
+		var chunked = strings.length + strings[0] + strings[1];
+		var read = functions.readChunkArray({'data': chunked, 'chunkSize': strings[0].length, 'countSize': 1});
+		deepEqual(read, strings);
       } );
     </script>
 </body>

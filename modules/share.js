@@ -40,7 +40,9 @@ function Share( $, plugins, functions )
 
   functions.dialog( false, 'share-form', 'share', function( form )
   {
-    $( '#share-url' ).click( function()
+    var $shareUrl = $( '#share-url' );
+
+    $shareUrl.click( function()
     {
       this.select();
     } );
@@ -49,12 +51,33 @@ function Share( $, plugins, functions )
     {
       var href = window.location.href.replace( '|', '%7C' ).replace( '—', '%E2%80%94' );
       this.blur();
-      $( '#share-url' ).val( href );
+      $shareUrl.val( href );
+      if ( window.location.hostname === 'alpha.chordlove.com' || window.location.hostname === 'chordlove.com' )
+      {
+        gapi.client.load( 'urlshortener', 'v1', function()
+        {
+          gapi.client.urlshortener.url.insert( {
+            'resource' : {
+              'longUrl' : href
+            }
+          } ).execute( function( response )
+          {
+            if ( !response.error && response.id )
+            {
+              $shareUrl.val( response.id );
+              $shareUrl.select();
+            }
+          } );
+        } );
+      }
+
       $( form ).modal().on( 'shown', function()
       {
-        $( '#share-url' ).select();
+        $shareUrl.select();
       } );
     } );
+
+    gapi.client.setApiKey( 'AIzaSyCTT5Hmfs--UxZWAUf2M4xWAPXhwK-Q6WI' );
   } );
 
   function writeUri( force )
