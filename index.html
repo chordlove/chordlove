@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 <head>
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-<title>alpha.chordlove.com</title>
+<title>Chordlove.com</title>
 <script src="//use.edgefonts.net/neuton-cursive:n4:all.js"></script>
 <script src="//ajax.googleapis.com/ajax/libs/webfont/1.4.10/webfont.js"></script>
 <script type="text/javascript">
@@ -127,6 +127,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 </script>
 <script type="text/javascript" src="modules/pluginlist.js"></script>
 <script type="text/javascript" src="libs/vexchord.min.js"></script>
+<script type="text/javascript">
+  function initGapi()
+  {
+    window.gapi.client.setApiKey( 'AIzaSyCTT5Hmfs--UxZWAUf2M4xWAPXhwK-Q6WI' );
+  }
+</script>
+<script src="https://apis.google.com/js/client.js?onload=initGapi"></script>
 <link rel="shortcut icon" href="favicon.ico" />
 <link rel="apple-touch-icon" sizes="144x144" href="apple-touch-icon-144x144.png" />
 <link rel="apple-touch-icon" sizes="114x114" href="apple-touch-icon-114x114.png" />
@@ -247,11 +254,24 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
               <i class="icon-folder-open-alt"></i>
             </button>
           </span>
-          <span class="btn-group always-visible">
-            <button id="share" class="btn" title="Share this page">
+          <div class="btn-group always-visible">
+            <a id="share-dropdown" title="Share" class="btn dropdown-toggle" data-toggle="dropdown" data-target="#">
               <i class="icon-share-alt"></i>
-            </button>
-          </span>
+              <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu">
+              <li><a id="share-twitter" href="" target="_blank" data-toggle="tooltip" title="Tweet the song">
+                  <i class="icon-twitter-sign"></i> Twitter
+                </a></li>
+              <li><a id="share-facebook" href="" target="_blank" data-toggle="tooltip"
+                  title="Share song on Facebook">
+                  <i class="icon-facebook-sign"></i> Facebook
+                </a></li>
+              <li><a id="share-link" href="" title="Get a link to this song" data-toggle="tooltip">
+                  <i class="icon-link"></i> Link
+                </a></li>
+            </ul>
+          </div>
           <div class="btn-group always-visible">
             <a class="btn dropdown-toggle" data-toggle="dropdown" data-target="#">
               <i class="icon-info-sign"></i>
@@ -290,6 +310,5 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <a href=".">chordlove.com</a>
   </div>
   <script src="libs/ga.min.js"></script>
-  <script src="https://apis.google.com/js/client.js"></script>
 </body>
 </html>

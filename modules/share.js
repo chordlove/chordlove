@@ -33,6 +33,12 @@ function Share( $, plugins, functions )
   }
   Share.prototype._instance = this;
 
+  var $SHARE_LINK = $( '#share-link' );
+  var $SHARE_TWITTER = $( '#share-twitter' );
+  var $SHARE_FACEBOOK = $( '#share-facebook' );
+  var $DROPDOWN_LINK = $( '#share-dropdown' );
+  var $DROPDOWN = $DROPDOWN_LINK.parent();
+
   var previousHash = '';
 
   var textChangeListeners = [];
@@ -47,27 +53,18 @@ function Share( $, plugins, functions )
       this.select();
     } );
 
-    $( '#share' ).click( function()
+    $SHARE_LINK.click( function( event )
     {
-      var href = window.location.href.replace( '|', '%7C' ).replace( '—', '%E2%80%94' );
+      event.preventDefault();
+      var href = this.href;
       this.blur();
       $shareUrl.val( href );
-      if ( window.location.hostname === 'alpha.chordlove.com' || window.location.hostname === 'chordlove.com' )
+      if ( href.indexOf( 'http://goo.gl/' ) !== 0 )
       {
-        gapi.client.load( 'urlshortener', 'v1', function()
+        getShortUrl( href, function( shortUrl )
         {
-          gapi.client.urlshortener.url.insert( {
-            'resource' : {
-              'longUrl' : href
-            }
-          } ).execute( function( response )
-          {
-            if ( !response.error && response.id )
-            {
-              $shareUrl.val( response.id );
-              $shareUrl.select();
-            }
-          } );
+          $shareUrl.val( shortUrl );
+          $shareUrl.select();
         } );
       }
 
@@ -76,9 +73,62 @@ function Share( $, plugins, functions )
         $shareUrl.select();
       } );
     } );
-
-    gapi.client.setApiKey( 'AIzaSyCTT5Hmfs--UxZWAUf2M4xWAPXhwK-Q6WI' );
   } );
+
+  $DROPDOWN_LINK.click( function()
+  {
+    if ( $DROPDOWN.hasClass( 'open' ) === false )
+    {
+      var href = getHref();
+      var title = document.title;
+      initSocialLinks( href, title );
+      getShortUrl( href, function( shortUrl )
+      {
+        initSocialLinks( shortUrl, title );
+      } );
+    }
+  } );
+
+  function initSocialLinks( href, title )
+  {
+    console.log( 'init social', href, title );
+    var encodedHref = encodeURIComponent( href );
+    $SHARE_TWITTER.attr( 'href', 'https://twitter.com/intent/tweet?text=' + encodeURIComponent( title ) + '&url='
+        + encodedHref );
+    $SHARE_FACEBOOK.attr( 'href', 'https://www.facebook.com/sharer/sharer.php?u=' + encodedHref );
+    $SHARE_LINK.attr( 'href', href );
+  }
+
+  function getHref()
+  {
+    return window.location.href.replace( '|', '%7C' ).replace( '—', '%E2%80%94' );
+  }
+
+  function getShortUrl( href, success )
+  {
+    if ( !gapi || !( 'client' in gapi ) || !( 'load' in gapi.client ) )
+    {
+      return;
+    }
+    var hostname = window.location.hostname;
+    if ( hostname === 'alpha.chordlove.com' || hostname === 'chordlove.com' || hostname === 'master.chordlove.com' )
+    {
+      gapi.client.load( 'urlshortener', 'v1', function()
+      {
+        gapi.client.urlshortener.url.insert( {
+          'resource' : {
+            'longUrl' : href
+          }
+        } ).execute( function( response )
+        {
+          if ( !response.error && response.id )
+          {
+            success( response.id );
+          }
+        } );
+      } );
+    }
+  }
 
   function writeUri( force )
   {
