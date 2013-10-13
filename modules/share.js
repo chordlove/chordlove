@@ -40,6 +40,10 @@ function Share( $, plugins, functions )
   var $DROPDOWN = $DROPDOWN_LINK.parent();
 
   var previousHash = '';
+  var shortUrlHistory = {
+    'longUrl' : -1,
+    'shortUrl' : ''
+  };
 
   var textChangeListeners = [];
   var structureChangeListeners = [];
@@ -91,7 +95,6 @@ function Share( $, plugins, functions )
 
   function initSocialLinks( href, title )
   {
-    console.log( 'init social', href, title );
     var encodedHref = encodeURIComponent( href );
     $SHARE_TWITTER.attr( 'href', 'https://twitter.com/intent/tweet?text=' + encodeURIComponent( title ) + '&url='
         + encodedHref );
@@ -106,6 +109,11 @@ function Share( $, plugins, functions )
 
   function getShortUrl( href, success )
   {
+    if ( href === shortUrlHistory.longUrl )
+    {
+      success( shortUrlHistory.shortUrl );
+      return;
+    }
     if ( !gapi || !( 'client' in gapi ) || !( 'load' in gapi.client ) )
     {
       return;
@@ -123,7 +131,10 @@ function Share( $, plugins, functions )
         {
           if ( !response.error && response.id )
           {
-            success( response.id );
+            var shortUrl = response.id;
+            shortUrlHistory.longUrl = href;
+            shortUrlHistory.shortUrl = shortUrl;
+            success( shortUrl );
           }
         } );
       } );
