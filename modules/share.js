@@ -36,6 +36,7 @@ function Share( $, plugins, functions )
   var $SHARE_LINK = $( '#share-link' );
   var $SHARE_TWITTER = $( '#share-twitter' );
   var $SHARE_FACEBOOK = $( '#share-facebook' );
+  var $SHARE_GOOGLEPLUS = $( '#share-google-plus' );
   var $DROPDOWN_LINK = $( '#share-dropdown' );
   var $DROPDOWN = $DROPDOWN_LINK.parent();
 
@@ -99,6 +100,7 @@ function Share( $, plugins, functions )
     $SHARE_TWITTER.attr( 'href', 'https://twitter.com/intent/tweet?text=' + encodeURIComponent( title ) + '&url='
         + encodedHref );
     $SHARE_FACEBOOK.attr( 'href', 'https://www.facebook.com/sharer/sharer.php?u=' + encodedHref );
+    $SHARE_GOOGLEPLUS.attr( 'href', 'https://plus.google.com/share?url=' + encodedHref );
     $SHARE_LINK.attr( 'href', href );
   }
 
