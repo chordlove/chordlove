@@ -412,12 +412,7 @@ body.edit-mode i.guitarchord-next,body.edit-mode i.guitarchord-previous {
 }
 
 #footer {
-  float: none;
-  font-size: 12px;
-  position: absolute;
-  bottom: 4px;
-  right: 4px;
-  z-index: -1;
+  display: none;
 }
 
 #alert {
@@ -431,6 +426,7 @@ body.edit-mode i.guitarchord-next,body.edit-mode i.guitarchord-previous {
   #footer {
     font-family: 'DejaVuSerifBook', 'DejaVu Serif', 'DejaVu Sans', 'Lucida Sans Unicode',
       'Arial Unicode MS', serif;
+    display: block;
     float: right;
     clear: both;
     font-size: 14px;
@@ -438,6 +434,7 @@ body.edit-mode i.guitarchord-next,body.edit-mode i.guitarchord-previous {
     bottom: 0;
     right: 0;
     padding-top: 2em;
+    float: right;
   }
   #footer a[href]:after {
     content: "";
