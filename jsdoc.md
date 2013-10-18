@@ -51,6 +51,8 @@ Dependencies
 * [jQuery UI](http://jqueryui.com/)
 * [Twitter Bootstrap](http://twitter.github.io/bootstrap/)
 * [Raphaël](http://raphaeljs.com/)
+* [WebFontLoader](https://github.com/typekit/webfontloader)
+* [JQuery Oembed All](https://github.com/starfishmod/jquery-oembed-all)
 
 Fonts
 -----
