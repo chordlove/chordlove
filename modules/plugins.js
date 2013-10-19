@@ -228,7 +228,11 @@ function Plugins( $, pluginlist, functions, toolbar )
     else
     {
       toolbar.setEditMode( true );
-      $( '#help' ).modal();
+      if ( document.cookie.replace( /(?:(?:^|.*;\s*)SPLASH\s*\=\s*([^;]*).*$)|^.*$/, "$1" ) !== 'true' )
+      {
+        $( '#help' ).modal();
+        document.cookie = 'SPLASH=true; expires=Tue, 19 Jan 2038 03:14:07 GMT; path=/; domain=chordlove.com';
+      }
     }
     if ( readMode )
     {
