@@ -49,7 +49,7 @@ function Chords( $, functions, share, toolbar, resizer, beatsHandler )
   var CHORD_SIZE = 1;
   var BEAT_SIZE = 1;
 
-  var $SINGLE_BARLINE = $( '<li class="symbol item-barline"><img class="barline" src="images/single-barline.svg" alt="|"></li>' );
+  var $SINGLE_BARLINE = $( '<li class="symbol item-barline"><img class="barline" src="http://cdn.chordlove.com/images/symbols/single-barline.svg" alt="|"></li>' );
   var $PARENT = $( '#items' );
   var $TIME_SIGNATURE = $( '#time-signature' );
   var $LI = $( '<li class="item" />' );
