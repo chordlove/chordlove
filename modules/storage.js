@@ -51,6 +51,7 @@ function Storage( $, functions, share, plugins )
     var $status = $( '#storage-save-status' );
     var $help = $( '#storage-save-help' );
     var $saveName = $( '#storage-save-name' );
+    var saveName = $saveName[0];
 
     $saveName.keyup( function()
     {
@@ -97,7 +98,7 @@ function Storage( $, functions, share, plugins )
 
     $form.on( 'shown', function()
     {
-      $saveName.focus();
+      functions.setCaretPositionToBeginning( saveName );
     } );
 
     $saveOk.click( function()

@@ -527,6 +527,28 @@ function functions( $ )
     return hasLocalStore;
   }
 
+  /**
+   * Move the caret position to the beginning.
+   * 
+   * @param {HTMLInputElement}
+   *          input Input element to change the caret position in.
+   */
+  function setCaretPositionToBeginning( input )
+  {
+    if ( typeof input.selectionStart === 'number' )
+    {
+      input.selectionStart = 0;
+      input.selectionEnd = 0;
+    }
+    else if ( typeof input.createTextRange !== 'undefined' )
+    {
+      input.focus();
+      var range = input.createTextRange();
+      range.collapse( true );
+      range.select();
+    }
+  }
+
   return {
     'getNumber' : getNumber,
     'getCharacters' : getCharacters,
@@ -542,6 +564,7 @@ function functions( $ )
     'dialog' : dialog,
     'printError' : printError,
     'alert' : alert,
-    'hasLocalStorage' : hasLocalStorage
+    'hasLocalStorage' : hasLocalStorage,
+    'setCaretPositionToBeginning' : setCaretPositionToBeginning
   };
 }

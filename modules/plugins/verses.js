@@ -176,10 +176,11 @@ function Verses( $, functions, share )
   {
     init( function()
     {
-      $( '#verses-content' ).val( getContentFromContainer().join( '\n' ) );
+      var $versesContent = $( '#verses-content' );
+      $versesContent.val( getContentFromContainer().join( '\n' ) );
       $( '#verses-form' ).modal().on( 'shown', function()
       {
-        $( '#verses-content' ).focus();
+        $versesContent.focus();
       } );
     } );
   }
