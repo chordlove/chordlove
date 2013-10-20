@@ -78,8 +78,9 @@ function Structure( $, share, functions )
    */
   function serialize()
   {
-    var result = PLUGIN_ID + DEFAULT_FORMAT + getStructure();
-    if ( result.length < 4 )
+    var structure = getStructure();
+    var result = PLUGIN_ID + DEFAULT_FORMAT + structure;
+    if ( result.length < 4 || structure === '0' )
     {
       result = '';
     }

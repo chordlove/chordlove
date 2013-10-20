@@ -227,6 +227,7 @@ function Plugins( $, pluginlist, functions, toolbar )
     }
     else
     {
+      clear();
       toolbar.setEditMode( true );
       if ( document.cookie.replace( /(?:(?:^|.*;\s*)SPLASH\s*\=\s*([^;]*).*$)|^.*$/, "$1" ) !== 'true' )
       {

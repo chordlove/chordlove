@@ -233,6 +233,8 @@ function Share( $, plugins, functions )
    */
   function clear()
   {
+    window.history.pushState( '', window.document.title, '#' );
+    previousHash = '#';
     plugins.clear();
     changedStructure( 'share/clear' );
   }
