@@ -535,6 +535,7 @@ function functions( $ )
    */
   function setCaretPositionToBeginning( input )
   {
+    input.focus();
     if ( typeof input.selectionStart === 'number' )
     {
       input.selectionStart = 0;
@@ -542,7 +543,6 @@ function functions( $ )
     }
     else if ( typeof input.createTextRange !== 'undefined' )
     {
-      input.focus();
       var range = input.createTextRange();
       range.collapse( true );
       range.select();
