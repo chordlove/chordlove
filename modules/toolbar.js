@@ -153,8 +153,7 @@ function Toolbar( $, functions, share )
     'hideOrShow' : hideOrShow,
     'setEditMode' : setEditMode,
     'registerAddonsMenuMember' : registerAddonsMenuMember,
-    'registerToolsMenuMember' : registerToolsMenuMember,
-    'clear' : clear
+    'registerToolsMenuMember' : registerToolsMenuMember
   };
 }
 

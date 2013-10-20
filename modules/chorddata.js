@@ -370,31 +370,7 @@ function ChordData()
       }
     }
     var tuning = [];
-    var numberNotes = numberNotesFlat;
-    if ( note.length > 1 )
-    {
-      if ( note.charAt( 1 ) === '♯' )
-      {
-        numberNotes = numberNotesSharp;
-      }
-    }
-    else if ( chordName.length > 0
-        && ( chordName.charAt( 0 ) === 'm' && ( chordName.length === 1 || chordName.charAt( 1 ) !== 'a' ) ) )
-    {
-      // minors
-      if ( 'EAB'.indexOf( note ) !== -1 )
-      {
-        numberNotes = numberNotesSharp;
-      }
-    }
-    else
-    {
-      // majors
-      if ( 'GDAEB'.indexOf( note ) !== -1 )
-      {
-        numberNotes = numberNotesSharp;
-      }
-    }
+    var numberNotes = getNumberNotes( note, chordName );
     for ( i = 6; i > 0; i-- )
     {
       var noteNumber = stringMax[i];
@@ -409,6 +385,40 @@ function ChordData()
       }
     }
     return tuning;
+  }
+
+  function getNumberNotes( note, chord )
+  {
+    var numberNotes = numberNotesFlat;
+    var realNote = note;
+    if ( note in notes )
+    {
+      realNote = notes[note];
+    }
+    if ( realNote.length > 1 )
+    {
+      if ( realNote.charAt( 1 ) === '♯' )
+      {
+        numberNotes = numberNotesSharp;
+      }
+    }
+    else if ( chord.length > 0 && ( chord.charAt( 0 ) === 'm' && ( chord.length === 1 || chord.charAt( 1 ) !== 'a' ) ) )
+    {
+      // minors
+      if ( 'EAB'.indexOf( realNote ) !== -1 )
+      {
+        numberNotes = numberNotesSharp;
+      }
+    }
+    else
+    {
+      // majors
+      if ( 'GDAEB'.indexOf( realNote ) !== -1 )
+      {
+        numberNotes = numberNotesSharp;
+      }
+    }
+    return numberNotes;
   }
 
   function stringToFrets( fretString )
