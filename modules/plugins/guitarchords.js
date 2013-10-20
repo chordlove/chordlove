@@ -165,20 +165,9 @@ function GuitarChords( $, chorddata, share, functions )
       }
       else
       {
-        var note = chord.charAt( 0 );
-        var chordName = '';
-        if ( chord.length > 1 )
-        {
-          var secondChar = chord.charAt( 1 );
-          if ( secondChar === '♯' || secondChar === '♭' )
-          {
-            note += secondChar;
-          }
-        }
-        if ( chord.length > note.length )
-        {
-          chordName = $.trim( chord.substr( note.length ) );
-        }
+        var splitName = chorddata.splitChord( chord );
+        var note = splitName.note;
+        var chordName = splitName.name;
         var chordRenderers = chorddata.get( chordName );
         if ( chordRenderers.length > 0 )
         {

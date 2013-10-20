@@ -30,7 +30,7 @@ function PluginList()
   PluginList.prototype._instance = this;
 
   var list = [ 'title', 'chords', 'lyrics', 'structure', 'verses', 'addons', 'tools', 'guitarchords', 'export',
-      'import', 'embed' ];
+      'import', 'embed', 'transpose' ];
 
   /**
    * Get plugin name from id.

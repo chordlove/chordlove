@@ -78,6 +78,10 @@ function Structure( $, share, functions )
    */
   function serialize()
   {
+    if ( !$barBreakNumberSelect )
+    {
+      return '';
+    }
     var structure = getStructure();
     var result = PLUGIN_ID + DEFAULT_FORMAT + structure;
     if ( result.length < 4 || structure === '0' )

@@ -390,14 +390,9 @@ function ChordData()
   function getNumberNotes( note, chord )
   {
     var numberNotes = numberNotesFlat;
-    var realNote = note;
-    if ( note in notes )
+    if ( note.length > 1 )
     {
-      realNote = notes[note];
-    }
-    if ( realNote.length > 1 )
-    {
-      if ( realNote.charAt( 1 ) === '♯' )
+      if ( note.charAt( 1 ) === '♯' )
       {
         numberNotes = numberNotesSharp;
       }
@@ -405,7 +400,7 @@ function ChordData()
     else if ( chord.length > 0 && ( chord.charAt( 0 ) === 'm' && ( chord.length === 1 || chord.charAt( 1 ) !== 'a' ) ) )
     {
       // minors
-      if ( 'EAB'.indexOf( realNote ) !== -1 )
+      if ( 'EABH'.indexOf( note ) !== -1 )
       {
         numberNotes = numberNotesSharp;
       }
@@ -413,12 +408,108 @@ function ChordData()
     else
     {
       // majors
-      if ( 'GDAEB'.indexOf( realNote ) !== -1 )
+      if ( 'GDAEBH'.indexOf( note ) !== -1 )
       {
         numberNotes = numberNotesSharp;
       }
     }
     return numberNotes;
+  }
+
+  function getRealNote( note )
+  {
+    var realNote = note;
+    if ( note in notes )
+    {
+      realNote = notes[note];
+    }
+    return realNote;
+  }
+
+  function getTransposed( chords, shift )
+  {
+    var numberNotes = numberNotesFlat;
+    var endChord = chords[chords.length - 1];
+    var splitName = splitChord( endChord );
+    var i = undefined;
+    if ( splitName.note in notes )
+    {
+      var realEndNote = notes[splitName.note];
+      var endNoteNumber = noteNumbers[realEndNote];
+      var newEndNoteNumber = ( endNoteNumber + shift + 12 ) % 12;
+      var newRealEndNote = numberNotesFlat[newEndNoteNumber];
+      if ( newRealEndNote.length === 1 )
+      {
+        numberNotes = getNumberNotes( newRealEndNote, splitName.name );
+      }
+      else
+      {
+        var sharps = 0;
+        var flats = 0;
+        for ( i = 0; i < chords.length; i++ )
+        {
+          var chord = chords[i];
+          if ( chord.indexOf( '♯' ) !== -1 )
+          {
+            sharps++;
+          }
+          if ( chord.indexOf( '♭' ) !== -1 )
+          {
+            flats++;
+          }
+          if ( sharps > flats )
+          {
+            numberNotes = numberNotesSharp;
+          }
+        }
+      }
+    }
+    var newChords = [];
+    for ( i = 0; i < chords.length; i++ )
+    {
+      var chord = chords[i];
+      var newChord = chord;
+      var split = splitChord( chord, true );
+      var note = split.note;
+      var name = split.name;
+      var realNote = getRealNote( note );
+      if ( realNote in noteNumbers )
+      {
+        var sourceNumber = noteNumbers[realNote];
+        var targetNumber = sourceNumber + shift;
+        targetNumber = ( targetNumber + 12 ) % 12;
+        newChord = numberNotes[targetNumber] + name;
+      }
+      newChords.push( newChord );
+    }
+    return newChords;
+  }
+
+  function splitChord( chord, preserveWhitespace )
+  {
+    if ( !chord.length )
+    {
+      return null;
+    }
+    var note = chord.charAt( 0 );
+    var chordName = '';
+    if ( chord.length > 1 )
+    {
+      var secondChar = chord.charAt( 1 );
+      if ( secondChar === '♯' || secondChar === '♭' )
+      {
+        note += secondChar;
+      }
+    }
+    if ( chord.length > note.length )
+    {
+      var rawChordName = chord.substr( note.length );
+      chordName = preserveWhitespace ? rawChordName : $.trim( rawChordName );
+    }
+    return {
+      'note' : note,
+      'name' : chordName
+    };
   }
 
   function stringToFrets( fretString )
@@ -658,6 +749,8 @@ function ChordData()
 
   return {
     'get' : get,
+    'splitChord' : splitChord,
+    'getTransposed' : getTransposed
   };
 }
 
