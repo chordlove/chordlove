@@ -428,7 +428,7 @@ function ChordData()
 
   function getTransposed( chords, shift )
   {
-    var numberNotes = numberNotesFlat;
+    var numberNotes = numberNotesSharp;
     var endChord = chords[chords.length - 1];
     var splitName = splitChord( endChord );
     var i = undefined;
@@ -444,22 +444,33 @@ function ChordData()
       }
       else
       {
-        var sharps = 0;
-        var flats = 0;
-        for ( i = 0; i < chords.length; i++ )
+        // C# D# F# G# A#
+        // major / minor
+        if ( splitName.name.length > 0 && splitName.name.charAt( 0 ) === 'm'
+            && ( splitName.name.length === 1 || splitName.name.charAt( 1 ) !== 'a' ) )
         {
-          var chord = chords[i];
-          if ( chord.indexOf( '♯' ) !== -1 )
+          // E F# A B Db (corresponding major keys to the minor ones)
+          // # # # # b
+          if ( newRealEndNote === 'A#' )
           {
-            sharps++;
+            numberNotes = numberNotesFlat;
           }
-          if ( chord.indexOf( '♭' ) !== -1 )
-          {
-            flats++;
-          }
-          if ( sharps > flats )
+          else
           {
             numberNotes = numberNotesSharp;
+          }
+        }
+        else
+        {
+          // C# D# F# G# A# (major keys)
+          // b b # b b
+          if ( newRealEndNote === 'F#' )
+          {
+            numberNotes = numberNotesSharp;
+          }
+          else
+          {
+            numberNotes = numberNotesFlat;
           }
         }
       }

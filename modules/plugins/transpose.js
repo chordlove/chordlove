@@ -23,7 +23,7 @@
  * @requires functions
  */
 
-function Transpose( $, functions, chorddata )
+function Transpose( $, functions, chorddata, share )
 {
   'use strict';
   if ( Transpose.prototype._instance )
@@ -77,6 +77,7 @@ function Transpose( $, functions, chorddata )
         {
           $( input ).val( transposed[ix] );
         } );
+        share.changedText( 'transpose' );
       } );
     } );
   }
@@ -95,11 +96,11 @@ function Transpose( $, functions, chorddata )
   };
 }
 
-define( 'plugins/transpose', [ 'plugins', 'jquery', 'functions', 'chorddata' ], function( plugins, $, functions,
-    chorddata )
+define( 'plugins/transpose', [ 'plugins', 'jquery', 'functions', 'chorddata', 'share' ], function( plugins, $,
+    functions, chorddata, share )
 {
   'use strict';
-  var instance = new Transpose( $, functions, chorddata );
+  var instance = new Transpose( $, functions, chorddata, share );
   plugins.register( {
     'name' : 'transpose',
     'instance' : instance,
