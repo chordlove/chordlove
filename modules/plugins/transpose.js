@@ -16,11 +16,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- * Transpose song.
+ * Transpose the song.
  * 
  * @module plugins/transpose
  * @requires jquery
  * @requires functions
+ * @requires share
  */
 
 function Transpose( $, functions, chorddata, share )
