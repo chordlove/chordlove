@@ -22,7 +22,7 @@ if ( $_SERVER['QUERY_STRING'] && $_SERVER['QUERY_STRING'] !== NULL && strlen($_S
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 <title>$output - Chordlove.com</title>
 <script>
-  //window.location.replace( '/#!' + window.location.search.substring(1) );
+  window.location.replace( '/#!' + window.location.search.substring(1) );
 </script>
 </head>
 <body>
