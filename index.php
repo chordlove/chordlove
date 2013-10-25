@@ -26,7 +26,7 @@ if ( $_SERVER['QUERY_STRING'] && $_SERVER['QUERY_STRING'] !== NULL && strlen($_S
 <meta name=”description” content=”$output at Chordlove, the number one free online tool for sharing song chords and lyrics.”>
 
 <meta property=”og:title” content=”$output at Chordlove.com.”>
-<meta property=”og:type” content=”music.song”>
+<meta property=”og:type” content=”article”>
 <meta property=”og:image” content=”http://cdn.chordlove.com/images/icon-600.png”>
 <meta property="og:image:type" content="image/png">
 <meta property="og:image:width" content="600">
