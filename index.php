@@ -3,9 +3,10 @@ header( 'Content-Type: text/html; charset=utf-8' );
 
 $found = FALSE;
 
-if ( $_SERVER['QUERY_STRING'] && $_SERVER['QUERY_STRING'] !== NULL && strlen($_SERVER['QUERY_STRING']) > 5 )
+$uri = $_SERVER['REQUEST_URI'];
+if ( $uri && strlen($uri) > 5 )
 {
-  $plugins = explode( '_', substr( $_SERVER['QUERY_STRING'], 1 ) );
+  $plugins = explode( '_', substr( $uri, 2 ) );
   foreach ( $plugins as $plugin )
   {
     if ( strlen( $plugin ) > 3 && substr( $plugin, 0, 2 ) == '00' )
@@ -19,14 +20,16 @@ if ( $_SERVER['QUERY_STRING'] && $_SERVER['QUERY_STRING'] !== NULL && strlen($_S
 <!DOCTYPE html>
 <html>
 <head>
+<meta content='text/html; charset=UTF-8' name='Content-Type'>
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
 <title>$output - Chordlove.com</title>
 
 <meta name=”description” content=”$output at Chordlove, the number one free online tool for sharing song chords and lyrics.”>
 
+<meta property="fb:app_id" content="170264763172639">
+<meta property=”og:type” content=”chordlove:chordlove_song”>
 <meta property=”og:title” content=”$output at Chordlove.com.”>
-<meta property=”og:type” content=”article”>
 <meta property=”og:image” content=”http://cdn.chordlove.com/images/icon-600.png”>
 <meta property="og:image:type" content="image/png">
 <meta property="og:image:width" content="600">
@@ -35,9 +38,10 @@ if ( $_SERVER['QUERY_STRING'] && $_SERVER['QUERY_STRING'] !== NULL && strlen($_S
 
 <meta name=”twitter:card” content=”summary”>
 <meta name="twitter:site" content="@ChordloveApp">
-<meta name=”twitter:title” content=”$output at Chordlove.com”>
-<meta name=”twitter:description” content=”$output at Chordlove.com, the number one free online tool for sharing song chords and lyrics.”>
-<meta name=”twitter:image” content=”http://cdn.chordlove.com/images/icon-600.png”>
+<meta name="twitter:domain" content="chordlove.com">
+<meta name=”twitter:title” content=”$output - Chordlove.com”>
+<meta name=”twitter:description” content=”$output - Chordlove.com, the number one free online tool for sharing song chords and lyrics.”>
+<meta name=”twitter:image:src” content=”http://cdn.chordlove.com/images/icon-600.png”>
 
 <script>
   window.location.replace( '/#!' + window.location.search.substring(1) );
