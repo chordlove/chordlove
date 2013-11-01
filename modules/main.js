@@ -15,16 +15,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-/**
- * Wraps jQuery as a module manually.
- * 
- * @module jquery
- */
-define( 'jquery', [], function()
-{
-  'use strict';
-  return jQuery;
-} );
 
 // shield from missing console.log().
 ( function()
