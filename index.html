@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <!--
 Chordlove is a tool for sharing song chords and lyrics.
-Copyright (C) 2013 NA Konsult AB
+Copyright (C) 2013-2014 NA Konsult AB
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as published by
@@ -133,19 +133,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 </script>
 <script>
   Inject.setModuleRoot( "modules" );
-  //   if ( window.location.hostname == "localhost" )
-  //   {
-  //     Inject.setExpires( 1 );
-  //   }
+  if ( window.location.hostname == "localhost" )
+  {
+    Inject.setExpires( 0 );
+  }
   //   else
   //   {
   //     Inject.setExpires( 1 );
   //   }
-  Inject.addContentRule( 'jquery', function( next, text )
-  {
-    next( null, [ 'var oldJQ = window.jQuery;', text, 'module.setExports(jQuery.noConflict());',
-        'delete window["jQuery"];', 'window.jQuery = oldJQ;', '' ].join( '\n' ) );
-  } );
+//   Inject.addContentRule( 'jquery', function( next, text )
+//   {
+//     next( null, [ 'var oldJQ = window.jQuery;', 'module.setExports(jQuery.noConflict());',
+//         'delete window["jQuery"];', 'window.jQuery = oldJQ;', '' ] );
+//   } );
   require.run( "main" );
 </script>
 <script src="http://cdn.chordlove.com/libs/vexchord-2013-08-24.min.js"></script>

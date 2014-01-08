@@ -1,6 +1,6 @@
 /* 
  * Chordlove is a tool for sharing song chords and lyrics.
- * Copyright (C) 2013 NA Konsult AB
+ * Copyright (C) 2013-2014 NA Konsult AB
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,8 +20,9 @@
  * Database of chords.
  * 
  * @module chorddata
+ * @requires jquery
  */
-function ChordData()
+function ChordData( $ )
 {
   'use strict';
   if ( ChordData.prototype._instance )
@@ -765,8 +766,8 @@ function ChordData()
   };
 }
 
-define( 'chorddata', [], function()
+define( 'chorddata', [ 'jquery' ], function( $ )
 {
   'use strict';
-  return new ChordData();
+  return new ChordData( $ );
 } );
