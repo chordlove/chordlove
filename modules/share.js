@@ -22,9 +22,10 @@
  * @requires jquery
  * @requires plugins
  * @requires functions
+ * @requires toolbar
  */
 
-function Share( $, plugins, functions )
+function Share( $, plugins, functions, toolbar )
 {
   'use strict';
   if ( Share.prototype._instance )
@@ -48,6 +49,8 @@ function Share( $, plugins, functions )
 
   var textChangeListeners = [];
   var structureChangeListeners = [];
+
+  toolbar.setClearFunction( clear );
 
   functions.dialog( false, 'share-form', 'share', function( form )
   {
@@ -249,8 +252,8 @@ function Share( $, plugins, functions )
   };
 }
 
-define( 'share', [ 'plugins', 'jquery', 'functions' ], function( plugins, $, functions )
+define( 'share', [ 'plugins', 'jquery', 'functions', 'toolbar' ], function( plugins, $, functions, toolbar )
 {
   'use strict';
-  return new Share( $, plugins, functions );
+  return new Share( $, plugins, functions, toolbar );
 } );

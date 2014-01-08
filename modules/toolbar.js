@@ -21,10 +21,9 @@
  * @module toolbar
  * @requires jquery
  * @requires functions
- * @requires share
  */
 
-function Toolbar( $, functions, share )
+function Toolbar( $, functions )
 {
   'use strict';
   if ( Toolbar.prototype._instance )
@@ -38,6 +37,8 @@ function Toolbar( $, functions, share )
   var $MENU_LI = $( '<li />' );
   var $MENU_A = $( '<a href="#"/>' );
 
+  var clearFunction = null;
+
   function prepareCpanel()
   {
     function editMode()
@@ -48,7 +49,10 @@ function Toolbar( $, functions, share )
 
     function clear()
     {
-      share.clear();
+      if ( clearFunction )
+      {
+        clearFunction();
+      }
       return false;
     }
 
@@ -149,16 +153,32 @@ function Toolbar( $, functions, share )
     $menu.append( $menuLi );
   }
 
+  /**
+   * Set clear function.
+   * <p>
+   * This was introduced to fix circular dependencies.
+   * 
+   * @method
+   * @name module:toolbar.setClearFunction
+   * @param {Function}
+   *          func The function to call to perform a clear operation.
+   */
+  function setClearFunction( func )
+  {
+    clearFunction = func;
+  }
+
   return {
     'hideOrShow' : hideOrShow,
     'setEditMode' : setEditMode,
     'registerAddonsMenuMember' : registerAddonsMenuMember,
-    'registerToolsMenuMember' : registerToolsMenuMember
+    'registerToolsMenuMember' : registerToolsMenuMember,
+    'setClearFunction' : setClearFunction
   };
 }
 
-define( 'toolbar', [ 'jquery', 'functions', 'share' ], function( $, functions, share )
+define( 'toolbar', [ 'jquery', 'functions' ], function( $, functions )
 {
   'use strict';
-  return new Toolbar( $, functions, share );
+  return new Toolbar( $, functions );
 } );
