@@ -1,43 +1,47 @@
-<div id="transpose-form" class="modal hide fade" tabindex="-1">
-  <div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-    <h3>
-      <i class="icon-resize-vertical"></i> Transpose
-    </h3>
-  </div>
-  <div class="modal-body">
-    <form>
-      <fieldset>
-        <label for="transpose-shift">Chose the number of semitones to shift the key with:</label> <select
-          id="transpose-shift" title="" style="width: 12em;">
-          <option value="+11">+11 (major seventh)</option>
-          <option value="+10">+10 (minor seventh)</option>
-          <option value="+9">+9 (major sixth)</option>
-          <option value="+8">+8 (minor sixth)</option>
-          <option value="+7">+7 (perfect fifth)</option>
-          <option value="+6">+6 (diminished fifth)</option>
-          <option value="+5">+5 (perfect fourth)</option>
-          <option value="+4">+4 (major third)</option>
-          <option value="+3">+3 (minor third)</option>
-          <option value="+2">+2 (major second)</option>
-          <option value="+1">+1 (minor second)</option>
-          <option value="0" selected>(none)</option>
-          <option value="-1">-1 (minor second)</option>
-          <option value="-2">-2 (major second)</option>
-          <option value="-3">-3 (minor third)</option>
-          <option value="-4">-4 (major third)</option>
-          <option value="-5">-5 (perfect fourth)</option>
-          <option value="-6">-6 (diminished fifth)</option>
-          <option value="-7">-7 (perfect fifth)</option>
-          <option value="-8">-8 (minor sixth)</option>
-          <option value="-9">-9 (major sixth)</option>
-          <option value="-10">-10 (minor seventh)</option>
-          <option value="-11">-11 (major seventh)</option>
-        </select>
-      </fieldset>
-    </form>
-  </div>
-  <div class="modal-footer">
-    <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true" id="transpose-ok">Ok</button>
+<div id="transpose-form" class="modal fade" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3>
+          <i class="fa fa-arrows-v"></i> Transpose
+        </h3>
+      </div>
+      <div class="modal-body">
+        <form>
+          <fieldset>
+            <label for="transpose-shift">Chose the number of semitones to shift the key with:</label> <select
+              id="transpose-shift" class="form-control" title="" style="width: 12em;">
+              <option value="+11">+11 (major seventh)</option>
+              <option value="+10">+10 (minor seventh)</option>
+              <option value="+9">+9 (major sixth)</option>
+              <option value="+8">+8 (minor sixth)</option>
+              <option value="+7">+7 (perfect fifth)</option>
+              <option value="+6">+6 (diminished fifth)</option>
+              <option value="+5">+5 (perfect fourth)</option>
+              <option value="+4">+4 (major third)</option>
+              <option value="+3">+3 (minor third)</option>
+              <option value="+2">+2 (major second)</option>
+              <option value="+1">+1 (minor second)</option>
+              <option value="0" selected>(none)</option>
+              <option value="-1">-1 (minor second)</option>
+              <option value="-2">-2 (major second)</option>
+              <option value="-3">-3 (minor third)</option>
+              <option value="-4">-4 (major third)</option>
+              <option value="-5">-5 (perfect fourth)</option>
+              <option value="-6">-6 (diminished fifth)</option>
+              <option value="-7">-7 (perfect fifth)</option>
+              <option value="-8">-8 (minor sixth)</option>
+              <option value="-9">-9 (major sixth)</option>
+              <option value="-10">-10 (minor seventh)</option>
+              <option value="-11">-11 (major seventh)</option>
+            </select>
+          </fieldset>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true" id="transpose-ok">Ok</button>
+      </div>
+    </div>
   </div>
 </div>

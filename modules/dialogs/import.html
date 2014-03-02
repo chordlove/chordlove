@@ -1,19 +1,23 @@
-<div id="storage-import-form" class="modal hide fade" tabindex="-1">
-  <div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-    <h3>
-      <i class="icon-upload-alt"></i> Import songs
-    </h3>
-  </div>
-  <div class="modal-body">
-    <form>
-      <fieldset>
-        <input type="file" id="import-file" name="file" multiple />
-      </fieldset>
-    </form>
-  </div>
-  <div class="modal-footer">
-    <button class="btn" type="button" data-dismiss="modal">Close</button>
-    <button class="btn btn-primary disabled" disabled type="submit" data-dismiss="modal" id="import-button">Import</button>
+<div id="storage-import-form" class="modal fade" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3>
+          <i class="fa fa-upload"></i> Import songs
+        </h3>
+      </div>
+      <div class="modal-body">
+        <form>
+          <fieldset>
+            <input type="file" id="import-file" name="file" multiple />
+          </fieldset>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-default" type="button" data-dismiss="modal">Close</button>
+        <button class="btn btn-primary disabled" disabled type="submit" data-dismiss="modal" id="import-button">Import</button>
+      </div>
+    </div>
   </div>
 </div>

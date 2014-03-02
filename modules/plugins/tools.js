@@ -38,11 +38,11 @@ function Tools( $, toolbar, plugins )
   // var PLUGIN_ID = '06', DEFAULT_FORMAT = 0;
 
   var tools = [
-      new ToolInfo( 'transpose', 'init', 'icon-resize-vertical', 'Transpose song …', true ),
-      new ToolInfo( 'structure', 'setBarBreaks', 'icon-th', 'Organize bars …', true ),
-      new ToolInfo( 'export', 'init', 'icon-download-alt', 'Export songs …', window.Blob && window.URL
+      new ToolInfo( 'transpose', 'init', 'fa-arrows-v', 'Transpose song …', true ),
+      new ToolInfo( 'structure', 'setBarBreaks', 'fa-th', 'Organize bars …', true ),
+      new ToolInfo( 'export', 'init', 'fa-download', 'Export songs …', window.Blob && window.URL
           && window.URL.createObjectURL ),
-      new ToolInfo( 'import', 'init', 'icon-upload-alt', 'Import songs …', window.FileReader ) ];
+      new ToolInfo( 'import', 'init', 'fa-upload', 'Import songs …', window.FileReader ) ];
 
   function ToolInfo( name, method, icon, text, test )
   {
@@ -51,7 +51,7 @@ function Tools( $, toolbar, plugins )
     {
       return;
     }
-    this.menuHtml = '<i class="' + icon + '"></i> ' + text;
+    this.menuHtml = '<i class="fa ' + icon + '"></i> ' + text;
     this.func = function( event )
     {
       event.preventDefault();

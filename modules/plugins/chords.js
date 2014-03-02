@@ -58,7 +58,7 @@ function Chords( $, functions, share, toolbar, resizer, beatsHandler )
   var $MENU_LI = $( '<li />' );
   var $MENU_A = $( '<a href="#"/>' );
   var MENU_PASTE_BEFORE = '<i class="icon-paste"></i> Paste before';
-  var $INPUT = $( '<input class="chord-text resize-trigger empty-input" type="text" title="Add a chord" placeholder="Chord…" />' );
+  var $INPUT = $( '<input class="chord-text resize-trigger empty-input form-control" type="text" title="Add a chord" placeholder="Chord…" />' );
   var $CHORD = $( '<div class="chord"/>' );
 
   var postRenderers = [];

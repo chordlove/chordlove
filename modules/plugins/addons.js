@@ -37,13 +37,13 @@ function Addons( $, toolbar, plugins )
 
   // var PLUGIN_ID = '05', DEFAULT_FORMAT = 0;
 
-  var addons = [ new AddonInfo( 'verses', 'icon-align-left', 'Add more verses' ),
-      new AddonInfo( 'guitarchords', 'icon-table', 'Show guitar chords' ),
-      new AddonInfo( 'embed', 'icon-link', 'Add content from link' ) ];
+  var addons = [ new AddonInfo( 'verses', 'fa-align-left', 'Add more verses' ),
+      new AddonInfo( 'guitarchords', 'fa-table', 'Show guitar chords' ),
+      new AddonInfo( 'embed', 'fa-link', 'Add content from link' ) ];
 
   function AddonInfo( name, icon, text )
   {
-    this.menuHtml = '<i class="' + icon + '"></i> ' + text;
+    this.menuHtml = '<i class="fa ' + icon + '"></i> ' + text;
     this.func = function( event )
     {
       event.preventDefault();
