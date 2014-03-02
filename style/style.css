@@ -21,13 +21,12 @@
 }
 
 body {
-  margin-top: 50px !important;
   padding: 8px;
 }
 
 #navbar {
   width: 16em;
-  margin-top: 0.5em;
+  margin: 0.5em 0;
   background: rgba(255, 255, 255, 0.9);
 }
 

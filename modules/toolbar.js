@@ -37,6 +37,10 @@ function Toolbar( $, functions )
   var $MENU_LI = $( '<li />' );
   var $MENU_A = $( '<a href="#"/>' );
 
+  var $body = $( 'body' );
+  var $edit = $( '#edit' );
+  var $navbar = $( '#navbar' );
+
   var clearFunction = null;
 
   function prepareCpanel()
@@ -58,6 +62,9 @@ function Toolbar( $, functions )
 
     functions.bindButton( '#edit', editMode );
     functions.bindButton( '#clear', clear );
+
+    $( window ).resize( refreshNavbarMargin );
+    refreshNavbarMargin();
   }
 
   prepareCpanel();
@@ -74,16 +81,24 @@ function Toolbar( $, functions )
   {
     if ( mode === true )
     {
-      $( 'body' ).addClass( 'edit-mode' );
-      $( '#edit' ).addClass( 'active' );
+      $body.addClass( 'edit-mode' );
+      $edit.addClass( 'active' );
       hideOrShow( 'show' );
     }
     else
     {
-      $( 'body' ).removeClass( 'edit-mode' );
-      $( '#edit' ).removeClass( 'active' );
+      $body.removeClass( 'edit-mode' );
+      $edit.removeClass( 'active' );
       hideOrShow( 'hide' );
     }
+    $edit.blur();
+    refreshNavbarMargin();
+  }
+
+  function refreshNavbarMargin()
+  {
+    var height = $navbar.height();
+    $body.css( 'margin-top', height );
   }
 
   /**
