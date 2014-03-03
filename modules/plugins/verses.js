@@ -37,6 +37,7 @@ function Verses( $, functions, share )
   var PLUGIN_ID = '04', DEFAULT_FORMAT = 0;
   var data = null;
   var format = DEFAULT_FORMAT;
+  var loaded = true;
 
   var $ADDONS = $( '#addons-core' );
 
@@ -56,6 +57,10 @@ function Verses( $, functions, share )
    */
   function render()
   {
+    if ( !loaded )
+    {
+      return;
+    }
     var blocks = functions.readStringArray( {
       'data' : data,
       'countSize' : 1,
@@ -79,6 +84,10 @@ function Verses( $, functions, share )
    */
   function serialize()
   {
+    if ( !loaded )
+    {
+      return '';
+    }
     var content = getContentFromContainer();
     var serialized = PLUGIN_ID + DEFAULT_FORMAT + functions.writeStringArray( {
       'items' : content,
@@ -174,6 +183,7 @@ function Verses( $, functions, share )
 
   function load()
   {
+    loaded = true;
     init( function()
     {
       var $versesContent = $( '#verses-content' );
@@ -183,6 +193,11 @@ function Verses( $, functions, share )
         $versesContent.focus();
       } );
     } );
+  }
+
+  function unload()
+  {
+    loaded = false;
   }
 
   function clear()
@@ -196,6 +211,7 @@ function Verses( $, functions, share )
     'serialize' : serialize,
     'setData' : setData,
     'load' : load,
+    'unload' : unload,
     'clear' : clear
   };
 }

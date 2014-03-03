@@ -37,6 +37,7 @@ function Embed( $, functions, share )
   var PLUGIN_ID = '0a', DEFAULT_FORMAT = 0;
   var data = null;
   var format = DEFAULT_FORMAT;
+  var loaded = true;
 
   var $ADDONS = $( '#addons' );
 
@@ -61,6 +62,10 @@ function Embed( $, functions, share )
    */
   function render()
   {
+    if ( !loaded )
+    {
+      return;
+    }
     renderContent();
   }
 
@@ -70,13 +75,17 @@ function Embed( $, functions, share )
    */
   function serialize()
   {
+    if ( !loaded )
+    {
+      return '';
+    }
     var lines = $( '#embed-content' ).val().split( "\n" );
     var serialized = PLUGIN_ID + DEFAULT_FORMAT + functions.writeStringArray( {
       'items' : lines,
       'countSize' : 1,
       'itemLengthSize' : 2
     } );
-    return serialized.length > 4 ? serialized : '';
+    return serialized.length > 6 ? serialized : '';
   }
 
   function init( func )
@@ -106,7 +115,13 @@ function Embed( $, functions, share )
 
   function load()
   {
+    loaded = true;
     init( showForm );
+  }
+
+  function unload()
+  {
+    loaded = false;
   }
 
   function parseInput( inputData )

@@ -158,7 +158,7 @@ function Storage( $, functions, share, plugins )
         share.changed( true ); // this stores the current location in history
         var selectedKey = $openSelect.val();
         var hash = window.localStorage[selectedKey];
-        plugins.clear();
+        share.clear();
         window.location.hash = hash;
         functions.alert( 'success', 'Open', '"' + selectedKey + '" has been opened.', 'icon-folder-open-alt' );
       } );

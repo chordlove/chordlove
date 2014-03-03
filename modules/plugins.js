@@ -291,6 +291,17 @@ function Plugins( $, pluginlist, functions, toolbar )
           functions.printError( ex, 'Could not perform clear operation on plugin.' );
         }
       }
+      if ( 'unload' in instance )
+      {
+        try
+        {
+          instance.unload();
+        }
+        catch ( ex )
+        {
+          functions.printError( ex, 'Could not perform unload operation on plugin.' );
+        }
+      }
     } );
   }
 

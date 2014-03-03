@@ -48,6 +48,7 @@ function GuitarChords( $, chorddata, share, functions )
 
   var chordsPluginInitialized = false;
   var previousSeen = undefined;
+  var loaded = true;
 
   $( '#addons-core' ).append( $GUITAR_CHORDS );
 
@@ -95,6 +96,10 @@ function GuitarChords( $, chorddata, share, functions )
    */
   function render()
   {
+    if ( !loaded )
+    {
+      return;
+    }
     var chordNumbers = undefined;
     if ( data !== null && data.length > 1 )
     {
@@ -287,6 +292,10 @@ function GuitarChords( $, chorddata, share, functions )
    */
   function serialize()
   {
+    if ( !loaded )
+    {
+      return '';
+    }
     var result = PLUGIN_ID + DEFAULT_FORMAT;
     var chords = '';
     $( 'div.guitarchord' ).each( function()
@@ -317,8 +326,14 @@ function GuitarChords( $, chorddata, share, functions )
 
   function load()
   {
+    loaded = true;
     render();
     share.changed();
+  }
+
+  function unload()
+  {
+    loaded = false;
   }
 
   return {
@@ -327,6 +342,7 @@ function GuitarChords( $, chorddata, share, functions )
     'setData' : setData,
     'clear' : clear,
     'load' : load,
+    'unload' : unload,
     'renderGuitarChords' : renderGuitarChords
   };
 }
