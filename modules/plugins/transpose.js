@@ -85,7 +85,7 @@ function Transpose( $, functions, chorddata, share )
 
   function showForm()
   {
-    $form.modal( 'show' ).on( 'shown', function()
+    $form.modal( 'show' ).on( 'shown.bs.modal', function()
     {
       $transposeShift.focus();
     } );

@@ -76,7 +76,7 @@ function Share( $, plugins, functions, toolbar )
         } );
       }
 
-      $( form ).modal().on( 'shown', function()
+      $( form ).modal().on( 'shown.bs.modal', function()
       {
         $shareUrl.select();
       } );

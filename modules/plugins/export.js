@@ -78,7 +78,7 @@ function Export( $, functions )
 
   function showForm()
   {
-    $form.modal( 'show' ).on( 'shown', function()
+    $form.modal( 'show' ).on( 'shown.bs.modal', function()
     {
       $link.focus();
     } );

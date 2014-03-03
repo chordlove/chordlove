@@ -97,7 +97,7 @@ function Beats( $, functions, share )
       } );
       share.changedStructure( 'toolbar/timesignature' );
     } );
-    $modal.on( 'hidden', function()
+    $modal.on( 'hidden.bs.modal', function()
     {
       if ( !$modal.data( 'saved' ) )
       {

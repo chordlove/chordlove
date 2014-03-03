@@ -107,7 +107,7 @@ function Embed( $, functions, share )
 
   function showForm()
   {
-    $form.modal().on( 'shown', function()
+    $form.modal().on( 'shown.bs.modal', function()
     {
       $links.focus();
     } );

@@ -188,7 +188,7 @@ function Verses( $, functions, share )
     {
       var $versesContent = $( '#verses-content' );
       $versesContent.val( getContentFromContainer().join( '\n' ) );
-      $( '#verses-form' ).modal().on( 'shown', function()
+      $( '#verses-form' ).modal().on( 'shown.bs.modal', function()
       {
         $versesContent.focus();
       } );

@@ -160,7 +160,7 @@ function Structure( $, share, functions )
     {
       $barBreakNumberSelect = $( '#structure-barbreak' );
       barBreakNumberSelect = $barBreakNumberSelect[0];
-      $form = $( form ).on( 'shown', function()
+      $form = $( form ).on( 'shown.bs.modal', function()
       {
         $barBreakNumberSelect.focus();
       } );

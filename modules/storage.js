@@ -96,7 +96,7 @@ function Storage( $, functions, share, plugins )
       $form.modal();
     } );
 
-    $form.on( 'shown', function()
+    $form.on( 'shown.bs.modal', function()
     {
       functions.setCaretPositionToBeginning( saveName );
     } );
@@ -142,11 +142,14 @@ function Storage( $, functions, share, plugins )
         $openSelect.append( $OPTION.clone().text( items[i] ) );
       }
 
-      $openForm.modal().on( 'shown', function()
+      $openForm.modal().on( 'shown.bs.modal', function()
       {
         $openSelect.focus();
         $openSelect.children( 'option:first' ).attr( 'selected', 'selected' );
         updateButtons();
+      } ).on( 'hidden.bs.modal', function()
+      {
+        deleteConfirm.checked = false;
       } );
 
       $okButton.click( function()
