@@ -52,7 +52,7 @@ function Lyrics( $, functions, share, toolbar, resizer, plugins )
 
   functions.bindButton( '#view-lyrics', visibleLyrics );
 
-  share.addStructureChangeListener( addTextInput );
+  share.addStructureChangeListener( addTextInputs );
 
   function visibleLyrics()
   {
@@ -64,7 +64,7 @@ function Lyrics( $, functions, share, toolbar, resizer, plugins )
     else
     {
       $PARENT.addClass( 'has-text' );
-      addTextInput();
+      addTextInputs();
       $VIEW_BUTTON.addClass( 'active' );
     }
   }
@@ -76,7 +76,7 @@ function Lyrics( $, functions, share, toolbar, resizer, plugins )
 
   function setLyrics( item, text )
   {
-    var $element = $( 'input.song-text', item );
+    var $element = getOrAddTextInput( item );
     $element.val( text );
     functions.emptyOrNot( $element, text );
   }
@@ -93,29 +93,36 @@ function Lyrics( $, functions, share, toolbar, resizer, plugins )
     };
   }
 
-  function addTextInput()
+  function addTextInputs()
   {
     if ( !$PARENT.hasClass( 'has-text' ) )
     {
       return;
     }
-    $( 'div.chord input.chord-text' ).each( function()
+    $( 'li.item', $PARENT ).each( function()
     {
-      var $chordInput = $( this );
-      var $wrapper = $chordInput.parents( 'li.item' ).first();
-      if ( $chordInput.siblings( 'input.song-text' ).length )
-      {
-        return;
-      }
-      var $textInput = $TEXT_INPUT.clone();
-      $textInput.appendTo( $chordInput.parent() ).keydown( functions.handleInputKeyEvent ).blur( {
-        'item' : $wrapper
-      }, function( event )
-      {
-        share.changedText( event );
-      } ).bind( 'input', functions.handleInputChangeEvent );
-      resizer.prepareResize( $wrapper );
+      getOrAddTextInput( this );
     } );
+  }
+
+  function getOrAddTextInput( item )
+  {
+    var $wrapper = $( item );
+    var $chord = $wrapper.children( 'div.chord' ).first();
+    var $existing = $chord.children( 'input.song-text' );
+    if ( $existing.length )
+    {
+      return $existing.first();
+    }
+    var $textInput = $TEXT_INPUT.clone();
+    $textInput.appendTo( $chord ).keydown( functions.handleInputKeyEvent ).blur( {
+      'item' : $wrapper
+    }, function( event )
+    {
+      share.changedText( event );
+    } ).bind( 'input', functions.handleInputChangeEvent );
+    resizer.prepareResize( $wrapper );
+    return $textInput;
   }
 
   /**
@@ -144,7 +151,7 @@ function Lyrics( $, functions, share, toolbar, resizer, plugins )
     } ).array;
     $PARENT.addClass( 'has-text' );
     $VIEW_BUTTON.addClass( 'active' );
-    addTextInput();
+    addTextInputs();
     $PARENT.children( 'li.item' ).each( function()
     {
       setLyrics( this, lyrics.shift() );
@@ -180,6 +187,7 @@ function Lyrics( $, functions, share, toolbar, resizer, plugins )
   {
     $PARENT.removeClass( 'has-text' );
     $VIEW_BUTTON.removeClass( 'active' );
+    data = null;
   }
 
   return {

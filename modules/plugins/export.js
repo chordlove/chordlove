@@ -35,7 +35,10 @@ function Export( $, functions )
   var $form = undefined;
   var $link = undefined;
   var link = undefined;
+  var $adocLink = undefined;
+  var adocLink = undefined;
   var mimeType = 'application/octet-stream';
+  var adocMimeType = 'application/octet-stream';
 
   // var PLUGIN_ID = '08', DEFAULT_FORMAT = 0;
 
@@ -73,6 +76,26 @@ function Export( $, functions )
           $form.modal( 'hide' );
         }
       } );
+      $adocLink = $( '#storage-export-asciidoc-link' );
+      adocLink = $adocLink[0];
+      if ( 'download' in adocLink )
+      {
+        adocLink.download = 'songs.adoc';
+        adocMimeType = 'text/plain';
+      }
+      $adocLink.click( function( event )
+      {
+        if ( adocLink.href === '#' )
+        {
+          // TODO error message + don't hide.
+          // also make the btn look disabled in advance
+          event.preventDefault();
+        }
+        else
+        {
+          $form.modal( 'hide' );
+        }
+      } );
     } );
   }
 
@@ -92,6 +115,17 @@ function Export( $, functions )
     var url = window.URL.createObjectURL( blob );
     link.href = url;
     $link.removeClass( 'disabled' );
+
+    if ( adocLink.href !== '#' )
+    {
+      window.URL.revokeObjectURL( adocLink.href );
+    }
+    var adocBlob = new window.Blob( buildAsciidocData(), {
+      'type' : adocMimeType
+    } );
+    var adocUrl = window.URL.createObjectURL( adocBlob );
+    adocLink.href = adocUrl;
+    $adocLink.removeClass( 'disabled' );
   }
 
   function buildExportData()
@@ -104,6 +138,23 @@ function Export( $, functions )
         strings.push( key );
         strings.push( "\n" );
         strings.push( window.localStorage[key] );
+        strings.push( "\n" );
+      }
+    }
+    return strings;
+  }
+
+  function buildAsciidocData()
+  {
+    var loc = window.location;
+    var baseUrl = loc.protocol + '//' + loc.hostname + loc.pathname;
+    var strings = [];
+    for ( var key in window.localStorage )
+    {
+      if ( key.indexOf( 'lscache-INJECT' ) !== 0 )
+      {
+        var line = '* ' + baseUrl + window.localStorage[key].replace( /~/g, '\\~' ) + '[' + key + ']';
+        strings.push( line );
         strings.push( "\n" );
       }
     }

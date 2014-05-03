@@ -487,7 +487,7 @@ function functions( $ )
   {
     var typeClass = 'alert-' + type;
     var $alert = $( '#alert' );
-    var iconText = icon === undefined ? '' : '<i class="' + icon + '"></i> ';
+    var iconText = icon === undefined ? '' : '<i class="fa ' + icon + '"></i> ';
     if ( !$alert.length )
     {
       $alert = $( '<div id="alert" class="alert fade in" data-alert="alert"/>' ).appendTo( 'body' );

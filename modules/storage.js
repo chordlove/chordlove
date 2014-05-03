@@ -108,7 +108,7 @@ function Storage( $, functions, share, plugins )
         return false;
       }
       window.localStorage[$.trim( $saveName.val() )] = $saveName.data( 'hash' );
-      functions.alert( 'success', 'Save', '"' + $saveName.val() + '" has been saved.', 'icon-save' );
+      functions.alert( 'success', 'Save', '"' + $saveName.val() + '" has been saved.', 'fa fa-save' );
     } );
   }
 
@@ -162,8 +162,8 @@ function Storage( $, functions, share, plugins )
         var selectedKey = $openSelect.val();
         var hash = window.localStorage[selectedKey];
         share.clear();
+        functions.alert( 'success', 'Open', '"' + selectedKey + '" has been opened.', 'fa-folder-open-o' );
         window.location.hash = hash;
-        functions.alert( 'success', 'Open', '"' + selectedKey + '" has been opened.', 'icon-folder-open-alt' );
       } );
 
       $deleteButton.click( function( event )

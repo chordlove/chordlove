@@ -82,16 +82,16 @@ function Import( $, functions )
           }
           if ( success )
           {
-            functions.alert( 'success', 'Import', 'All songs have been imported.', 'icon-upload-alt' );
+            functions.alert( 'success', 'Import', 'All songs have been imported.', 'fa-upload' );
           }
           else
           {
-            functions.alert( 'warning', 'Import', 'Some songs may not have been imported.', 'icon-upload-alt' );
+            functions.alert( 'warning', 'Import', 'Some songs may not have been imported.', 'fa-upload' );
           }
         }
         else
         {
-          functions.alert( 'error', 'Import', 'There were no songs to import.', 'icon-upload-alt' );
+          functions.alert( 'error', 'Import', 'There were no songs to import.', 'fa-upload' );
         }
       } );
       importButton = $importButton[0];

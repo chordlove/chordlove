@@ -42,8 +42,8 @@ function GuitarChords( $, chorddata, share, functions )
   var $GUITAR_CHORDS = $( '<li id="guitarchords"/>' );
   var $CHORD_WRAPPER = $( '<div class="guitarchord"/>' );
   var $INNER_CHORD_WRAPPER = $( '<div class="guitarchord-inner"/>' );
-  var $NEXT_BTN = $( '<i class="icon-chevron-sign-right guitarchord-next"></i>' );
-  var $PREVIOUS_BTN = $( '<i class="icon-chevron-sign-left guitarchord-previous"></i>' );
+  var $NEXT_BTN = $( '<i class="fa fa-chevron-circle-right guitarchord-next"></i>' );
+  var $PREVIOUS_BTN = $( '<i class="fa fa-chevron-circle-left guitarchord-previous"></i>' );
   var $CHORD_LABEL = $( '<p class="guitarchord"/>' );
 
   var chordsPluginInitialized = false;
@@ -80,13 +80,11 @@ function GuitarChords( $, chorddata, share, functions )
 
   function renderGuitarChords()
   {
+    chordsPluginInitialized = true;
+    loaded = true;
     if ( data !== null )
     {
       render();
-    }
-    else
-    {
-      chordsPluginInitialized = true;
     }
   }
 
@@ -250,19 +248,19 @@ function GuitarChords( $, chorddata, share, functions )
       {
         if ( index === 0 )
         {
-          $previous.addClass( 'icon-muted' );
+          $previous.addClass( 'disabled' );
         }
         else
         {
-          $previous.removeClass( 'icon-muted' );
+          $previous.removeClass( 'disabled' );
         }
         if ( index === noteRenderers.length - 1 )
         {
-          $next.addClass( 'icon-muted' );
+          $next.addClass( 'disabled' );
         }
         else
         {
-          $next.removeClass( 'icon-muted' );
+          $next.removeClass( 'disabled' );
         }
       }
 
@@ -311,6 +309,7 @@ function GuitarChords( $, chorddata, share, functions )
   function clear()
   {
     $GUITAR_CHORDS.empty();
+    data = null;
   }
 
   function dbToVexChords( db )

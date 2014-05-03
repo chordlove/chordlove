@@ -97,7 +97,7 @@ require(
                         + window.location.href
                         + '" target="_blank">'
                         + window.location.hostname
-                        + ' <i class="icon-external-link"></i></a>.</p></div>' );
+                        + ' <i class="fa fa-external-link"></i></a>.</p></div>' );
           }
           $( '#chordlove-navbar-icon' ).click( function()
           {

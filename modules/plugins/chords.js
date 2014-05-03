@@ -53,11 +53,11 @@ function Chords( $, functions, share, toolbar, resizer, beatsHandler )
   var $PARENT = $( '#items' );
   var $TIME_SIGNATURE = $( '#time-signature' );
   var $LI = $( '<li class="item" />' );
-  var $HANDLE = $( '<div class="handle"><i class="icon-move" title="move"></i><i class="icon-pushpin" title="select/unselect"></i></div>' );
-  var $MENU = $( '<div class="btn-group chord-menu"><a class="btn dropdown-toggle" data-toggle="dropdown" href="#" title="More …"><i class="icon-cog"></i></a><ul class="dropdown-menu"></ul></div>' );
+  var $HANDLE = $( '<div class="handle"><i class="fa fa-arrows" title="move"></i><i class="fa fa-thumb-tack pin" title="select/unselect"></i></div>' );
+  var $MENU = $( '<div class="btn-group chord-menu"><a class="btn dropdown-toggle" data-toggle="dropdown" href="#" title="More …"><i class="fa fa-cog"></i></a><ul class="dropdown-menu"></ul></div>' );
   var $MENU_LI = $( '<li />' );
   var $MENU_A = $( '<a href="#"/>' );
-  var MENU_PASTE_BEFORE = '<i class="icon-paste"></i> Paste before';
+  var MENU_PASTE_BEFORE = '<i class="fa fa-paste"></i> Paste before';
   var $INPUT = $( '<input class="chord-text resize-trigger empty-input form-control" type="text" title="Add a chord" placeholder="Chord…" />' );
   var $CHORD = $( '<div class="chord"/>' );
 
@@ -76,7 +76,7 @@ function Chords( $, functions, share, toolbar, resizer, beatsHandler )
   var copyPaste = new CopyPaste( {
     'getExtracts' : getExtracts,
     'createItem' : createItem
-  }, share, functions, $PARENT );
+  }, $, share, functions, resizer, $PARENT );
 
   functions.bindButton( '#add-chord', createItem );
 
@@ -429,7 +429,7 @@ function Chords( $, functions, share, toolbar, resizer, beatsHandler )
 
   function addPinEvents( $wrapper )
   {
-    $( 'i.icon-pushpin', $wrapper ).mousedown( function( event )
+    $( 'i.pin', $wrapper ).mousedown( function( event )
     {
       event.stopImmediatePropagation();
       $wrapper.toggleClass( 'ui-selected' );
@@ -447,7 +447,7 @@ function Chords( $, functions, share, toolbar, resizer, beatsHandler )
    * <pre><code>
    * function menuMember( $wrapper, $li, $a )
    * {
-   *   $a.html( '&lt;i class=&quot;icon-paste&quot;&gt;&lt;/i&gt; Paste before' ).click( {
+   *   $a.html( '&lt;i class=&quot;fa-paste&quot;&gt;&lt;/i&gt; Paste before' ).click( {
    *     'li' : $wrapper.get( 0 )
    *   }, function( event )
    *   {
@@ -535,7 +535,7 @@ function Chords( $, functions, share, toolbar, resizer, beatsHandler )
   };
 }
 
-function CopyPaste( chords, share, functions, $PARENT )
+function CopyPaste( chords, $, share, functions, resizer, $PARENT )
 {
   'use strict';
   var copiedItems = [];
@@ -583,6 +583,7 @@ function CopyPaste( chords, share, functions, $PARENT )
       for ( var i = 0; i < this.length; i++ )
       {
         this[i]( $li );
+        resizer.performResize( $li );
       }
     } );
     $( 'li.ui-selected', $PARENT ).removeClass( 'ui-selected' );
