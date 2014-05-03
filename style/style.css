@@ -124,6 +124,10 @@ input[type="text"].song-text {
   visibility: hidden;
 }
 
+#embed-form form {
+  margin-bottom: 1em;
+}
+
 #items li.start-of-line {
   clear: left;
 }
