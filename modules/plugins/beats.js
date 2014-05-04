@@ -51,7 +51,7 @@ function Beats( $, functions, share )
 
   function timeSignatureChanged()
   {
-    if ( $PARENT.children( 'li.item' ).length > 0 )
+    if ( $PARENT.children( 'dd.item' ).length > 0 )
     {
       createTimeSignatureDialog();
     }
@@ -85,7 +85,7 @@ function Beats( $, functions, share )
       var current = parseInt( $TIME_SIGNATURE.val() );
       var multiplier = current / previous;
       $TIME_SIGNATURE.data( 'previous', current );
-      $PARENT.children( 'li.item' ).each( function( index )
+      $PARENT.children( 'dd.item' ).each( function( index )
       {
         var beats = getBeats( this ).length;
         if ( transform )
@@ -146,7 +146,7 @@ function Beats( $, functions, share )
     var current = parseInt( $TIME_SIGNATURE.val() );
     var multiplier = current / previous;
     var canTransform = true;
-    $PARENT.children( 'li.item' ).each( function( index )
+    $PARENT.children( 'dd.item' ).each( function( index )
     {
       var beats = getBeats( this ).length;
       var result = beats * multiplier;

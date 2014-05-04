@@ -61,7 +61,7 @@ function Transpose( $, functions, chorddata, share )
         {
           return;
         }
-        var $chords = $PARENT.children( 'li.item' ).children( 'div.chord' ).children( 'input.chord-text' );
+        var $chords = $PARENT.children( 'dd.item' ).children( 'div.chord' ).children( 'input.chord-text' );
         if ( $chords.length === 0 )
         {
           return;

@@ -99,7 +99,7 @@ function Lyrics( $, functions, share, toolbar, resizer, plugins )
     {
       return;
     }
-    $( 'li.item', $PARENT ).each( function()
+    $( 'dd.item', $PARENT ).each( function()
     {
       getOrAddTextInput( this );
     } );
@@ -152,7 +152,7 @@ function Lyrics( $, functions, share, toolbar, resizer, plugins )
     $PARENT.addClass( 'has-text' );
     $VIEW_BUTTON.addClass( 'active' );
     addTextInputs();
-    $PARENT.children( 'li.item' ).each( function()
+    $PARENT.children( 'dd.item' ).each( function()
     {
       setLyrics( this, lyrics.shift() );
     } );
@@ -167,7 +167,7 @@ function Lyrics( $, functions, share, toolbar, resizer, plugins )
     var result = '';
     result += PLUGIN_ID + DEFAULT_FORMAT;
     var items = [];
-    $PARENT.children( 'li.item' ).each( function()
+    $PARENT.children( 'dd.item' ).each( function()
     {
       items.push( getLyrics( this ) );
     } );

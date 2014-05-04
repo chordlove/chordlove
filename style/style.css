@@ -128,7 +128,7 @@ input[type="text"].song-text {
   margin-bottom: 1em;
 }
 
-#items li.start-of-line {
+#items dd.start-of-line {
   clear: left;
 }
 
@@ -233,7 +233,7 @@ div.duration ul>li>a {
   clear: left;
 }
 
-#items>li {
+#items>dd {
   width: 107px;
   height: 48px;
   float: left;
@@ -255,11 +255,11 @@ div.duration ul>li>a {
   margin-top: 1.5em;
 }
 
-#items.has-text>li {
+#items.has-text>dd {
   height: 68px;
 }
 
-#items>li.symbol {
+#items>dd.symbol {
   width: 12px;
   border: none;
   padding: 3px 0 3px 0;
@@ -274,19 +274,19 @@ img.barline {
   height: 68px;
 }
 
-#items>li.ui-selecting {
+#items>dd.ui-selecting {
   background: #FECA40;
 }
 
-#items>li.ui-selected {
+#items>dd.ui-selected {
   background: #F39814;
 }
 
-body li div.handle {
+body dd div.handle {
   display: none;
 }
 
-body.edit-mode #items>li div.handle {
+body.edit-mode #items>dd div.handle {
   background: #f8f8f8;
   position: absolute;
   left: 0;
@@ -322,7 +322,7 @@ div.chord-menu>a {
   padding: 3px;
 }
 
-li .handle .pin {
+dd .handle .pin {
   position: absolute;
   top: 15px;
   left: 0;
@@ -330,11 +330,11 @@ li .handle .pin {
   cursor: default;
 }
 
-#items.has-text li div.handle .pin {
+#items.has-text dd div.handle .pin {
   top: 28px;
 }
 
-li.ui-selected .handle .pin {
+dd.ui-selected .handle .pin {
   color: #F39814;
 }
 
@@ -437,7 +437,7 @@ body.edit-mode i.guitarchord-next,body.edit-mode i.guitarchord-previous {
   #footer a[href]:after {
     content: "";
   }
-  .hide-in-print,.navbar,#items>li div.handle,#cpanel span.btn-group,#cpanel div.btn-group {
+  .hide-in-print,.navbar,#items>dd div.handle,#cpanel span.btn-group,#cpanel div.btn-group {
     display: none !important;
   }
   input[type="text"].empty-input,input[type="text"].empty-input.song-text,#items.has-text input[type="text"].empty-input.song-text,i.guitarchord-next,i.guitarchord-previous

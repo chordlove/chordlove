@@ -96,7 +96,7 @@ function Structure( $, share, functions )
     var currentBreakBarNumber = $barBreakNumberSelect.val();
     var timeSig = currentBreakBarNumber ? functions.getCharacters( currentBreakBarNumber, 1 ) : '0';
     var startOfLineItems = '';
-    $PARENT.children( 'li.item' ).each( function( ix, li )
+    $PARENT.children( 'dd.item' ).each( function( ix, li )
     {
       if ( $( li ).data( INDIVIDUAL_BAR_BREAK ) )
       {
@@ -187,7 +187,7 @@ function Structure( $, share, functions )
         startOfLineItems = parseInput( data );
         data = null;
       }
-      var items = $PARENT.children( 'li.item' ).toArray();
+      var items = $PARENT.children( 'dd.item' ).toArray();
       var currentBreakBarNumber = $barBreakNumberSelect.val();
       if ( currentBreakBarNumber )
       {

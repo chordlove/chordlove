@@ -357,8 +357,8 @@ function functions( $ )
         }
         else
         {
-          var $wrapper = $target.parents( 'li.item' ).first();
-          var $next = $wrapper[backwards ? 'prevAll' : 'nextAll']( 'li.item' );
+          var $wrapper = $target.parents( 'dd.item' ).first();
+          var $next = $wrapper[backwards ? 'prevAll' : 'nextAll']( 'dd.item' );
           if ( $next.length )
           {
             var $input = $next.first().find( 'input' ).filter( noHiddenElements );

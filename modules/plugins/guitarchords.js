@@ -115,7 +115,7 @@ function GuitarChords( $, chorddata, share, functions )
     var seen = {};
     $GUITAR_CHORDS.empty();
     var chordNumberIndex = 0;
-    $PARENT.children( 'li.item' ).each( function()
+    $PARENT.children( 'dd.item' ).each( function()
     {
       var chord = $( 'input.chord-text', this ).val();
       if ( !( chord in seen ) )

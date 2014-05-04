@@ -49,10 +49,10 @@ function Chords( $, functions, share, toolbar, resizer, beatsHandler )
   var CHORD_SIZE = 1;
   var BEAT_SIZE = 1;
 
-  var $SINGLE_BARLINE = $( '<li class="symbol item-barline"><img class="barline" src="http://cdn.chordlove.com/images/symbols/single-barline.svg" alt="|"></li>' );
+  var $SINGLE_BARLINE = $( '<dd class="symbol item-barline"><img class="barline" src="http://cdn.chordlove.com/images/symbols/single-barline.svg" alt="|"></dd>' );
   var $PARENT = $( '#items' );
   var $TIME_SIGNATURE = $( '#time-signature' );
-  var $LI = $( '<li class="item" />' );
+  var $DD = $( '<dd class="item" />' );
   var $HANDLE = $( '<div class="handle"><i class="fa fa-arrows" title="move"></i><i class="fa fa-thumb-tack pin" title="select/unselect"></i></div>' );
   var $MENU = $( '<div class="btn-group chord-menu"><a class="btn dropdown-toggle" data-toggle="dropdown" href="#" title="More …"><i class="fa fa-cog"></i></a><ul class="dropdown-menu"></ul></div>' );
   var $MENU_LI = $( '<li />' );
@@ -165,7 +165,7 @@ function Chords( $, functions, share, toolbar, resizer, beatsHandler )
       this( chords );
     } );
     initialPostRenderingPerformed = true;
-    $PARENT.children( 'li.item' ).each( function()
+    $PARENT.children( 'dd.item' ).each( function()
     {
       resizer.performResize( $( this ) );
     } );
@@ -253,7 +253,7 @@ function Chords( $, functions, share, toolbar, resizer, beatsHandler )
     var chordValues = [];
     var chordItems = [];
     var timeSignature = $TIME_SIGNATURE.val();
-    $PARENT.children( 'li.item' ).each( function( index )
+    $PARENT.children( 'dd.item' ).each( function( index )
     {
       var chordData = getChordData( this );
       var val = chordData.chord;
@@ -279,10 +279,10 @@ function Chords( $, functions, share, toolbar, resizer, beatsHandler )
 
   function updateBarlines()
   {
-    $PARENT.children( 'li.item-barline' ).remove();
+    $PARENT.children( 'dd.item-barline' ).remove();
     var timeSignature = $TIME_SIGNATURE.val();
     var beatsSum = 0;
-    $PARENT.children( 'li.item' ).each( function( index )
+    $PARENT.children( 'dd.item' ).each( function( index )
     {
       beatsSum += beatsHandler.getBeats( this ).length;
       if ( beatsSum % timeSignature === 0 )
@@ -381,7 +381,7 @@ function Chords( $, functions, share, toolbar, resizer, beatsHandler )
       }
     }
     var $handle = $HANDLE.clone();
-    var $wrapper = $LI.clone().append( $handle );
+    var $wrapper = $DD.clone().append( $handle );
     var $menu = $MENU.clone();
     var $menuList = $( 'ul', $menu );
     addChordMenuItems( $menuList, $wrapper );
@@ -484,11 +484,11 @@ function Chords( $, functions, share, toolbar, resizer, beatsHandler )
   function pasteBeforeMenu( $wrapper, $li, $a )
   {
     $a.html( MENU_PASTE_BEFORE ).click( {
-      'li' : $wrapper.get( 0 )
+      'dd' : $wrapper.get( 0 )
     }, function( event )
     {
       event.preventDefault();
-      copyPaste.pasteItems( event.data.li );
+      copyPaste.pasteItems( event.data.dd );
     } );
   }
 
@@ -547,7 +547,7 @@ function CopyPaste( chords, $, share, functions, resizer, $PARENT )
 
   function getSelectedItems()
   {
-    return $( 'li.ui-selected', $PARENT );
+    return $( 'dd.ui-selected', $PARENT );
   }
 
   function deleteItems()
@@ -586,7 +586,7 @@ function CopyPaste( chords, $, share, functions, resizer, $PARENT )
         resizer.performResize( $li );
       }
     } );
-    $( 'li.ui-selected', $PARENT ).removeClass( 'ui-selected' );
+    $( 'dd.ui-selected', $PARENT ).removeClass( 'ui-selected' );
     share.changedStructure( 'chords/CopyPaste/paste' );
   }
 
