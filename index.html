@@ -152,6 +152,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 <link rel="apple-touch-icon" sizes="114x114" href="apple-touch-icon-114x114.png" />
 <link rel="apple-touch-icon" sizes="72x72" href="apple-touch-icon-72x72.png" />
 <link rel="apple-touch-icon" sizes="57x57" href="apple-touch-icon-57x57.png" />
+<meta name="apple-mobile-web-app-capable" content="yes">
 <link href="http://cdn.chordlove.com/style/jquery.oembed-2013-09-01.css" rel="stylesheet">
 <script src="http://cdn.chordlove.com/libs/jquery.oembed-2013-09-01.js"></script>
 </head>
@@ -187,6 +188,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
       height="34" title="About Chordlove">
     <div id="cpanel" class="btn-toolbar">
       <span class="btn-group always-visible">
+        <button id="navigation-back" class="btn btn-default navbar-btn" title="Undo / Go back">
+          <i class="fa fa-chevron-left"></i>
+        </button>
+        <button id="navigation-forward" class="btn btn-default navbar-btn" title="Redo / Go forward">
+          <i class="fa fa-chevron-right"></i>
+        </button>
+      </span>
+      <span class="btn-group always-visible">
         <button type="button" title="Edit mode" id="edit" class="btn btn-default navbar-btn">
           <i class="fa fa-edit"></i>
         </button>
@@ -216,14 +225,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         </select>
         <button id="view-lyrics" class="btn btn-default navbar-btn" title="View lyrics">
           <i class="fa fa-align-left"></i>
-        </button>
-      </span>
-      <span class="btn-group NIY">
-        <button id="key-up" class="btn btn-default navbar-btn" title="Change key upwards">
-          <i class="fa fa-arrow-up"></i>
-        </button>
-        <button id="key-down" class="btn btn-default navbar-btn" title="Change key downwards">
-          <i class="fa fa-arrow-down"></i>
         </button>
       </span>
       <span id="sharpflat" class="btn-group NIY" data-toggle="buttons-radio">

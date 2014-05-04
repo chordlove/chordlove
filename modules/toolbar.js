@@ -60,6 +60,25 @@ function Toolbar( $, functions )
       return false;
     }
 
+    function goBack()
+    {
+      if ( 'history' in window && 'back' in window.history )
+      {
+        window.history.back();
+      }
+    }
+
+    function goForward()
+    {
+      if ( 'history' in window && 'forward' in window.history )
+      {
+        window.history.forward();
+      }
+    }
+
+    functions.bindButton( '#navigation-back', goBack );
+    functions.bindButton( '#navigation-forward', goForward );
+
     functions.bindButton( '#edit', editMode );
     functions.bindButton( '#clear', clear );
 
