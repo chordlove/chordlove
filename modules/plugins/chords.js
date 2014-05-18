@@ -57,7 +57,8 @@ function Chords( $, functions, share, toolbar, resizer, beatsHandler )
   var $MENU = $( '<div class="btn-group chord-menu"><a class="btn dropdown-toggle" data-toggle="dropdown" href="#" title="More …"><i class="fa fa-cog"></i></a><ul class="dropdown-menu"></ul></div>' );
   var $MENU_LI = $( '<li />' );
   var $MENU_A = $( '<a href="#"/>' );
-  var MENU_PASTE_BEFORE = '<i class="fa fa-paste"></i> Paste before';
+  var MENU_PASTE_BEFORE = '<i class="fa fa-fw fa-paste"></i> Paste before';
+  var MENU_LABEL = '<i class="fa fa-fw fa-tag"></i> Label';
   var $INPUT = $( '<input class="chord-text resize-trigger empty-input form-control" type="text" title="Add a chord" placeholder="Chord…" />' );
   var $CHORD = $( '<div class="chord"/>' );
 
@@ -72,6 +73,7 @@ function Chords( $, functions, share, toolbar, resizer, beatsHandler )
   registerContentExtractor( extract );
 
   registerChordMenuMember( pasteBeforeMenu );
+  registerChordMenuMember( labelMenu );
 
   var copyPaste = new CopyPaste( {
     'getExtracts' : getExtracts,
@@ -489,6 +491,24 @@ function Chords( $, functions, share, toolbar, resizer, beatsHandler )
     {
       event.preventDefault();
       copyPaste.pasteItems( event.data.dd );
+    } );
+  }
+
+  function labelMenu( $wrapper, $li, $a )
+  {
+    $a.html( MENU_LABEL ).click( {
+      'dd' : $wrapper.get( 0 )
+    }, function( event )
+    {
+      event.preventDefault();
+      var $dd = $( event.data.dd );
+      var $dt = $dd.prev( 'dt' ).first();
+      if ( $dt.length === 0 )
+      {
+        $dt = $( '<dt>Label</dt>' );
+        $dt.insertBefore( $dd );
+      }
+      console.log( $dt.get( 0 ) );
     } );
   }
 

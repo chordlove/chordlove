@@ -87,7 +87,7 @@ h1 input[type="text"],input[type="text"].chord-text,input[type="text"].song-text
   color: #222222;
 }
 
-h1 input[type="text"] {
+h1 input[type="text"],#items>dt {
   font-family: neuton-cursive, serif;
 }
 
@@ -95,6 +95,15 @@ h1 input[type="text"] {
   font-family: 'DejaVuSerifBook', 'DejaVu Serif', 'DejaVu Sans', 'Lucida Sans Unicode',
     'Arial Unicode MS', serif;
   font-weight: 400;
+}
+
+#items>dt {
+  width: 0;
+  float: left;
+  position: relative;
+  top: -24px;
+  overflow: visible;
+  overflow-x: visible;
 }
 
 input[type="text"].chord-text,input[type="text"].song-text {

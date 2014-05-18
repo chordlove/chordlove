@@ -43,7 +43,7 @@ function Addons( $, toolbar, plugins )
 
   function AddonInfo( name, icon, text )
   {
-    this.menuHtml = '<i class="fa ' + icon + '"></i> ' + text;
+    this.menuHtml = '<i class="fa fa-fw ' + icon + '"></i> ' + text;
     this.func = function( event )
     {
       event.preventDefault();

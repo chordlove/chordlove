@@ -41,7 +41,7 @@ function Structure( $, share, functions )
 
   var $PARENT = $( '#items' );
   var $TIME_SIGNATURE = $( '#time-signature' );
-  var MENU_START_OF_LINE = '<i class="fa fa-arrow-left"></i> Put on new line / back';
+  var MENU_START_OF_LINE = '<i class="fa fa-fw fa-arrow-left"></i> Put on new line / back';
 
   var START_OF_LINE = 'start-of-line';
   var INDIVIDUAL_BAR_BREAK = 'inidividual-bar-break';
