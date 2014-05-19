@@ -72,7 +72,7 @@ body .NIY {
   border-radius: 2px;
 }
 
-h1 input[type="text"],input[type="text"].chord-text,input[type="text"].song-text {
+h1 input[type="text"],input[type="text"].chord-text,input[type="text"].song-text,input[type="text"].label-text {
   font-family: 'DejaVuSerifBook', 'DejaVu Serif', 'DejaVu Sans', 'Lucida Sans Unicode',
     'Arial Unicode MS', serif;
   font-weight: 400;
@@ -101,9 +101,14 @@ h1 input[type="text"],#items>dt {
   width: 0;
   float: left;
   position: relative;
-  top: -24px;
+  top: -20px;
   overflow: visible;
   overflow-x: visible;
+}
+
+#items>dt > input {
+  width: 300px;
+  padding: 0;
 }
 
 input[type="text"].chord-text,input[type="text"].song-text {
@@ -249,7 +254,7 @@ div.duration ul>li>a {
   cursor: default;
   display: block;
   padding: 2px 3px 2px 18px;
-  margin: 0 4px 16px 0;
+  margin: 0 4px 24px 0;
   position: relative;
   border: 1px solid #cccccc;
   border-radius: 4px;

@@ -61,6 +61,7 @@ function Chords( $, functions, share, toolbar, resizer, beatsHandler )
   var MENU_LABEL = '<i class="fa fa-fw fa-tag"></i> Label';
   var $INPUT = $( '<input class="chord-text resize-trigger empty-input form-control" type="text" title="Add a chord" placeholder="Chord…" />' );
   var $CHORD = $( '<div class="chord"/>' );
+  var $LABEL = $( '<dt><input class="label-text form-control" type="text" title="Add a label" placeholder="Label…" /></dt>' );
 
   var postRenderers = [];
   var initialPostRenderingPerformed = false;
@@ -505,9 +506,12 @@ function Chords( $, functions, share, toolbar, resizer, beatsHandler )
       var $dt = $dd.prev( 'dt' ).first();
       if ( $dt.length === 0 )
       {
-        $dt = $( '<dt>Label</dt>' );
+        $dt = $LABEL.clone();
         $dt.insertBefore( $dd );
+        $dt.keydown( functions.handleInputKeyEvent );
       }
+      var $input = $dt.children( 'input' );
+      $input.focus();
       console.log( $dt.get( 0 ) );
     } );
   }

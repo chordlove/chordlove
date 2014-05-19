@@ -346,6 +346,7 @@ function functions( $ )
     {
       event.preventDefault();
       $target.blur();
+      // $target.val( $target.val().replace( / /g, '\u2009' ) );
       if ( event.which === 9 )
       {
         var backwards = 'shiftKey' in event && event.shiftKey === true;
