@@ -601,6 +601,7 @@ function CopyPaste( chords, $, share, functions, resizer, $PARENT )
     var before = beforeElement ? {
       'before' : beforeElement
     } : undefined;
+    var $lastLi = undefined;
     $( copiedItems ).each( function()
     {
       var $li = chords.createItem( before );
@@ -608,10 +609,12 @@ function CopyPaste( chords, $, share, functions, resizer, $PARENT )
       {
         this[i]( $li );
         resizer.performResize( $li );
+        $lastLi = $li;
       }
     } );
     $( 'dd.ui-selected', $PARENT ).removeClass( 'ui-selected' );
     share.changedStructure( 'chords/CopyPaste/paste' );
+    $lastLi.find( 'input' ).blur();
   }
 
   return {
