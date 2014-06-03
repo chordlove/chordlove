@@ -4,3 +4,7 @@ http://fortawesome.github.com/Font-Awesome/design.html
 http://twitter.github.com/bootstrap/
 http://caniuse.com/#index
 http://www.w3.org/TR/webstorage/
+
+http://westciv.com/tools/manifestR/
+
+echo "CACHE MANIFEST" > cache.manifest; find . -type f | sed "s#^\./##" | grep -vi "ds_store" | grep -vi "~" >> cache.manifest; printf "\nNETWORK:\n*\n\nFALLBACK:\n\n" >> cache.manifest && cat cache.manifest
