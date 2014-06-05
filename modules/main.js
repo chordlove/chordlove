@@ -48,6 +48,7 @@
  * @requires jquery
  * @requires plugins
  * @requires share
+ * @requires functions
  * @requires plugins/title
  * @requires plugins/chords
  * @requires plugins/lyrics
@@ -57,9 +58,9 @@
  * @requires storage
  */
 require(
-    [ 'jquery', 'plugins', 'share', 'plugins/title', 'plugins/chords', 'plugins/lyrics', 'plugins/structure',
-        'plugins/addons', 'plugins/tools', 'storage' ],
-    function( $, plugins, share )
+    [ 'jquery', 'plugins', 'share', 'functions', 'plugins/title', 'plugins/chords', 'plugins/lyrics',
+        'plugins/structure', 'plugins/addons', 'plugins/tools', 'storage' ],
+    function( $, plugins, share, functions )
     {
       'use strict';
       $( function()
@@ -103,6 +104,41 @@ require(
           {
             $( '#help' ).modal();
           } );
+          if ( 'applicationCache' in window )
+          {
+            console.log( 'initializing appcache events' );
+            var appCache = window.applicationCache;
+
+            $( appCache ).bind( 'updateready', function()
+            {
+              console.log( 'update ready event, reloading page!' );
+              appCache.swapCache();
+              location.reload();
+            } );
+            $( window ).bind( 'online', function()
+            {
+              window.setTimeout( function()
+              {
+                if ( !window.navigator.onLine )
+                {
+                  return;
+                }
+                appCache.update();
+              }, 5000 );
+            } );
+
+            window.setInterval( function()
+            {
+              appCache.update();
+            }, 864000 ); // 4h
+
+            if ( appCache.status === appCache.UPDATEREADY )
+            {
+              console.log( 'update ready status, reloading page!' );
+              appCache.swapCache();
+              location.reload();
+            }
+          }
         } )();
       } );
     } );
