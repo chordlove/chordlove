@@ -26,7 +26,7 @@ body {
 
 #navbar {
   width: 21em;
-  padding: 0.5em 0;
+  padding: 5px 0;
   margin: 0;
   background: rgba(255, 255, 255, 0.9);
   border-radius: 8px;
@@ -47,7 +47,7 @@ body.edit-mode #navbar {
 }
 
 #cpanel {
-  margin-bottom: 7px;
+  margin-bottom: 2px;
   margin-left: 48px;
 }
 
@@ -72,6 +72,11 @@ body .NIY {
   border-radius: 2px;
 }
 
+h1 {
+  margin-top: 6px;
+  margin-bottom: 10px;
+}
+
 h1 input[type="text"],input[type="text"].chord-text,input[type="text"].song-text,input[type="text"].label-text {
   font-family: 'DejaVuSerifBook', 'DejaVu Serif', 'DejaVu Sans', 'Lucida Sans Unicode',
     'Arial Unicode MS', serif;
@@ -87,8 +92,16 @@ h1 input[type="text"],input[type="text"].chord-text,input[type="text"].song-text
   color: #222222;
 }
 
-h1 input[type="text"],#items>dt {
-  font-family: neuton-cursive, serif;
+h1 input[type="text"],input[type="text"].label-text,#items>dt {
+  font-family: 'DejaVuSansCondensedBold', 'DejaVu Sans Condensed Bold', 'DejaVu Sans', 'Lucida Sans Unicode',
+    'Arial Unicode MS', sans-serif;
+    font-weight: bold;
+}
+
+h1 input[type="text"] {
+  height: 1.8em;
+  font-size: 0.8em;
+  margin-top: 5px;
 }
 
 #help .modal-body,#share-form .modal-body {

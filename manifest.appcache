@@ -1,12 +1,11 @@
 CACHE MANIFEST
 
-# 2014-06-05y
+# 2014-06-06b
 
 CACHE:
 
 # *** PROBLEMATIC ***
 https://apis.google.com/js/client.js?onload=initGapi
-http://use.edgefonts.net/c/b28aa2/neuton-cursive:n4.WTk:P:1/d
 
 apple-touch-icon-114x114.png
 apple-touch-icon-144x144.png
@@ -74,7 +73,8 @@ http://cdn.chordlove.com/images/symbols/single-barline.svg
 http://cdn.chordlove.com/images/loading.gif
 
 #style sheets
-http://cdn.chordlove.com/style/fonts-2014-05-01.css
+http://cdn.chordlove.com/style/fonts-2014-06-06.3/fonts.css
+http://cdn.chordlove.com/style/fonts-2014-06-06.3/fonts-winchromefix.css
 http://cdn.chordlove.com/style/jquery.oembed-2013-09-01.css
 http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css
 http://netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css
@@ -82,15 +82,14 @@ http://netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css
 #fonts
 http://netdna.bootstrapcdn.com/font-awesome/4.1.0/fonts/fontawesome-webfont.woff?v=4.1.0
 http://netdna.bootstrapcdn.com/font-awesome/4.1.0/fonts/fontawesome-webfont.ttf?v=4.1.0
-http://netdna.bootstrapcdn.com/font-awesome/4.1.0/fonts/fontawesome-webfont.svg?v=4.1.0
-http://cdn.chordlove.com/style/fonts-2014-05-01/DejaVuSerif-webfont.woff
-http://cdn.chordlove.com/style/fonts-2014-05-01/DejaVuSerif-webfont.svg
-http://cdn.chordlove.com/style/fonts-2014-05-01/DejaVuSerif-webfont.ttf
+http://cdn.chordlove.com/style/fonts-2014-06-06.3/DejaVuSansCondensed-Bold-webfont.woff
+http://cdn.chordlove.com/style/fonts-2014-06-06.3/DejaVuSansCondensed-Bold-webfont.ttf
+http://cdn.chordlove.com/style/fonts-2014-06-06.3/DejaVuSerif-webfont.woff
+http://cdn.chordlove.com/style/fonts-2014-06-06.3/DejaVuSerif-webfont.ttf
 
 #javascript files
 http://www.google-analytics.com/analytics.js
 https://apis.google.com/_/scs/apps-static/_/js/k=oz.gapi.sv.NUW3nKyqT4w.O/m=client/rt=j/sv=1/d=1/ed=1/am=AQ/rs=AItRSTNXcAn5AIHBG64VPejmPcyGMdYiAA/cb=gapi.loaded_0
-http://use.edgefonts.net/neuton-cursive:n4:all.js
 http://ajax.googleapis.com/ajax/libs/webfont/1.5.3/webfont.js
 http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js
 http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js

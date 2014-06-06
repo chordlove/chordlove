@@ -24,7 +24,6 @@
  * @requires functions
  * @requires toolbar
  */
-
 function Share( $, plugins, functions, toolbar )
 {
   'use strict';

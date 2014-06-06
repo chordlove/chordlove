@@ -21,7 +21,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 <title>Chordlove.com</title>
-<script src="//use.edgefonts.net/neuton-cursive:n4:all.js"></script>
 <script src="//ajax.googleapis.com/ajax/libs/webfont/1.5.3/webfont.js"></script>
 <script>
   if ( !window.WebFont )
@@ -77,11 +76,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
       'addListener' : addListener
     };
   }() );
+  
+  var fontCssLocation = 'http://cdn.chordlove.com/style/fonts-2014-06-06.3/fonts.css';
 
   WebFont.load( {
     custom : {
-      families : [ 'DejaVuSerifBook' ],
-      urls : [ 'http://cdn.chordlove.com/style/fonts-2014-05-01.css' ]
+      families : [ 'DejaVuSerifBook', 'DejaVuSansCondensedBold' ],
+      urls : [ fontCssLocation ]
     },
     fontactive : window.ChordloveFontLoading.registerActiveFont,
     fontinactive : window.ChordloveFontLoading.registerInactiveFont
