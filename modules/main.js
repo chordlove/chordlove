@@ -60,7 +60,7 @@
 require(
     [ 'jquery', 'plugins', 'share', 'appcache', 'plugins/title', 'plugins/chords', 'plugins/lyrics',
         'plugins/structure', 'plugins/addons', 'plugins/tools', 'storage' ],
-    function( $, plugins, share )
+    function( $, plugins, share, appcache )
     {
       'use strict';
       $( function()
@@ -103,6 +103,13 @@ require(
           $( '#chordlove-navbar-icon' ).click( function()
           {
             $( '#help' ).modal();
+          } );
+          appcache.runOnceWhenOnline( function()
+          {
+            var script = document.createElement( 'script' );
+            script.type = 'text/javascript';
+            script.src = 'https://apis.google.com/js/client.js?onload=initGapi';
+            $( 'head' ).append( script );
           } );
         } )();
       } );

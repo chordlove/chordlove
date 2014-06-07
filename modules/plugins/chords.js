@@ -512,7 +512,6 @@ function Chords( $, functions, share, toolbar, resizer, beatsHandler )
       }
       var $input = $dt.children( 'input' );
       $input.focus();
-      console.log( $dt.get( 0 ) );
     } );
   }
 

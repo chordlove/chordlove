@@ -102,6 +102,7 @@ h1 input[type="text"] {
   height: 1.8em;
   font-size: 0.8em;
   margin-top: 5px;
+  color: #333333;
 }
 
 #help .modal-body,#share-form .modal-body {

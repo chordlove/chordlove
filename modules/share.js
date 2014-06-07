@@ -23,8 +23,9 @@
  * @requires plugins
  * @requires functions
  * @requires toolbar
+ * @requires appcache
  */
-function Share( $, plugins, functions, toolbar )
+function Share( $, plugins, functions, toolbar, appcache )
 {
   'use strict';
   if ( Share.prototype._instance )
@@ -50,6 +51,16 @@ function Share( $, plugins, functions, toolbar )
   var structureChangeListeners = [];
 
   toolbar.setClearFunction( clear );
+
+  appcache.registerOnlineEventListener( function()
+  {
+    $DROPDOWN_LINK.removeClass( 'disabled' );
+  } );
+
+  appcache.registerOfflineEventListener( function()
+  {
+    $DROPDOWN_LINK.addClass( 'disabled' );
+  } );
 
   functions.dialog( false, 'share-form', 'share', function( form )
   {
@@ -251,8 +262,9 @@ function Share( $, plugins, functions, toolbar )
   };
 }
 
-define( 'share', [ 'plugins', 'jquery', 'functions', 'toolbar' ], function( plugins, $, functions, toolbar )
+define( 'share', [ 'plugins', 'jquery', 'functions', 'toolbar', 'appcache' ], function( plugins, $, functions, toolbar,
+    appcache )
 {
   'use strict';
-  return new Share( $, plugins, functions, toolbar );
+  return new Share( $, plugins, functions, toolbar, appcache );
 } );

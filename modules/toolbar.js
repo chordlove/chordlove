@@ -21,9 +21,10 @@
  * @module toolbar
  * @requires jquery
  * @requires functions
+ * @requires appcache
  */
 
-function Toolbar( $, functions )
+function Toolbar( $, functions, appcache )
 {
   'use strict';
   if ( Toolbar.prototype._instance )
@@ -42,6 +43,16 @@ function Toolbar( $, functions )
   var $navbar = $( '#navbar' );
 
   var clearFunction = null;
+
+  appcache.registerOnlineEventListener( function()
+  {
+    $( 'a[href^="http"]' ).parent( 'li' ).removeClass( 'disabled' );
+  } );
+
+  appcache.registerOfflineEventListener( function()
+  {
+    $( 'a[href^="http"]' ).parent( 'li' ).addClass( 'disabled' );
+  } );
 
   function prepareCpanel()
   {
@@ -211,8 +222,8 @@ function Toolbar( $, functions )
   };
 }
 
-define( 'toolbar', [ 'jquery', 'functions' ], function( $, functions )
+define( 'toolbar', [ 'jquery', 'functions', 'appcache' ], function( $, functions, appcache )
 {
   'use strict';
-  return new Toolbar( $, functions );
+  return new Toolbar( $, functions, appcache );
 } );

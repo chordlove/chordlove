@@ -76,8 +76,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
       'addListener' : addListener
     };
   }() );
-  
+
   var fontCssLocation = 'http://cdn.chordlove.com/style/fonts-2014-06-06.3/fonts.css';
+  // check for chrome bug under windows in version < 37.
+  var ua = navigator.userAgent.toLowerCase();
+  if ( ua.indexOf( 'chrome' ) > -1 && ua.indexOf( 'Win' ) !== -1 )
+  {
+    var ver = parseInt( window.navigator.appVersion.match( /Chrome\/(\d+)\./ )[1], 10 );
+    if ( ver < 37 )
+    {
+      fontCssLocation = 'http://cdn.chordlove.com/style/fonts-2014-06-06.3/fonts-winchromefix.css';
+    }
+  }
 
   WebFont.load( {
     custom : {
@@ -288,7 +298,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         </button>
       </span>
       <div class="btn-group always-visible">
-        <a id="share-dropdown" title="Share" class="btn btn-default navbar-btn dropdown-toggle" data-toggle="dropdown"
+        <a id="share-dropdown" title="Share" class="btn btn-default navbar-btn dropdown-toggle disabled" data-toggle="dropdown"
           data-target="#">
           <i class="fa fa-share-square-o"></i>
           <span class="caret"></span>
@@ -317,16 +327,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
           <li><a href="#help" id="help-btn" role="button" data-toggle="modal" title="About Chordlove">
               <i class="fa fa-fw fa-info-circle"></i> Introduction
             </a></li>
-          <li><a href="http://blog.chordlove.com/" target="_blank">
+          <li class="disabled"><a href="http://blog.chordlove.com/" target="_blank">
               <i class="fa fa-fw fa-globe"></i> Blog
             </a></li>
-          <li><a href="https://twitter.com/ChordloveApp" target="_blank">
+          <li class="disabled"><a href="https://twitter.com/ChordloveApp" target="_blank">
               <i class="fa fa-fw fa-twitter-square"></i> Twitter
             </a></li>
-          <li><a href="https://github.com/chordlove/chordlove/issues" target="_blank">
+          <li class="disabled"><a href="https://github.com/chordlove/chordlove/issues" target="_blank">
               <i class="fa fa-fw fa-ticket"></i> Issues
             </a></li>
-          <li><a href="https://github.com/chordlove/chordlove" target="_blank">
+          <li class="disabled"><a href="https://github.com/chordlove/chordlove" target="_blank">
               <i class="fa fa-fw fa-code-fork"></i> Project
             </a></li>
         </ul>
