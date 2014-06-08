@@ -208,7 +208,7 @@ function Structure( $, share, functions, beatsHandler )
       var currentBreakBarNumber = $barBreakNumberSelect.val();
       if ( currentBreakBarNumber )
       {
-        var timeSignature = beatsHandler.getTimeSignature();
+        var timeSignature = beatsHandler.getTimeSignatureAsInt();
         var beatsToBreakAfter = currentBreakBarNumber * timeSignature;
         var beatsSum = 0;
         for ( var i = 0; i < items.length; i++ )

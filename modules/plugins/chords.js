@@ -256,7 +256,7 @@ function Chords( $, functions, share, toolbar, resizer, beatsHandler )
     var chords = {}, chordNo = 0;
     var chordValues = [];
     var chordItems = [];
-    var timeSignature = beatsHandler.getTimeSignature();
+    var timeSignature = beatsHandler.getTimeSignatureAsInt();
     $PARENT.children( 'dd.item' ).each( function( index )
     {
       var chordData = getChordData( this );
@@ -284,7 +284,7 @@ function Chords( $, functions, share, toolbar, resizer, beatsHandler )
   function updateBarlines()
   {
     $PARENT.children( 'dd.item-barline' ).remove();
-    var timeSignature = beatsHandler.getTimeSignature();
+    var timeSignature = beatsHandler.getTimeSignatureAsInt();
     var beatsSum = 0;
     $PARENT.children( 'dd.item' ).each( function( index )
     {
