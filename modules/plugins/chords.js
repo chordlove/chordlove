@@ -49,6 +49,8 @@ function Chords( $, functions, share, toolbar, resizer, beatsHandler )
   var CHORD_SIZE = 1;
   var BEAT_SIZE = 1;
 
+  var START_OF_LINE = 'start-of-line'; // duplicated in structure.js
+
   var $SINGLE_BARLINE = $( '<dd class="symbol item-barline"><img class="barline" src="http://cdn.chordlove.com/images/symbols/single-barline.svg" alt="|"></dd>' );
   var $PARENT = $( '#items' );
   var $TIME_SIGNATURE = $( '#time-signature' );
@@ -509,6 +511,11 @@ function Chords( $, functions, share, toolbar, resizer, beatsHandler )
         $dt = $LABEL.clone();
         $dt.insertBefore( $dd );
         $dt.keydown( functions.handleInputKeyEvent );
+        if ( $dd.hasClass( START_OF_LINE ) )
+        {
+          $dd.removeClass( START_OF_LINE );
+          $dt.addClass( START_OF_LINE );
+        }
       }
       var $input = $dt.children( 'input' );
       $input.focus();

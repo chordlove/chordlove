@@ -43,7 +43,7 @@ function Structure( $, share, functions )
   var $TIME_SIGNATURE = $( '#time-signature' );
   var MENU_START_OF_LINE = '<i class="fa fa-fw fa-arrow-left"></i> Put on new line / back';
 
-  var START_OF_LINE = 'start-of-line';
+  var START_OF_LINE = 'start-of-line'; // duplicated in chords.js
   var INDIVIDUAL_BAR_BREAK = 'inidividual-bar-break';
 
   var $form = undefined;
@@ -132,13 +132,13 @@ function Structure( $, share, functions )
     {
       event.preventDefault();
       var $item = event.data.li;
-      if ( $item.hasClass( START_OF_LINE ) )
+      if ( $item.hasClass( START_OF_LINE ) || $item.prev( 'dt.' + START_OF_LINE ).length > 0 )
       {
-        $item.removeClass( START_OF_LINE ).data( INDIVIDUAL_BAR_BREAK, false );
+        setStartOfLine( $item, false, true );
       }
       else
       {
-        $item.addClass( START_OF_LINE ).data( INDIVIDUAL_BAR_BREAK, true );
+        setStartOfLine( $item, true, true );
       }
       share.changedStructure( 'plugins/structure/individualBreak' );
     } );
@@ -177,6 +177,24 @@ function Structure( $, share, functions )
     performOnForm( null );
   }
 
+  function setStartOfLine( $item, isStartOfLine, isSetData )
+  {
+    var $prev = $item.prev( 'dt' );
+    var $elementForStart = $prev.length > 0 ? $prev : $item;
+    if ( isStartOfLine )
+    {
+      $elementForStart.addClass( START_OF_LINE );
+    }
+    else
+    {
+      $elementForStart.removeClass( START_OF_LINE );
+    }
+    if ( isSetData === true )
+    {
+      $item.data( INDIVIDUAL_BAR_BREAK, isStartOfLine );
+    }
+  }
+
   function performRendering()
   {
     performOnForm( function()
@@ -200,11 +218,11 @@ function Structure( $, share, functions )
           var $item = $( item );
           if ( beatsSum !== 0 && ( beatsSum % beatsToBreakAfter === 0 ) || $item.data( INDIVIDUAL_BAR_BREAK ) )
           {
-            $item.addClass( START_OF_LINE );
+            setStartOfLine( $item, true );
           }
           else
           {
-            $item.removeClass( START_OF_LINE );
+            setStartOfLine( $item, false );
           }
           beatsSum += getBeats( item ).length;
         }
@@ -214,7 +232,8 @@ function Structure( $, share, functions )
         $.each( startOfLineItems, function()
         {
           var position = functions.getNumber( this );
-          $( items[position] ).addClass( START_OF_LINE ).data( INDIVIDUAL_BAR_BREAK, true );
+          var $item = $( items[position] );
+          setStartOfLine( $item, true, true );
         } );
       }
     } );

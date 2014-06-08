@@ -156,7 +156,7 @@ input[type="text"].song-text {
   margin-bottom: 1em;
 }
 
-#items dd.start-of-line {
+#items dd.start-of-line, #items dt.start-of-line  {
   clear: left;
 }
 
