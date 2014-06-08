@@ -23,12 +23,11 @@
  * @requires jquery
  * @requires functions
  * @requires share
- * @requires toolbar
  * @requires resizer
  * @requires plugins
  */
 
-function Lyrics( $, functions, share, toolbar, resizer, plugins )
+function Lyrics( $, functions, share, resizer, plugins )
 {
   'use strict';
   if ( Lyrics.prototype._instance )
@@ -49,8 +48,6 @@ function Lyrics( $, functions, share, toolbar, resizer, plugins )
   {
     chords.registerContentExtractor( extract );
   } );
-
-  functions.bindButton( '#view-lyrics', visibleLyrics );
 
   share.addStructureChangeListener( addTextInputs );
 
@@ -194,15 +191,16 @@ function Lyrics( $, functions, share, toolbar, resizer, plugins )
     'render' : render,
     'serialize' : serialize,
     'setData' : setData,
-    'clear' : clear
+    'clear' : clear,
+    'toggleLyrics' : visibleLyrics
   };
 }
 
-define( 'plugins/lyrics', [ 'plugins', 'jquery', 'functions', 'share', 'toolbar', 'resizer', 'plugins/chords' ],
-    function( plugins, $, functions, share, toolbar, resizer, chords )
+define( 'plugins/lyrics', [ 'plugins', 'jquery', 'functions', 'share', 'resizer', 'plugins/chords' ],
+    function( plugins, $, functions, share, resizer, chords )
     {
       'use strict';
-      var instance = new Lyrics( $, functions, share, toolbar, resizer, plugins );
+      var instance = new Lyrics( $, functions, share, resizer, plugins );
       chords.addPostRenderer( instance.render );
       plugins.register( {
         'name' : 'lyrics',

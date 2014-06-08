@@ -38,9 +38,10 @@ function Tools( $, toolbar, plugins )
   // var PLUGIN_ID = '06', DEFAULT_FORMAT = 0;
 
   var tools = [
-      new ToolInfo( 'transpose', 'init', 'fa-arrows-v', 'Transpose song …', true ),
+      new ToolInfo( 'lyrics', 'toggleLyrics', 'fa-align-left', 'Show/hide lyrics', true ),
       new ToolInfo( 'beats', 'showDialog', 'fa-clock-o', 'Time signature …', true ),
       new ToolInfo( 'structure', 'setBarBreaks', 'fa-th', 'Organize bars …', true ),
+      new ToolInfo( 'transpose', 'init', 'fa-arrows-v', 'Transpose song …', true ),
       new ToolInfo( 'export', 'init', 'fa-download', 'Export songs …', window.Blob && window.URL
           && window.URL.createObjectURL ),
       new ToolInfo( 'import', 'init', 'fa-upload', 'Import songs …', window.FileReader ) ];
