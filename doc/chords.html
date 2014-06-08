@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <title>JSDoc: Module: plugins/chords</title>
-    
+
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
     <!--[if lt IE 9]>
@@ -16,26 +16,26 @@
 <body>
 
 <div id="main">
-    
+
     <h1 class="page-title">Module: plugins/chords</h1>
-    
+
     
 
 
 
 <section>
-    
+
 <header>
     <h2>
     plugins/chords
     </h2>
     
-</header>  
+</header>
 
 <article>
     <div class="container-overview">
     
-    
+
     
         
             <div class="description">Render and serialize chords together with beats per chord and time signature. <i>The core</i> of the whole
@@ -44,53 +44,53 @@ application.
 There's three classes at play here, the core Chords class, the separate Beats class to manage beat counts and the
 CopyPaste class to handle copy/paste actions.</div>
         
-        
+
         
 <dl class="details">
     
-        
-    
-    
+
     
 
     
+
     
+
     
+
     
+
     
+
     
+
     
-    
-    
-    
-    
-    
+
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        plugins/chords.js, line 2
+        <a href="chords.js.html">plugins/chords.js</a>, <a href="chords.js.html#line18">line 18</a>
     </li></ul></dd>
     
+
     
+
     
-    
-    
-    
+
     
 </dl>
 
-        
+
         
     
     </div>
+
     
+
     
-    
-    
-    
+
     
         <h3 class="subsection-title">Requires</h3>
-        
+
         <ul>
             <li><a href="module-jquery.html">module:jquery</a></li>
         
@@ -105,25 +105,27 @@ CopyPaste class to handle copy/paste actions.</div>
             <li>module:beats</li>
         </ul>
     
+
     
+
+     
+
     
+
     
-    
-    
-    
-    
+
     
         <h3 class="subsection-title">Methods</h3>
-        
+
         <dl>
             
 <dt>
-    <h4 class="name" id="addPostRenderer"><span class="type-signature">&lt;static> </span>addPostRenderer<span class="signature">(renderer)</span><span class="type-signature"></span></h4>
-    
+    <h4 class="name" id="addPostRenderer"><span class="type-signature">(static) </span>addPostRenderer<span class="signature">(renderer)</span><span class="type-signature"></span></h4>
+
     
 </dt>
 <dd>
-    
+
     
     <div class="description">
         Add a renderer to be executed after the chords have been rendered.
@@ -131,116 +133,118 @@ CopyPaste class to handle copy/paste actions.</div>
     
 
     
+
     
-    
-    
+
     
         <h5>Parameters:</h5>
         
 
 <table class="params">
     <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
         <tr>
             
                 <td class="name"><code>renderer</code></td>
             
-            
+
             <td class="type">
             
                 
-<span class="param-type">Function</span>
+<span class="param-type">function</span>
 
 
             
             </td>
+
             
+
             
-            
-            
-            
+
             <td class="description last">The renderer to execute.</td>
         </tr>
-	
-	
-	</tbody>
+
+    
+    </tbody>
 </table>
     
-    
+
     
 <dl class="details">
     
-        
-    
-    
+
     
 
     
+
     
+
     
+
     
+
     
+
     
+
     
-    
-    
-    
-    
-    
+
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        plugins/chords.js, line 107
+        <a href="chords.js.html">plugins/chords.js</a>, <a href="chords.js.html#line112">line 112</a>
     </li></ul></dd>
     
+
     
+
     
-    
-    
-    
+
     
 </dl>
 
+
     
+
     
 
     
 
     
+
     
+
     
-    
-    
-    
+
     
 </dd>
 
         
             
 <dt>
-    <h4 class="name" id="getExtracts"><span class="type-signature">&lt;static> </span>getExtracts<span class="signature">(li)</span><span class="type-signature"> &rarr; {Array}</span></h4>
-    
+    <h4 class="name" id="getExtracts"><span class="type-signature">(static) </span>getExtracts<span class="signature">(li)</span><span class="type-signature"> &rarr; {Array}</span></h4>
+
     
 </dt>
 <dd>
-    
+
     
     <div class="description">
         Get contents of items. Only made available to the <a href="module-toolbar.html"><code>module:toolbar</code></a> for copy operations.
@@ -248,38 +252,38 @@ CopyPaste class to handle copy/paste actions.</div>
     
 
     
+
     
-    
-    
+
     
         <h5>Parameters:</h5>
         
 
 <table class="params">
     <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
         <tr>
             
                 <td class="name"><code>li</code></td>
             
-            
+
             <td class="type">
             
                 
@@ -288,62 +292,64 @@ CopyPaste class to handle copy/paste actions.</div>
 
             
             </td>
+
             
+
             
-            
-            
-            
+
             <td class="description last">The element to extract data from.</td>
         </tr>
-	
-	
-	</tbody>
+
+    
+    </tbody>
 </table>
     
-    
+
     
 <dl class="details">
     
-        
-    
-    
+
     
 
     
+
     
+
     
+
     
+
     
+
     
+
     
-    
-    
-    
-    
-    
+
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        plugins/chords.js, line 335
+        <a href="chords.js.html">plugins/chords.js</a>, <a href="chords.js.html#line340">line 340</a>
     </li></ul></dd>
     
+
     
+
     
-    
-    
-    
+
     
 </dl>
 
+
     
+
     
 
     
 
     
+
     
-    
-    
+
     
     <h5>Returns:</h5>
     
@@ -355,31 +361,31 @@ CopyPaste class to handle copy/paste actions.</div>
 
 
 <dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
 <span class="param-type">Array</span>
 
 
-	</dd>
+    </dd>
 </dl>
 
         
-    
+
     
 </dd>
 
         
             
 <dt>
-    <h4 class="name" id="registerChordMenuMember"><span class="type-signature">&lt;static> </span>registerChordMenuMember<span class="signature">(menuMember)</span><span class="type-signature"></span></h4>
-    
+    <h4 class="name" id="registerChordMenuMember"><span class="type-signature">(static) </span>registerChordMenuMember<span class="signature">(menuMember)</span><span class="type-signature"></span></h4>
+
     
 </dt>
 <dd>
-    
+
     
     <div class="description">
         Register a member in the chord menu.
@@ -391,7 +397,7 @@ needed. Something along the lines of:
 <pre><code>
 function menuMember( $wrapper, $li, $a )
 {
-  $a.html( '&lt;i class=&quot;icon-paste&quot;&gt;&lt;/i&gt; Paste before' ).click( {
+  $a.html( '&lt;i class=&quot;fa-paste&quot;&gt;&lt;/i&gt; Paste before' ).click( {
     'li' : $wrapper.get( 0 )
   }, function( event )
   {
@@ -405,116 +411,118 @@ function menuMember( $wrapper, $li, $a )
     
 
     
+
     
-    
-    
+
     
         <h5>Parameters:</h5>
         
 
 <table class="params">
     <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
         <tr>
             
                 <td class="name"><code>menuMember</code></td>
             
-            
+
             <td class="type">
             
                 
-<span class="param-type">Function</span>
+<span class="param-type">function</span>
 
 
             
             </td>
+
             
+
             
-            
-            
-            
+
             <td class="description last">The menu member function to register.</td>
         </tr>
-	
-	
-	</tbody>
+
+    
+    </tbody>
 </table>
     
-    
+
     
 <dl class="details">
     
-        
-    
-    
+
     
 
     
+
     
+
     
+
     
+
     
+
     
+
     
-    
-    
-    
-    
-    
+
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        plugins/chords.js, line 440
+        <a href="chords.js.html">plugins/chords.js</a>, <a href="chords.js.html#line445">line 445</a>
     </li></ul></dd>
     
+
     
+
     
-    
-    
-    
+
     
 </dl>
 
+
     
+
     
 
     
 
     
+
     
+
     
-    
-    
-    
+
     
 </dd>
 
         
             
 <dt>
-    <h4 class="name" id="registerContentExtractor"><span class="type-signature">&lt;static> </span>registerContentExtractor<span class="signature">(extractor)</span><span class="type-signature"></span></h4>
-    
+    <h4 class="name" id="registerContentExtractor"><span class="type-signature">(static) </span>registerContentExtractor<span class="signature">(extractor)</span><span class="type-signature"></span></h4>
+
     
 </dt>
 <dd>
-    
+
     
     <div class="description">
         Register an extractor that extracts data for copy/paste operations.
@@ -536,116 +544,118 @@ function extract( li )
     
 
     
+
     
-    
-    
+
     
         <h5>Parameters:</h5>
         
 
 <table class="params">
     <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
         <tr>
             
                 <td class="name"><code>extractor</code></td>
             
-            
+
             <td class="type">
             
                 
-<span class="param-type">Function</span>
+<span class="param-type">function</span>
 
 
             
             </td>
+
             
+
             
-            
-            
-            
+
             <td class="description last">The extractor to register.</td>
         </tr>
-	
-	
-	</tbody>
+
+    
+    </tbody>
 </table>
     
-    
+
     
 <dl class="details">
     
-        
-    
-    
+
     
 
     
+
     
+
     
+
     
+
     
+
     
+
     
-    
-    
-    
-    
-    
+
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        plugins/chords.js, line 295
+        <a href="chords.js.html">plugins/chords.js</a>, <a href="chords.js.html#line300">line 300</a>
     </li></ul></dd>
     
+
     
+
     
-    
-    
-    
+
     
 </dl>
 
+
     
+
     
 
     
 
     
+
     
+
     
-    
-    
-    
+
     
 </dd>
 
         
             
 <dt>
-    <h4 class="name" id="render"><span class="type-signature">&lt;static> </span>render<span class="signature">()</span><span class="type-signature"></span></h4>
-    
+    <h4 class="name" id="render"><span class="type-signature">(static) </span>render<span class="signature">()</span><span class="type-signature"></span></h4>
+
     
 </dt>
 <dd>
-    
+
     
     <div class="description">
         Render data. Kicked off by the <a href="module-plugins.html"><code>module:plugins</code></a> module.
@@ -653,68 +663,70 @@ function extract( li )
     
 
     
+
     
+
     
-    
-    
-    
+
     
 <dl class="details">
     
-        
-    
-    
+
     
 
     
+
     
+
     
+
     
+
     
+
     
+
     
-    
-    
-    
-    
-    
+
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        plugins/chords.js, line 124
+        <a href="chords.js.html">plugins/chords.js</a>, <a href="chords.js.html#line129">line 129</a>
     </li></ul></dd>
     
+
     
+
     
-    
-    
-    
+
     
 </dl>
 
+
     
+
     
 
     
 
     
+
     
+
     
-    
-    
-    
+
     
 </dd>
 
         </dl>
     
+
     
-    
-    
+
     
 </article>
 
-</section>  
+</section>
 
 
 
@@ -722,13 +734,13 @@ function extract( li )
 </div>
 
 <nav>
-    <h2><a href="index.html">Index</a></h2><h3>Modules</h3><ul><li><a href="module-chorddata.html">chorddata</a></li><li><a href="module-functions.html">functions</a></li><li><a href="module-jquery.html">jquery</a></li><li><a href="module-main.html">main</a></li><li><a href="module-pluginlist.html">pluginlist</a></li><li><a href="module-plugins.html">plugins</a></li><li><a href="addons.html">plugins/addons</a></li><li><a href="beats.html">plugins/beats</a></li><li><a href="chords.html">plugins/chords</a></li><li><a href="embed.html">plugins/embed</a></li><li><a href="export.html">plugins/export</a></li><li><a href="guitar-chords.html">plugins/guitar-chords</a></li><li><a href="import.html">plugins/import</a></li><li><a href="lyrics.html">plugins/lyrics</a></li><li><a href="structure.html">plugins/structure</a></li><li><a href="title.html">plugins/title</a></li><li><a href="tools.html">plugins/tools</a></li><li><a href="transpose.html">plugins/transpose</a></li><li><a href="verses.html">plugins/verses</a></li><li><a href="module-resizer.html">resizer</a></li><li><a href="module-share.html">share</a></li><li><a href="module-storage.html">storage</a></li><li><a href="module-toolbar.html">toolbar</a></li></ul>
+    <h2><a href="index.html">Index</a></h2><h3>Modules</h3><ul><li><a href="module-appcache.html">appcache</a></li><li><a href="module-chorddata.html">chorddata</a></li><li><a href="module-functions.html">functions</a></li><li><a href="module-jquery.html">jquery</a></li><li><a href="module-main.html">main</a></li><li><a href="module-pluginlist.html">pluginlist</a></li><li><a href="module-plugins.html">plugins</a></li><li><a href="addons.html">plugins/addons</a></li><li><a href="beats.html">plugins/beats</a></li><li><a href="chords.html">plugins/chords</a></li><li><a href="embed.html">plugins/embed</a></li><li><a href="export.html">plugins/export</a></li><li><a href="guitar-chords.html">plugins/guitar-chords</a></li><li><a href="import.html">plugins/import</a></li><li><a href="lyrics.html">plugins/lyrics</a></li><li><a href="structure.html">plugins/structure</a></li><li><a href="title.html">plugins/title</a></li><li><a href="tools.html">plugins/tools</a></li><li><a href="transpose.html">plugins/transpose</a></li><li><a href="verses.html">plugins/verses</a></li><li><a href="module-resizer.html">resizer</a></li><li><a href="module-share.html">share</a></li><li><a href="module-storage.html">storage</a></li><li><a href="module-toolbar.html">toolbar</a></li></ul>
 </nav>
 
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0-dev</a> on Wed Jan 08 2014 02:19:02 GMT+0100 (CET)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a> on Sun Jun 08 2014 02:12:52 GMT+0200 (CEST)
 </footer>
 
 <script> prettyPrint(); </script>

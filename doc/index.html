@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <title>JSDoc: Index</title>
-    
+
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
     <!--[if lt IE 9]>
@@ -16,9 +16,9 @@
 <body>
 
 <div id="main">
-    
+
     <h1 class="page-title">Index</h1>
-    
+
     
 
 
@@ -41,58 +41,48 @@
 
 
     <section>
-        <article><h1>Chordlove developer documentation</h1>
-
-<p>Chordlove is client-side application written in JavaScript (and HTML5 + CSS).
+        <article><h1>Chordlove developer documentation</h1><p>Chordlove is client-side application written in JavaScript (and HTML5 + CSS).
 The source code is found at <a href="https://github.com/chordlove/chordlove">GitHub</a>.</p>
-
-<h2>Overview</h2>
-
-<p>The core code is contained in modules loaded by <a href="http://www.injectjs.com/">Inject</a>.
+<h2>Overview</h2><p>The core code is contained in modules loaded by <a href="http://www.injectjs.com/">Inject</a>.
 This code mostly handles the infrastructure of the application.
 All modules are singletons.</p>
-
 <p>Most functionality lives in plugins, handled by the <a href="module-plugins.html">plugins module</a>.
 Technically the plugins are modules as well, just loaded and accessed in a different way.</p>
-
-<h2>Building</h2>
-
-<p>There&#39;s no build process, the source code equals the application.
-Still, to try it out locally, you&#39;ll need a web server running.</p>
-
+<h2>Building</h2><p>There's no build process, the source code equals the application.
+Still, to try it out locally, you'll need a web server running.</p>
 <p>To build the documentation, install <code>jsdoc</code> on the system, and execute the <code>document</code> script in the project root.</p>
-
-<h2>Plugins</h2>
-
-<p>Plugins provide the actual functionality of the application.</p>
-
+<h2>Plugins</h2><p>Plugins provide the actual functionality of the application.</p>
 <p>All plugins can implement these actions:</p>
-
-<ol><li>Receive data (<code>setData</code> method).</li><li>Render data (<code>render</code> method).</li><li>Write data (<code>serialize</code> method).</li></ol>
-
-<p>The data received is the one emitted by the plugin at an earlier point (unless it&#39;s damaged somehow, that can also be the case). The data is transparently added to the URL of the page and received from there as well.</p>
-
-<p>The actions are opt-in, there&#39;s flags in the plugin metadata to control this.</p>
-
+<ol>
+<li>Receive data (<code>setData</code> method).</li>
+<li>Render data (<code>render</code> method).</li>
+<li>Write data (<code>serialize</code> method).</li>
+</ol>
+<p>The data received is the one emitted by the plugin at an earlier point (unless it's damaged somehow, that can also be the case). The data is transparently added to the URL of the page and received from there as well.</p>
+<p>The actions are opt-in, there's flags in the plugin metadata to control this.</p>
 <p>Plugins register themselves with the <a href="module-plugins.html">plugins module</a> at load time.</p>
-
 <p>Plugins can keep an internal state, but the general advice is to not do so. Other plugins my alter the DOM so that the internal state is out of sync with the page. Instead, read the state from the DOM as needed. In some places the <code>data</code> method is used to keep state information connected to the DOM.</p>
-
-<h2>Dependencies</h2>
-
-<ul><li><a href="http://fortawesome.github.io/Font-Awesome/">Font Awesome</a></li><li><a href="http://www.injectjs.com/">Inject</a></li><li><a href="http://jquery.com/">jQuery</a></li><li><a href="https://github.com/GerHobbelt/jquery-hashchange">jQuery hashchange event</a></li><li><a href="http://jqueryui.com/">jQuery UI</a></li><li><a href="http://twitter.github.io/bootstrap/">Twitter Bootstrap</a></li><li><a href="http://raphaeljs.com/">Raphaël</a></li><li><a href="https://github.com/typekit/webfontloader">WebFontLoader</a></li><li><a href="https://github.com/starfishmod/jquery-oembed-all">JQuery Oembed All</a></li></ul>
-
-<h2>Fonts</h2>
-
-<ul><li><a href="http://dejavu-fonts.org/wiki/Main_Page">DejaVu Font</a></li><li><a href="https://edgewebfonts.adobe.com/">Neuton Cursive Font</a></li></ul>
-
-<h2>Tools</h2>
-
-<ul><li><a href="https://github.com/jsdoc3/jsdoc">JSDoc 3</a></li></ul>
-
-<h2>Tests</h2>
-
-<ul><li><a href="../tests/">Main Tests Page</a></li></ul></article>
+<h2>Dependencies</h2><ul>
+<li><a href="http://fortawesome.github.io/Font-Awesome/">Font Awesome</a></li>
+<li><a href="http://www.injectjs.com/">Inject</a></li>
+<li><a href="http://jquery.com/">jQuery</a></li>
+<li><a href="https://github.com/GerHobbelt/jquery-hashchange">jQuery hashchange event</a></li>
+<li><a href="http://jqueryui.com/">jQuery UI</a></li>
+<li><a href="http://twitter.github.io/bootstrap/">Twitter Bootstrap</a></li>
+<li><a href="http://raphaeljs.com/">Raphaël</a></li>
+<li><a href="https://github.com/typekit/webfontloader">WebFontLoader</a></li>
+<li><a href="https://github.com/starfishmod/jquery-oembed-all">JQuery Oembed All</a></li>
+</ul>
+<h2>Fonts</h2><ul>
+<li><a href="http://dejavu-fonts.org/wiki/Main_Page">DejaVu Font</a></li>
+<li><a href="https://edgewebfonts.adobe.com/">Neuton Cursive Font</a></li>
+</ul>
+<h2>Tools</h2><ul>
+<li><a href="https://github.com/jsdoc3/jsdoc">JSDoc 3</a></li>
+</ul>
+<h2>Tests</h2><ul>
+<li><a href="../tests/">Main Tests Page</a></li>
+</ul></article>
     </section>
 
 
@@ -103,13 +93,13 @@ Still, to try it out locally, you&#39;ll need a web server running.</p>
 </div>
 
 <nav>
-    <h2><a href="index.html">Index</a></h2><h3>Modules</h3><ul><li><a href="module-chorddata.html">chorddata</a></li><li><a href="module-functions.html">functions</a></li><li><a href="module-jquery.html">jquery</a></li><li><a href="module-main.html">main</a></li><li><a href="module-pluginlist.html">pluginlist</a></li><li><a href="module-plugins.html">plugins</a></li><li><a href="addons.html">plugins/addons</a></li><li><a href="beats.html">plugins/beats</a></li><li><a href="chords.html">plugins/chords</a></li><li><a href="embed.html">plugins/embed</a></li><li><a href="export.html">plugins/export</a></li><li><a href="guitar-chords.html">plugins/guitar-chords</a></li><li><a href="import.html">plugins/import</a></li><li><a href="lyrics.html">plugins/lyrics</a></li><li><a href="structure.html">plugins/structure</a></li><li><a href="title.html">plugins/title</a></li><li><a href="tools.html">plugins/tools</a></li><li><a href="transpose.html">plugins/transpose</a></li><li><a href="verses.html">plugins/verses</a></li><li><a href="module-resizer.html">resizer</a></li><li><a href="module-share.html">share</a></li><li><a href="module-storage.html">storage</a></li><li><a href="module-toolbar.html">toolbar</a></li></ul>
+    <h2><a href="index.html">Index</a></h2><h3>Modules</h3><ul><li><a href="module-appcache.html">appcache</a></li><li><a href="module-chorddata.html">chorddata</a></li><li><a href="module-functions.html">functions</a></li><li><a href="module-jquery.html">jquery</a></li><li><a href="module-main.html">main</a></li><li><a href="module-pluginlist.html">pluginlist</a></li><li><a href="module-plugins.html">plugins</a></li><li><a href="addons.html">plugins/addons</a></li><li><a href="beats.html">plugins/beats</a></li><li><a href="chords.html">plugins/chords</a></li><li><a href="embed.html">plugins/embed</a></li><li><a href="export.html">plugins/export</a></li><li><a href="guitar-chords.html">plugins/guitar-chords</a></li><li><a href="import.html">plugins/import</a></li><li><a href="lyrics.html">plugins/lyrics</a></li><li><a href="structure.html">plugins/structure</a></li><li><a href="title.html">plugins/title</a></li><li><a href="tools.html">plugins/tools</a></li><li><a href="transpose.html">plugins/transpose</a></li><li><a href="verses.html">plugins/verses</a></li><li><a href="module-resizer.html">resizer</a></li><li><a href="module-share.html">share</a></li><li><a href="module-storage.html">storage</a></li><li><a href="module-toolbar.html">toolbar</a></li></ul>
 </nav>
 
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0-dev</a> on Wed Jan 08 2014 02:19:02 GMT+0100 (CET)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a> on Sun Jun 08 2014 02:12:52 GMT+0200 (CEST)
 </footer>
 
 <script> prettyPrint(); </script>

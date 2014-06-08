@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: toolbar.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: toolbar.js</h1>
+
+    
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/* 
+ * Chordlove is a tool for sharing song chords and lyrics.
+ * Copyright (C) 2013-2014 NA Konsult AB
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see &lt;http://www.gnu.org/licenses/>.
+ */
+/**
+ * Behavior of the toolbar.
+ * 
+ * @module toolbar
+ * @requires jquery
+ * @requires functions
+ * @requires appcache
+ */
+
+function Toolbar( $, functions, appcache )
+{
+  'use strict';
+  if ( Toolbar.prototype._instance )
+  {
+    return Toolbar.prototype._instance;
+  }
+  Toolbar.prototype._instance = this;
+
+  var $ADDONS_MENU = $( '#addons-list' );
+  var $TOOLS_MENU = $( '#tools-list' );
+  var $MENU_LI = $( '&lt;li />' );
+  var $MENU_A = $( '&lt;a href="#"/>' );
+
+  var $body = $( 'body' );
+  var $edit = $( '#edit' );
+  var $navbar = $( '#navbar' );
+
+  var clearFunction = null;
+
+  appcache.registerOnlineEventListener( function()
+  {
+    $( 'a[href^="http"]' ).parent( 'li' ).removeClass( 'disabled' );
+  } );
+
+  appcache.registerOfflineEventListener( function()
+  {
+    $( 'a[href^="http"]' ).parent( 'li' ).addClass( 'disabled' );
+  } );
+
+  function prepareCpanel()
+  {
+    function editMode()
+    {
+      var currentState = $( '#edit' ).hasClass( 'active' );
+      setEditMode( !currentState );
+    }
+
+    function clear()
+    {
+      if ( clearFunction )
+      {
+        clearFunction();
+      }
+      return false;
+    }
+
+    function goBack()
+    {
+      if ( 'history' in window &amp;&amp; 'back' in window.history )
+      {
+        window.history.back();
+      }
+    }
+
+    function goForward()
+    {
+      if ( 'history' in window &amp;&amp; 'forward' in window.history )
+      {
+        window.history.forward();
+      }
+    }
+
+    functions.bindButton( '#navigation-back', goBack );
+    functions.bindButton( '#navigation-forward', goForward );
+
+    functions.bindButton( '#edit', editMode );
+    functions.bindButton( '#clear', clear );
+
+    $( window ).resize( refreshNavbarMargin );
+    refreshNavbarMargin();
+  }
+
+  prepareCpanel();
+
+  /**
+   * Set the edit mode to use.
+   * 
+   * @method
+   * @name module:toolbar.setEditMode
+   * @param {boolean}
+   *          mode Set to &lt;code>true&lt;/code> to enable editing.
+   */
+  function setEditMode( mode )
+  {
+    if ( mode === true )
+    {
+      $body.addClass( 'edit-mode' );
+      $edit.addClass( 'active' );
+      hideOrShow( 'show' );
+    }
+    else
+    {
+      $body.removeClass( 'edit-mode' );
+      $edit.removeClass( 'active' );
+      hideOrShow( 'hide' );
+    }
+    $edit.blur();
+    refreshNavbarMargin();
+  }
+
+  function refreshNavbarMargin()
+  {
+    var height = $navbar.height();
+    $body.css( 'margin-top', height );
+  }
+
+  /**
+   * Hide or show the empty title input elements. Make the title input element read-only in the case of hiding.
+   * 
+   * @method
+   * @name module:toolbar.hideOrShow
+   * @param {string}
+   *          action Choose action by using &lt;code>show&lt;/code> or &lt;code>hide&lt;/code> as the value.
+   */
+  function hideOrShow( action )
+  {
+    $( '#title' ).each( function()
+    {
+      var $element = $( this );
+      if ( $element.val() === '' )
+      {
+        $element[action]();
+      }
+    } );
+  }
+
+  /**
+   * Register a member in the addons menu.
+   * &lt;p>
+   * The registered function will be provided the &lt;code>LI&lt;/code> and &lt;code>A&lt;/code> element going into the menu,
+   * both wrapped as jQuery objects. Manipulate the menu elements as needed. Something along the lines of:
+   * 
+   * &lt;pre>&lt;code>
+   * &lt;/code>&lt;/pre>
+   * 
+   * @method
+   * @name module:toolbar.registerAddonsMenuMember
+   * @param {Function}
+   *          menuMember The menu member function to register.
+   */
+  function registerAddonsMenuMember( menuMember )
+  {
+    registerMenuMember( $ADDONS_MENU, menuMember );
+  }
+
+  /**
+   * Register a member in the tools menu.
+   * &lt;p>
+   * The registered function will be provided the &lt;code>LI&lt;/code> and &lt;code>A&lt;/code> element going into the menu,
+   * both wrapped as jQuery objects. Manipulate the menu elements as needed. Something along the lines of:
+   * 
+   * &lt;pre>&lt;code>
+   * &lt;/code>&lt;/pre>
+   * 
+   * @method
+   * @name module:toolbar.registerAddonsMenuMember
+   * @param {Function}
+   *          menuMember The menu member function to register.
+   */
+  function registerToolsMenuMember( menuMember )
+  {
+    registerMenuMember( $TOOLS_MENU, menuMember );
+  }
+
+  function registerMenuMember( $menu, menuMember )
+  {
+    var $menuLi = $MENU_LI.clone();
+    var $menuA = $MENU_A.clone();
+    menuMember( $menuLi, $menuA );
+    $menuLi.append( $menuA );
+    $menu.append( $menuLi );
+  }
+
+  /**
+   * Set clear function.
+   * &lt;p>
+   * This was introduced to fix circular dependencies.
+   * 
+   * @method
+   * @name module:toolbar.setClearFunction
+   * @param {Function}
+   *          func The function to call to perform a clear operation.
+   */
+  function setClearFunction( func )
+  {
+    clearFunction = func;
+  }
+
+  return {
+    'hideOrShow' : hideOrShow,
+    'setEditMode' : setEditMode,
+    'registerAddonsMenuMember' : registerAddonsMenuMember,
+    'registerToolsMenuMember' : registerToolsMenuMember,
+    'setClearFunction' : setClearFunction
+  };
+}
+
+define( 'toolbar', [ 'jquery', 'functions', 'appcache' ], function( $, functions, appcache )
+{
+  'use strict';
+  return new Toolbar( $, functions, appcache );
+} );
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Index</a></h2><h3>Modules</h3><ul><li><a href="module-appcache.html">appcache</a></li><li><a href="module-chorddata.html">chorddata</a></li><li><a href="module-functions.html">functions</a></li><li><a href="module-jquery.html">jquery</a></li><li><a href="module-main.html">main</a></li><li><a href="module-pluginlist.html">pluginlist</a></li><li><a href="module-plugins.html">plugins</a></li><li><a href="addons.html">plugins/addons</a></li><li><a href="beats.html">plugins/beats</a></li><li><a href="chords.html">plugins/chords</a></li><li><a href="embed.html">plugins/embed</a></li><li><a href="export.html">plugins/export</a></li><li><a href="guitar-chords.html">plugins/guitar-chords</a></li><li><a href="import.html">plugins/import</a></li><li><a href="lyrics.html">plugins/lyrics</a></li><li><a href="structure.html">plugins/structure</a></li><li><a href="title.html">plugins/title</a></li><li><a href="tools.html">plugins/tools</a></li><li><a href="transpose.html">plugins/transpose</a></li><li><a href="verses.html">plugins/verses</a></li><li><a href="module-resizer.html">resizer</a></li><li><a href="module-share.html">share</a></li><li><a href="module-storage.html">storage</a></li><li><a href="module-toolbar.html">toolbar</a></li></ul>
+</nav>
+
+<br clear="both">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a> on Sun Jun 08 2014 02:12:52 GMT+0200 (CEST)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

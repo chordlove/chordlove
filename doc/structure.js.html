@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: plugins/structure.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: plugins/structure.js</h1>
+
+    
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/* 
+ * Chordlove is a tool for sharing song chords and lyrics.
+ * Copyright (C) 2013-2014 NA Konsult AB
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see &lt;http://www.gnu.org/licenses/>.
+ */
+/**
+ * Manages the song structure.
+ * 
+ * @module plugins/structure
+ * @requires jquery
+ * @requires share
+ * @requires functions
+ */
+
+function Structure( $, share, functions )
+{
+  'use strict';
+  if ( Structure.prototype._instance )
+  {
+    return Structure.prototype._instance;
+  }
+  Structure.prototype._instance = this;
+
+  var PLUGIN_ID = '03';
+  var DEFAULT_FORMAT = '0';
+
+  var format = DEFAULT_FORMAT;
+  var data = null;
+
+  var $PARENT = $( '#items' );
+  var $TIME_SIGNATURE = $( '#time-signature' );
+  var MENU_START_OF_LINE = '&lt;i class="fa fa-fw fa-arrow-left">&lt;/i> Put on new line / back';
+
+  var START_OF_LINE = 'start-of-line'; // duplicated in chords.js
+  var INDIVIDUAL_BAR_BREAK = 'inidividual-bar-break';
+
+  var $form = undefined;
+
+  var $barBreakNumberSelect = undefined;
+  var barBreakNumberSelect = undefined;
+
+  initForm();
+
+  /**
+   * @method
+   * @name module:plugins/structure.setData
+   */
+  function setData( inputFormat, inputData )
+  {
+    format = inputFormat;
+    data = inputData;
+  }
+
+  /**
+   * @method
+   * @name module:plugins/structure.render
+   */
+  function render()
+  {
+    performRendering();
+  }
+
+  /**
+   * @method
+   * @name module:plugins/structure.serialize
+   */
+  function serialize()
+  {
+    if ( !$barBreakNumberSelect )
+    {
+      return '';
+    }
+    var structure = getStructure();
+    var result = PLUGIN_ID + DEFAULT_FORMAT + structure;
+    if ( result.length &lt; 4 || structure === '0' )
+    {
+      result = '';
+    }
+    return result;
+  }
+
+  function getStructure()
+  {
+    var currentBreakBarNumber = $barBreakNumberSelect.val();
+    var timeSig = currentBreakBarNumber ? functions.getCharacters( currentBreakBarNumber, 1 ) : '0';
+    var startOfLineItems = '';
+    $PARENT.children( 'dd.item' ).each( function( ix, li )
+    {
+      if ( $( li ).data( INDIVIDUAL_BAR_BREAK ) )
+      {
+        var item = functions.getCharacters( ix, 2 );
+        startOfLineItems += item;
+      }
+    } );
+    var count = functions.getCharacters( startOfLineItems.length / 2, 1 );
+    if ( count === '0' )
+    {
+      count = '';
+    }
+    return timeSig + count + startOfLineItems;
+  }
+
+  function parseInput( input )
+  {
+    barBreakNumberSelect.value = functions.getNumber( input.charAt( 0 ) );
+
+    return functions.readChunkArray( {
+      'data' : input,
+      'currentPos' : 1,
+      'chunkSize' : 2,
+      'countSize' : 1
+    } );
+  }
+
+  function startOfLineMenu( $wrapper, $li, $a )
+  {
+    $a.html( MENU_START_OF_LINE ).click( {
+      'li' : $wrapper
+    }, function( event )
+    {
+      event.preventDefault();
+      var $item = event.data.li;
+      if ( $item.hasClass( START_OF_LINE ) || $item.prev( 'dt.' + START_OF_LINE ).length > 0 )
+      {
+        setStartOfLine( $item, false, true );
+      }
+      else
+      {
+        setStartOfLine( $item, true, true );
+      }
+      share.changedStructure( 'plugins/structure/individualBreak' );
+    } );
+  }
+
+  function setBarBreaks()
+  {
+    $form.modal( 'show' );
+  }
+
+  function getBeats( li )
+  {
+    return $( 'div.duration > a', li ).text();
+  }
+
+  function performOnForm( func )
+  {
+    functions.dialog( func, 'structure-barbreak', 'structure', function( form )
+    {
+      $barBreakNumberSelect = $( '#structure-barbreak' );
+      barBreakNumberSelect = $barBreakNumberSelect[0];
+      $form = $( form ).on( 'shown.bs.modal', function()
+      {
+        $barBreakNumberSelect.focus();
+      } );
+      $( '#structure-barbreak-ok' ).click( function()
+      {
+        performRendering();
+        share.changedStructure( 'plugins/structure/breakbars' );
+      } );
+    } );
+  }
+
+  function initForm()
+  {
+    performOnForm( null );
+  }
+
+  function setStartOfLine( $item, isStartOfLine, isSetData )
+  {
+    var $prev = $item.prev( 'dt' );
+    var $elementForStart = $prev.length > 0 ? $prev : $item;
+    if ( isStartOfLine )
+    {
+      $elementForStart.addClass( START_OF_LINE );
+    }
+    else
+    {
+      $elementForStart.removeClass( START_OF_LINE );
+    }
+    if ( isSetData === true )
+    {
+      $item.data( INDIVIDUAL_BAR_BREAK, isStartOfLine );
+    }
+  }
+
+  function performRendering()
+  {
+    performOnForm( function()
+    {
+      var startOfLineItems = undefined;
+      if ( data )
+      {
+        startOfLineItems = parseInput( data );
+        data = null;
+      }
+      var items = $PARENT.children( 'dd.item' ).toArray();
+      var currentBreakBarNumber = $barBreakNumberSelect.val();
+      if ( currentBreakBarNumber )
+      {
+        var timeSignature = $TIME_SIGNATURE.val();
+        var beatsToBreakAfter = currentBreakBarNumber * timeSignature;
+        var beatsSum = 0;
+        for ( var i = 0; i &lt; items.length; i++ )
+        {
+          var item = items[i];
+          var $item = $( item );
+          if ( beatsSum !== 0 &amp;&amp; ( beatsSum % beatsToBreakAfter === 0 ) || $item.data( INDIVIDUAL_BAR_BREAK ) )
+          {
+            setStartOfLine( $item, true );
+          }
+          else
+          {
+            setStartOfLine( $item, false );
+          }
+          beatsSum += getBeats( item ).length;
+        }
+      }
+      if ( startOfLineItems )
+      {
+        $.each( startOfLineItems, function()
+        {
+          var position = functions.getNumber( this );
+          var $item = $( items[position] );
+          setStartOfLine( $item, true, true );
+        } );
+      }
+    } );
+  }
+
+  function structureChanged( event )
+  {
+    if ( event &amp;&amp; typeof event === 'string'
+        &amp;&amp; ( event === 'plugins/structure/breakbars' || event === 'plugins/structure/individualBreak' ) )
+    {
+      return;
+    }
+    performRendering();
+  }
+
+  return {
+    'render' : render,
+    'serialize' : serialize,
+    'setData' : setData,
+    'startOfLineMenu' : startOfLineMenu,
+    'setBarBreaks' : setBarBreaks,
+    'structureChanged' : structureChanged
+  };
+}
+
+define( 'plugins/structure', [ 'plugins', 'jquery', 'share', 'functions', 'plugins/chords' ], function( plugins, $,
+    share, functions, chords )
+{
+  'use strict';
+  var instance = new Structure( $, share, functions );
+  chords.registerChordMenuMember( instance.startOfLineMenu );
+  chords.addPostRenderer( instance.render );
+  share.addStructureChangeListener( instance.structureChanged );
+  plugins.register( {
+    'name' : 'structure',
+    'instance' : instance,
+    'render' : false,
+    'serialize' : true
+  } );
+} );
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Index</a></h2><h3>Modules</h3><ul><li><a href="module-appcache.html">appcache</a></li><li><a href="module-chorddata.html">chorddata</a></li><li><a href="module-functions.html">functions</a></li><li><a href="module-jquery.html">jquery</a></li><li><a href="module-main.html">main</a></li><li><a href="module-pluginlist.html">pluginlist</a></li><li><a href="module-plugins.html">plugins</a></li><li><a href="addons.html">plugins/addons</a></li><li><a href="beats.html">plugins/beats</a></li><li><a href="chords.html">plugins/chords</a></li><li><a href="embed.html">plugins/embed</a></li><li><a href="export.html">plugins/export</a></li><li><a href="guitar-chords.html">plugins/guitar-chords</a></li><li><a href="import.html">plugins/import</a></li><li><a href="lyrics.html">plugins/lyrics</a></li><li><a href="structure.html">plugins/structure</a></li><li><a href="title.html">plugins/title</a></li><li><a href="tools.html">plugins/tools</a></li><li><a href="transpose.html">plugins/transpose</a></li><li><a href="verses.html">plugins/verses</a></li><li><a href="module-resizer.html">resizer</a></li><li><a href="module-share.html">share</a></li><li><a href="module-storage.html">storage</a></li><li><a href="module-toolbar.html">toolbar</a></li></ul>
+</nav>
+
+<br clear="both">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a> on Sun Jun 08 2014 02:12:52 GMT+0200 (CEST)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

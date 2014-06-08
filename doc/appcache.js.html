@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: appcache.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: appcache.js</h1>
+
+    
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/* 
+ * Chordlove is a tool for sharing song chords and lyrics.
+ * Copyright (C) 2013-2014 NA Konsult AB
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see &lt;http://www.gnu.org/licenses/>.
+ */
+/**
+ * Store files in browser appcache.
+ * 
+ * @module appcache
+ * @requires jquery
+ * @requires functions
+ */
+function AppCache( $, functions )
+{
+  'use strict';
+  if ( AppCache.prototype._instance )
+  {
+    return AppCache.prototype._instance;
+  }
+  AppCache.prototype._instance = this;
+
+  if ( !( 'applicationCache' in window ) )
+  {
+    return exports;
+  }
+
+  var UPDATE_CHECK_DELAY = 60000; // 1m
+  var UPDATE_CHECK_INTERVAL = 864000; // 4h
+
+  var appCache = window.applicationCache;
+  var $appCache = $( appCache );
+  var $window = $( window );
+
+  var onlineEventListeners = [];
+  var offlineEventListeners = [];
+  var runOnceWhenOnlineListeners = [];
+
+  init();
+
+  function init()
+  {
+    $appCache.bind( 'updateready', function()
+    {
+      swapCache();
+    } );
+
+    $window.bind( 'online', function()
+    {
+      for ( var i = 0; i &lt; onlineEventListeners.length; i++ )
+      {
+        onlineEventListeners[i]();
+      }
+      while ( runOnceWhenOnlineListeners.length > 0 )
+      {
+        runOnceWhenOnlineListeners.pop()();
+      }
+    } );
+
+    $window.bind( 'offline', function()
+    {
+      for ( var i = 0; i &lt; offlineEventListeners.length; i++ )
+      {
+        offlineEventListeners[i]();
+      }
+    } );
+
+    registerOnlineEventListener( function()
+    {
+      // wait a bit after coming online, then check for updates
+      window.setTimeout( function()
+      {
+        if ( !window.navigator.onLine )
+        {
+          return;
+        }
+        appCache.update();
+      }, UPDATE_CHECK_DELAY );
+    } );
+
+    window.setInterval( function()
+    {
+      appCache.update();
+    }, UPDATE_CHECK_INTERVAL );
+
+    // check update status on page load as well
+    if ( appCache.status === appCache.UPDATEREADY )
+    {
+      swapCache();
+    }
+  }
+
+  function isOnline()
+  {
+    return 'onLine' in window.navigator ? window.navigator.onLine : true;
+  }
+
+  function swapCache()
+  {
+    appCache.swapCache();
+    var $form = null;
+    functions.dialog( function()
+    {
+      $form.modal( 'show' );
+    }, 'appcache-form', 'appcache', function( form )
+    {
+      $form = $( form );
+      $( '#appcache-button' ).click( function()
+      {
+        window.location.reload();
+      } );
+    } );
+  }
+
+  /**
+   * Register a listener to be executed when the browser goes online. The event will fire once at page load, if the
+   * browser is online.
+   * 
+   * @method
+   * @name module:appcache.registerOnlineEventListener
+   * @param {Function}
+   *          listener Listener to execute when coming online.
+   */
+  function registerOnlineEventListener( listener )
+  {
+    onlineEventListeners.push( listener );
+    if ( isOnline() )
+    {
+      listener();
+    }
+  }
+
+  /**
+   * Register a listener to be executed when the browser goes offline. The event will fire once at page load, if the
+   * browser is offline.
+   * 
+   * @method
+   * @name module:appcache.registerOfflineEventListener
+   * @param {Function}
+   *          listener Listener to execute when going offline.
+   */
+  function registerOfflineEventListener( listener )
+  {
+    offlineEventListeners.push( listener );
+    if ( !isOnline() )
+    {
+      listener();
+    }
+  }
+
+  /**
+   * Register a listener to be executed when the browser comes online for the first time. The listener will be executed
+   * right away if the browser is online. The listener will not be executed for any subsequent offline/online cycles.
+   * 
+   * @method
+   * @name module:appcache.runOnceWhenOnline
+   * @param {Function}
+   *          listener Listener to execute once when coming online.
+   */
+  function runOnceWhenOnline( listener )
+  {
+    if ( isOnline() )
+    {
+      listener();
+    }
+    else
+    {
+      runOnceWhenOnlineListeners.push( listener );
+    }
+  }
+
+  return {
+    'registerOnlineEventListener' : registerOnlineEventListener,
+    'registerOfflineEventListener' : registerOfflineEventListener,
+    'runOnceWhenOnline' : runOnceWhenOnline
+  };
+}
+
+define( 'appcache', [ 'jquery', 'functions' ], function( jquery, functions )
+{
+  'use strict';
+  return new AppCache( jquery, functions );
+} );
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Index</a></h2><h3>Modules</h3><ul><li><a href="module-appcache.html">appcache</a></li><li><a href="module-chorddata.html">chorddata</a></li><li><a href="module-functions.html">functions</a></li><li><a href="module-jquery.html">jquery</a></li><li><a href="module-main.html">main</a></li><li><a href="module-pluginlist.html">pluginlist</a></li><li><a href="module-plugins.html">plugins</a></li><li><a href="addons.html">plugins/addons</a></li><li><a href="beats.html">plugins/beats</a></li><li><a href="chords.html">plugins/chords</a></li><li><a href="embed.html">plugins/embed</a></li><li><a href="export.html">plugins/export</a></li><li><a href="guitar-chords.html">plugins/guitar-chords</a></li><li><a href="import.html">plugins/import</a></li><li><a href="lyrics.html">plugins/lyrics</a></li><li><a href="structure.html">plugins/structure</a></li><li><a href="title.html">plugins/title</a></li><li><a href="tools.html">plugins/tools</a></li><li><a href="transpose.html">plugins/transpose</a></li><li><a href="verses.html">plugins/verses</a></li><li><a href="module-resizer.html">resizer</a></li><li><a href="module-share.html">share</a></li><li><a href="module-storage.html">storage</a></li><li><a href="module-toolbar.html">toolbar</a></li></ul>
+</nav>
+
+<br clear="both">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a> on Sun Jun 08 2014 02:12:52 GMT+0200 (CEST)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

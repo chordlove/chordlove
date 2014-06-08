@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Module: main</title>
+    <title>JSDoc: Source: jquery.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,117 +17,45 @@
 
 <div id="main">
 
-    <h1 class="page-title">Module: main</h1>
+    <h1 class="page-title">Source: jquery.js</h1>
 
     
 
 
-
-<section>
-
-<header>
-    <h2>
-    main
-    </h2>
     
-</header>
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/* 
+ * Chordlove is a tool for sharing song chords and lyrics.
+ * Copyright (C) 2013-2014 NA Konsult AB
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see &lt;http://www.gnu.org/licenses/>.
+ */
 
-<article>
-    <div class="container-overview">
-    
-
-    
-        
-            <div class="description">Main module to bootstrap the application. Loads core plugins which should always be present.</div>
-        
-
-        
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="main.js.html">main.js</a>, <a href="main.js.html#line44">line 44</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-        
-    
-    </div>
-
-    
-
-    
-
-    
-        <h3 class="subsection-title">Requires</h3>
-
-        <ul>
-            <li><a href="module-jquery.html">module:jquery</a></li>
-        
-            <li><a href="module-plugins.html">module:plugins</a></li>
-        
-            <li><a href="module-share.html">module:share</a></li>
-        
-            <li><a href="module-appcache.html">module:appcache</a></li>
-        
-            <li><a href="title.html">module:plugins/title</a></li>
-        
-            <li><a href="chords.html">module:plugins/chords</a></li>
-        
-            <li><a href="lyrics.html">module:plugins/lyrics</a></li>
-        
-            <li><a href="structure.html">module:plugins/structure</a></li>
-        
-            <li><a href="addons.html">module:plugins/addons</a></li>
-        
-            <li><a href="tools.html">module:plugins/tools</a></li>
-        
-            <li><a href="module-storage.html">module:storage</a></li>
-        </ul>
-    
-
-    
-
-     
-
-    
-
-    
-
-    
-
-    
-
-    
-</article>
-
-</section>
+/**
+ * Wraps jQuery as a module manually.
+ * 
+ * @module jquery
+ */
+define( 'jquery', [], function()
+{
+  'use strict';
+  return window.jQuery.noConflict();
+} );
+</code></pre>
+        </article>
+    </section>
 
 
 

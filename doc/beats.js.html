@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: plugins/beats.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: plugins/beats.js</h1>
+
+    
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/* 
+ * Chordlove is a tool for sharing song chords and lyrics.
+ * Copyright (C) 2013-2014 NA Konsult AB
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see &lt;http://www.gnu.org/licenses/>.
+ */
+/**
+ * Render and serialize chords together with beats per chord and time signature. &lt;i>The core&lt;/i> of the whole
+ * application.
+ * &lt;p>
+ * There's three classes at play here, the core Chords class, the separate Beats class to manage beat counts and the
+ * CopyPaste class to handle copy/paste actions.
+ * 
+ * @module plugins/beats
+ * @requires jquery
+ * @requires functions
+ * @requires share
+ */
+
+function Beats( $, functions, share )
+{
+  'use strict';
+  var MAX_BULLETS = 16;
+  var $PARENT = $( '#items' );
+  var $TIME_SIGNATURE = $( '#time-signature' );
+  var $BEATS_WRAPPER = $( '&lt;div class="btn-group duration">' );
+  var $BEATS_LINK = $( '&lt;a class="btn dropdown-toggle" data-toggle="dropdown" href="#"/>' );
+  var $BEATS_LIST = $( '&lt;ul class="dropdown-menu"/>' );
+  var BULLET_STRING = '••••••••••••••••';
+  var BULLETS = [];
+  for ( var len = 0; len &lt;= MAX_BULLETS; len++ )
+  {
+    BULLETS.push( BULLET_STRING.substr( 0, len ) );
+  }
+
+  $TIME_SIGNATURE.data( 'previous', parseInt( $TIME_SIGNATURE.val() ) ).change( function()
+  {
+    timeSignatureChanged();
+  } );
+
+  function timeSignatureChanged()
+  {
+    if ( $PARENT.children( 'dd.item' ).length > 0 )
+    {
+      createTimeSignatureDialog();
+    }
+    else
+    {
+      // keep the "previous" data in sync.
+      $TIME_SIGNATURE.data( 'previous', parseInt( $TIME_SIGNATURE.val() ) );
+    }
+  }
+
+  function createTimeSignatureDialog()
+  {
+    var canTransform = canBeatsBeTransformed();
+    functions.dialog( function()
+    {
+      openTimeSignatureDialog( canTransform );
+    }, 'time-signature-form', 'time-signature', function()
+    {
+      initializeTimeSignatureDialog();
+    } );
+  }
+
+  function initializeTimeSignatureDialog()
+  {
+    var $modal = $( '#time-signature-form' );
+    $( '#time-signature-ok' ).click( function()
+    {
+      $modal.data( 'saved', true );
+      var transform = $( '#time-signature-actions-transform' ).prop( 'checked' );
+      var previous = $TIME_SIGNATURE.data( 'previous' );
+      var current = parseInt( $TIME_SIGNATURE.val() );
+      var multiplier = current / previous;
+      $TIME_SIGNATURE.data( 'previous', current );
+      $PARENT.children( 'dd.item' ).each( function( index )
+      {
+        var beats = getBeats( this ).length;
+        if ( transform )
+        {
+          beats *= multiplier;
+        }
+        $( 'div.duration', this ).remove();
+        createBeats( beats, this );
+      } );
+      share.changedStructure( 'toolbar/timesignature' );
+    } );
+    $modal.on( 'hidden.bs.modal', function()
+    {
+      if ( !$modal.data( 'saved' ) )
+      {
+        $TIME_SIGNATURE.val( $TIME_SIGNATURE.data( 'previous' ) );
+      }
+    } );
+    $( '#time-signature-close,#time-signature-close-header' ).click( function()
+    {
+      $TIME_SIGNATURE.val( $TIME_SIGNATURE.data( 'previous' ) );
+    } );
+  }
+
+  function openTimeSignatureDialog( canTransform )
+  {
+    var $modal = $( '#time-signature-form' );
+    $( '#time-signature-actions-default' ).prop( 'checked', true );
+    var $transformInput = $( '#time-signature-actions-transform' );
+    var $transformLabel = $( '#time-signature-actions-transform-label' );
+    var $transformAlert = $( '#time-signature-alert' );
+    var $transformAlertYes = $( '#time-signature-alert-yes' );
+    var $transformAlertNo = $( '#time-signature-alert-no' );
+    if ( canTransform )
+    {
+      $transformInput.removeAttr( 'disabled' );
+      $transformLabel.removeClass( 'disabled' );
+      $transformAlert.removeClass( 'alert-block' );
+      $transformAlert.addClass( 'alert-success' );
+      $transformAlertYes.show();
+      $transformAlertNo.hide();
+    }
+    else
+    {
+      $transformInput.attr( 'disabled', 'disabled' );
+      $transformLabel.addClass( 'disabled' );
+      $transformAlert.removeClass( 'alert-success' );
+      $transformAlert.addClass( 'alert-block' );
+      $transformAlertNo.show();
+      $transformAlertYes.hide();
+    }
+    $modal.modal().data( 'saved', false );
+  }
+
+  function canBeatsBeTransformed()
+  {
+    var previous = $TIME_SIGNATURE.data( 'previous' );
+    var current = parseInt( $TIME_SIGNATURE.val() );
+    var multiplier = current / previous;
+    var canTransform = true;
+    $PARENT.children( 'dd.item' ).each( function( index )
+    {
+      var beats = getBeats( this ).length;
+      var result = beats * multiplier;
+      var isInt = result % 1 === 0;
+      if ( !isInt )
+      {
+        canTransform = false;
+        return false;
+      }
+    } );
+    return canTransform;
+  }
+
+  function getBeats( li )
+  {
+    return $( 'div.duration > a', li ).text();
+  }
+
+  function createBeats( beats, wrapper )
+  {
+    var defaultBeats = parseInt( $TIME_SIGNATURE.val() );
+    var num = defaultBeats;
+    if ( beats !== undefined )
+    {
+      num = beats;
+    }
+    var $beatsWrapper = $BEATS_WRAPPER.clone();
+    var $currentBeats = $BEATS_LINK.clone().attr( 'title', 'Beats for this chord. (' + num + ')' );
+    $currentBeats.appendTo( $beatsWrapper );
+    $currentBeats.text( BULLETS[num] );
+    $currentBeats.dropdown();
+
+    var list = $BEATS_LIST.clone();
+    list.appendTo( $beatsWrapper );
+
+    for ( var len = defaultBeats; len > 0; len-- )
+    {
+      var beatString = BULLETS[len];
+      var $option = $( '&lt;li>&lt;a href="#" title="' + len + '">' + beatString + '&lt;/a>&lt;/li>' );
+      $option.appendTo( list );
+      $option.click( {
+        'beatString' : beatString
+      }, function( event )
+      {
+        $currentBeats.dropdown( 'toggle' );
+        if ( $currentBeats.text() !== event.data.beatString )
+        {
+          $currentBeats.text( event.data.beatString );
+          $currentBeats.blur();
+          share.changedStructure( 'beats/create-beats' );
+        }
+        return false;
+      } );
+    }
+
+    $beatsWrapper.appendTo( wrapper );
+  }
+
+  return {
+    'createBeats' : createBeats,
+    'getBeats' : getBeats
+  };
+}
+
+define( 'plugins/beats', [ 'plugins', 'jquery', 'functions', 'share' ], function( plugins, $, functions, share )
+{
+  'use strict';
+  var instance = new Beats( $, functions, share );
+  plugins.register( {
+    'name' : 'beats',
+    'instance' : instance,
+    'render' : false,
+    'serialize' : false
+  } );
+  return instance;
+} );
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Index</a></h2><h3>Modules</h3><ul><li><a href="module-appcache.html">appcache</a></li><li><a href="module-chorddata.html">chorddata</a></li><li><a href="module-functions.html">functions</a></li><li><a href="module-jquery.html">jquery</a></li><li><a href="module-main.html">main</a></li><li><a href="module-pluginlist.html">pluginlist</a></li><li><a href="module-plugins.html">plugins</a></li><li><a href="addons.html">plugins/addons</a></li><li><a href="beats.html">plugins/beats</a></li><li><a href="chords.html">plugins/chords</a></li><li><a href="embed.html">plugins/embed</a></li><li><a href="export.html">plugins/export</a></li><li><a href="guitar-chords.html">plugins/guitar-chords</a></li><li><a href="import.html">plugins/import</a></li><li><a href="lyrics.html">plugins/lyrics</a></li><li><a href="structure.html">plugins/structure</a></li><li><a href="title.html">plugins/title</a></li><li><a href="tools.html">plugins/tools</a></li><li><a href="transpose.html">plugins/transpose</a></li><li><a href="verses.html">plugins/verses</a></li><li><a href="module-resizer.html">resizer</a></li><li><a href="module-share.html">share</a></li><li><a href="module-storage.html">storage</a></li><li><a href="module-toolbar.html">toolbar</a></li></ul>
+</nav>
+
+<br clear="both">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a> on Sun Jun 08 2014 02:12:52 GMT+0200 (CEST)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

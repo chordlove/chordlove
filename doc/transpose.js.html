@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: plugins/transpose.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: plugins/transpose.js</h1>
+
+    
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/* 
+ * Chordlove is a tool for sharing song chords and lyrics.
+ * Copyright (C) 2013-2014 NA Konsult AB
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see &lt;http://www.gnu.org/licenses/>.
+ */
+/**
+ * Transpose the song.
+ * 
+ * @module plugins/transpose
+ * @requires jquery
+ * @requires functions
+ * @requires share
+ */
+
+function Transpose( $, functions, chorddata, share )
+{
+  'use strict';
+  if ( Transpose.prototype._instance )
+  {
+    return Transpose.prototype._instance;
+  }
+  Transpose.prototype._instance = this;
+
+  var $PARENT = $( '#items' );
+  var $form = undefined;
+  var $transposeShift = undefined;
+
+  // var PLUGIN_ID = '0b', DEFAULT_FORMAT = 0;
+
+  /**
+   * @method
+   * @name module:plugins/transpose.setData
+   */
+  function setData( inputFormat, inputData )
+  {
+    // just act as a plugin
+  }
+
+  function init()
+  {
+    functions.dialog( showForm, 'transpose-form', 'transpose', function( form )
+    {
+      $form = $( form );
+      $transposeShift = $( '#transpose-shift' );
+      $( '#transpose-ok' ).click( function()
+      {
+        var shift = parseInt( $transposeShift.val() );
+        if ( shift === 0 )
+        {
+          return;
+        }
+        var $chords = $PARENT.children( 'dd.item' ).children( 'div.chord' ).children( 'input.chord-text' );
+        if ( $chords.length === 0 )
+        {
+          return;
+        }
+        var chords = [];
+        $chords.each( function( ix, input )
+        {
+          var $input = $( input );
+          var currentChord = $input.val();
+          chords.push( currentChord );
+        } );
+        var transposed = chorddata.getTransposed( chords, shift );
+        $chords.each( function( ix, input )
+        {
+          $( input ).val( transposed[ix] );
+        } );
+        share.changedText( 'transpose' );
+      } );
+    } );
+  }
+
+  function showForm()
+  {
+    $form.modal( 'show' ).on( 'shown.bs.modal', function()
+    {
+      $transposeShift.focus();
+    } );
+  }
+
+  return {
+    'setData' : setData,
+    'init' : init
+  };
+}
+
+define( 'plugins/transpose', [ 'plugins', 'jquery', 'functions', 'chorddata', 'share' ], function( plugins, $,
+    functions, chorddata, share )
+{
+  'use strict';
+  var instance = new Transpose( $, functions, chorddata, share );
+  plugins.register( {
+    'name' : 'transpose',
+    'instance' : instance,
+    'render' : false,
+    'serialize' : false
+  } );
+} );
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Index</a></h2><h3>Modules</h3><ul><li><a href="module-appcache.html">appcache</a></li><li><a href="module-chorddata.html">chorddata</a></li><li><a href="module-functions.html">functions</a></li><li><a href="module-jquery.html">jquery</a></li><li><a href="module-main.html">main</a></li><li><a href="module-pluginlist.html">pluginlist</a></li><li><a href="module-plugins.html">plugins</a></li><li><a href="addons.html">plugins/addons</a></li><li><a href="beats.html">plugins/beats</a></li><li><a href="chords.html">plugins/chords</a></li><li><a href="embed.html">plugins/embed</a></li><li><a href="export.html">plugins/export</a></li><li><a href="guitar-chords.html">plugins/guitar-chords</a></li><li><a href="import.html">plugins/import</a></li><li><a href="lyrics.html">plugins/lyrics</a></li><li><a href="structure.html">plugins/structure</a></li><li><a href="title.html">plugins/title</a></li><li><a href="tools.html">plugins/tools</a></li><li><a href="transpose.html">plugins/transpose</a></li><li><a href="verses.html">plugins/verses</a></li><li><a href="module-resizer.html">resizer</a></li><li><a href="module-share.html">share</a></li><li><a href="module-storage.html">storage</a></li><li><a href="module-toolbar.html">toolbar</a></li></ul>
+</nav>
+
+<br clear="both">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a> on Sun Jun 08 2014 02:12:52 GMT+0200 (CEST)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

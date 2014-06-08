@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: storage.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: storage.js</h1>
+
+    
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/* 
+ * Chordlove is a tool for sharing song chords and lyrics.
+ * Copyright (C) 2013-2014 NA Konsult AB
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see &lt;http://www.gnu.org/licenses/>.
+ */
+/**
+ * Store hashes in local storage.
+ * 
+ * @module storage
+ * @requires jquery
+ * @requires functions
+ * @requires share
+ * @requires plugins
+ */
+
+function Storage( $, functions, share, plugins )
+{
+  'use strict';
+  if ( Storage.prototype._instance )
+  {
+    return Storage.prototype._instance;
+  }
+  Storage.prototype._instance = this;
+
+  if ( !functions.hasLocalStorage() )
+  {
+    return;
+  }
+
+  $( '#save-load' ).removeClass( 'NIY' );
+
+  init();
+
+  function initSaveForm( form )
+  {
+    var $form = $( form );
+    var $save = $( '#save' );
+    var $saveOk = $( '#storage-save-ok' );
+    var $status = $( '#storage-save-status' );
+    var $help = $( '#storage-save-help' );
+    var $saveName = $( '#storage-save-name' );
+    var saveName = $saveName[0];
+
+    $saveName.keyup( function()
+    {
+      setSaveNameStatus();
+    } ).keypress( function( event )
+    {
+      if ( event.keyCode === 13 )
+      {
+        event.preventDefault();
+        $saveOk.click();
+      }
+    } );
+
+    function setSaveNameStatus()
+    {
+      var value = $.trim( $saveName.val() );
+      $status.removeClass( 'error info' );
+      if ( value.length === 0 )
+      {
+        $status.addClass( 'error' );
+        $help.text( "The name can't be empty!" );
+        $saveOk.addClass( 'disabled' );
+      }
+      else if ( value in window.localStorage )
+      {
+        $status.addClass( 'info' );
+        $help.text( "The existing song will be overwritten." );
+        $saveOk.removeClass( 'disabled' );
+      }
+      else
+      {
+        $help.text( '' );
+        $saveOk.removeClass( 'disabled' );
+      }
+    }
+
+    $save.click( function()
+    {
+      $saveName.val( $( '#title' ).val() );
+      $saveName.data( 'hash', window.location.hash );
+      setSaveNameStatus();
+      $form.modal();
+    } );
+
+    $form.on( 'shown.bs.modal', function()
+    {
+      functions.setCaretPositionToBeginning( saveName );
+    } );
+
+    $saveOk.click( function()
+    {
+      if ( $status.hasClass( 'error' ) )
+      {
+        return false;
+      }
+      window.localStorage[$.trim( $saveName.val() )] = $saveName.data( 'hash' );
+      functions.alert( 'success', 'Save', '"' + $saveName.val() + '" has been saved.', 'fa fa-save' );
+    } );
+  }
+
+  function initOpenDeleteForm( form )
+  {
+    var $OPTION = $( '&lt;option/>' );
+
+    var $deleteGroup = $( '#storage-delete-group' );
+    var $deleteConfirm = $( '#storage-delete-confirm' );
+    var deleteConfirm = $deleteConfirm[0];
+    var $deleteButton = $( '#storage-open-delete' );
+    var $openSelect = $( '#storage-open-select' );
+    var openSelect = $openSelect[0];
+    var $okButton = $( '#storage-open-ok' );
+    var $openForm = $( form );
+
+    $( '#open' ).click( function()
+    {
+      var items = [];
+      for ( var key in window.localStorage )
+      {
+        if ( key.indexOf( 'lscache-INJECT' ) !== 0 )
+        {
+          items.push( key );
+        }
+      }
+      items.sort();
+      $openSelect.empty();
+      for ( var i = 0; i &lt; items.length; i++ )
+      {
+        $openSelect.append( $OPTION.clone().text( items[i] ) );
+      }
+
+      $openForm.modal().on( 'shown.bs.modal', function()
+      {
+        $openSelect.focus();
+        $openSelect.children( 'option:first' ).attr( 'selected', 'selected' );
+        updateButtons();
+      } ).on( 'hidden.bs.modal', function()
+      {
+        deleteConfirm.checked = false;
+      } );
+
+      $okButton.click( function()
+      {
+        if ( openSelect.selectedIndex === -1 )
+        {
+          return;
+        }
+        share.changed( true ); // this stores the current location in history
+        var selectedKey = $openSelect.val();
+        var hash = window.localStorage[selectedKey];
+        share.clear();
+        functions.alert( 'success', 'Open', '"' + selectedKey + '" has been opened.', 'fa-folder-open-o' );
+        window.location.hash = hash;
+      } );
+
+      $deleteButton.click( function( event )
+      {
+        event.preventDefault();
+        var selectedKey = $openSelect.val();
+        delete window.localStorage[selectedKey];
+        var selected = openSelect.selectedIndex;
+        if ( selected !== -1 )
+        {
+          openSelect.remove( selected );
+        }
+        updateButtons();
+      } );
+
+      $deleteConfirm.change( updateButtons );
+
+      $openSelect.change( updateButtons ).keypress( function( event )
+      {
+        if ( event.keyCode === 13 )
+        {
+          event.preventDefault();
+          $okButton.click();
+        }
+      } ).dblclick( function( event )
+      {
+        event.stopImmediatePropagation();
+        $okButton.click();
+      } );
+
+      function updateButtons()
+      {
+        var somethingIsSelected = openSelect.selectedIndex !== -1;
+        var doNotDelete = !deleteConfirm.checked;
+        $deleteButton.toggleClass( 'disabled', doNotDelete || !somethingIsSelected );
+        if ( doNotDelete || !somethingIsSelected )
+        {
+          $deleteButton.attr( 'disabled', 'disabled' );
+        }
+        else
+        {
+          $deleteButton.removeAttr( 'disabled' );
+        }
+        $deleteGroup.toggleClass( 'error', doNotDelete );
+        $okButton.toggleClass( 'disabled', !somethingIsSelected );
+        if ( somethingIsSelected )
+        {
+          $okButton.removeAttr( 'disabled' );
+        }
+        else
+        {
+          $okButton.attr( 'disabled', 'disabled' );
+        }
+      }
+    } );
+  }
+
+  function init( func )
+  {
+    functions.dialog( func, 'storage-save-form', 'save', function( form )
+    {
+      initSaveForm( form );
+    } );
+    functions.dialog( func, 'storage-open-form', 'open', function( form )
+    {
+      initOpenDeleteForm( form );
+    } );
+  }
+
+  return {};
+}
+
+define( 'storage', [ 'jquery', 'functions', 'share', 'plugins' ], function( $, functions, share, plugins )
+{
+  'use strict';
+  return new Storage( $, functions, share, plugins );
+} );
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Index</a></h2><h3>Modules</h3><ul><li><a href="module-appcache.html">appcache</a></li><li><a href="module-chorddata.html">chorddata</a></li><li><a href="module-functions.html">functions</a></li><li><a href="module-jquery.html">jquery</a></li><li><a href="module-main.html">main</a></li><li><a href="module-pluginlist.html">pluginlist</a></li><li><a href="module-plugins.html">plugins</a></li><li><a href="addons.html">plugins/addons</a></li><li><a href="beats.html">plugins/beats</a></li><li><a href="chords.html">plugins/chords</a></li><li><a href="embed.html">plugins/embed</a></li><li><a href="export.html">plugins/export</a></li><li><a href="guitar-chords.html">plugins/guitar-chords</a></li><li><a href="import.html">plugins/import</a></li><li><a href="lyrics.html">plugins/lyrics</a></li><li><a href="structure.html">plugins/structure</a></li><li><a href="title.html">plugins/title</a></li><li><a href="tools.html">plugins/tools</a></li><li><a href="transpose.html">plugins/transpose</a></li><li><a href="verses.html">plugins/verses</a></li><li><a href="module-resizer.html">resizer</a></li><li><a href="module-share.html">share</a></li><li><a href="module-storage.html">storage</a></li><li><a href="module-toolbar.html">toolbar</a></li></ul>
+</nav>
+
+<br clear="both">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a> on Sun Jun 08 2014 02:12:52 GMT+0200 (CEST)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

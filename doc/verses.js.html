@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: plugins/verses.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: plugins/verses.js</h1>
+
+    
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/* 
+ * Chordlove is a tool for sharing song chords and verses.
+ * Copyright (C) 2013-2014 NA Konsult AB
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see &lt;http://www.gnu.org/licenses/>.
+ */
+/**
+ * Module to add verses to the song. Hooks into the {@link module:plugins/chords} module to get rendering executed and
+ * adds its own copy/paste extractor as well.
+ * 
+ * @module plugins/verses
+ * @requires jquery
+ * @requires functions
+ * @requires share
+ */
+
+function Verses( $, functions, share )
+{
+  'use strict';
+  if ( Verses.prototype._instance )
+  {
+    return Verses.prototype._instance;
+  }
+  Verses.prototype._instance = this;
+
+  var PLUGIN_ID = '04', DEFAULT_FORMAT = 0;
+  var data = null;
+  var format = DEFAULT_FORMAT;
+  var loaded = true;
+
+  var $ADDONS = $( '#addons-core' );
+
+  /**
+   * @method
+   * @name module:plugins/verses.setData
+   */
+  function setData( inputFormat, inputData )
+  {
+    format = inputFormat;
+    data = inputData;
+  }
+
+  /**
+   * @method
+   * @name module:plugins/verses.render
+   */
+  function render()
+  {
+    if ( !loaded )
+    {
+      return;
+    }
+    var blocks = functions.readStringArray( {
+      'data' : data,
+      'countSize' : 1,
+      'itemLengthSize' : 2
+    } ).array;
+    var maxBlockLength = 0;
+    $.each( blocks, function()
+    {
+      var len = this.split( '\n' ).length - 1;
+      if ( len > maxBlockLength )
+      {
+        maxBlockLength = len;
+      }
+    } );
+    renderBlocks( blocks, maxBlockLength );
+  }
+
+  /**
+   * @method
+   * @name module:plugins/verses.serialize
+   */
+  function serialize()
+  {
+    if ( !loaded )
+    {
+      return '';
+    }
+    var content = getContentFromContainer();
+    var serialized = PLUGIN_ID + DEFAULT_FORMAT + functions.writeStringArray( {
+      'items' : content,
+      'countSize' : 1,
+      'itemLengthSize' : 2
+    } );
+    return serialized.length > 4 ? serialized : '';
+  }
+
+  function getContentFromForm()
+  {
+    var lines = $( '#verses-content' ).val().split( "\n" );
+    lines.push( "" ); // ensure last block gets added
+    var blocks = [];
+    var maxBlockLength = 0;
+    var blockLength = 0;
+    var block = "";
+    $.each( lines, function( index, line )
+    {
+      if ( $.trim( this ).length === 0 )
+      {
+        if ( block.length > 0 )
+        {
+          blocks.push( block );
+          if ( blockLength > maxBlockLength )
+          {
+            maxBlockLength = blockLength;
+          }
+          block = "";
+          blockLength = 0;
+        }
+        else
+        {
+          // ignore multiple blank lines
+        }
+      }
+      else
+      {
+        block += line + "\n";
+        blockLength++;
+      }
+    } );
+    return {
+      'blocks' : blocks,
+      'maxBlockLength' : maxBlockLength
+    };
+  }
+
+  function getContentFromContainer()
+  {
+    var $container = $( '#verses-blocks' );
+    var blocks = [];
+    if ( $container.length === 0 )
+    {
+      return blocks;
+    }
+    $container.children( 'p' ).each( function()
+    {
+      blocks.push( $( this ).text() );
+    } );
+    return blocks;
+  }
+
+  function renderBlocks( blocks, maxBlockLength )
+  {
+    init( function()
+    {
+      var height = 20 * maxBlockLength;
+      var $container = $( '#verses-blocks' );
+      $container.empty();
+      $.each( blocks, function()
+      {
+        $container.append( $( '&lt;p/>' ).text( this ).height( height ) );
+      } );
+    } );
+  }
+
+  function init( func )
+  {
+    functions.dialog( func, 'verses', 'verses', function()
+    {
+      var $verses = $( '&lt;li id="verses"/>' );
+      $( '&lt;div id="verses-blocks"/>' ).appendTo( $verses ).click( load );
+      $verses.appendTo( $ADDONS );
+      $( '#verses-ok' ).click( function()
+      {
+        var content = getContentFromForm();
+        renderBlocks( content.blocks, content.maxBlockLength );
+        share.changedText( 'plugins/verses' );
+      } );
+    } );
+  }
+
+  function load()
+  {
+    loaded = true;
+    init( function()
+    {
+      var $versesContent = $( '#verses-content' );
+      $versesContent.val( getContentFromContainer().join( '\n' ) );
+      $( '#verses-form' ).modal().on( 'shown.bs.modal', function()
+      {
+        $versesContent.focus();
+      } );
+    } );
+  }
+
+  function unload()
+  {
+    loaded = false;
+  }
+
+  function clear()
+  {
+    $( '#verses-content' ).val( '' );
+    $( '#verses-blocks' ).empty();
+  }
+
+  return {
+    'render' : render,
+    'serialize' : serialize,
+    'setData' : setData,
+    'load' : load,
+    'unload' : unload,
+    'clear' : clear
+  };
+}
+
+define( 'plugins/verses', [ 'plugins', 'jquery', 'functions', 'share' ], function( plugins, $, functions, share )
+{
+  'use strict';
+  var instance = new Verses( $, functions, share );
+  plugins.register( {
+    'name' : 'verses',
+    'instance' : instance,
+    'render' : true,
+    'serialize' : true
+  } );
+  return instance;
+} );
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Index</a></h2><h3>Modules</h3><ul><li><a href="module-appcache.html">appcache</a></li><li><a href="module-chorddata.html">chorddata</a></li><li><a href="module-functions.html">functions</a></li><li><a href="module-jquery.html">jquery</a></li><li><a href="module-main.html">main</a></li><li><a href="module-pluginlist.html">pluginlist</a></li><li><a href="module-plugins.html">plugins</a></li><li><a href="addons.html">plugins/addons</a></li><li><a href="beats.html">plugins/beats</a></li><li><a href="chords.html">plugins/chords</a></li><li><a href="embed.html">plugins/embed</a></li><li><a href="export.html">plugins/export</a></li><li><a href="guitar-chords.html">plugins/guitar-chords</a></li><li><a href="import.html">plugins/import</a></li><li><a href="lyrics.html">plugins/lyrics</a></li><li><a href="structure.html">plugins/structure</a></li><li><a href="title.html">plugins/title</a></li><li><a href="tools.html">plugins/tools</a></li><li><a href="transpose.html">plugins/transpose</a></li><li><a href="verses.html">plugins/verses</a></li><li><a href="module-resizer.html">resizer</a></li><li><a href="module-share.html">share</a></li><li><a href="module-storage.html">storage</a></li><li><a href="module-toolbar.html">toolbar</a></li></ul>
+</nav>
+
+<br clear="both">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a> on Sun Jun 08 2014 02:12:52 GMT+0200 (CEST)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
