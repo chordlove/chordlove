@@ -217,25 +217,41 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         </button>
         <button type="button" title="Use sharps" id="sharp" class="btn btn-default navbar-btn chord-font">♯</button>
       </span>
-      <span id="copypaste" class="btn-group">
-        <button id="cut" class="btn btn-default navbar-btn" title="Cut">
-          <i class="fa fa-cut"></i>
-        </button>
-        <button id="copy" class="btn btn-default navbar-btn" title="Copy">
-          <i class="fa fa-copy"></i>
-        </button>
-        <button id="paste" class="btn btn-default navbar-btn" title="Paste at the end">
-          <i class="fa fa-paste"></i>
-        </button>
-        <button id="delete" class="btn btn-default navbar-btn" title="Delete">
-          <i class="fa fa-times"></i>
-        </button>
-      </span>
-      <span class="btn-group">
-        <button id="clear" class="btn btn-default navbar-btn" title="Clear all">
-          <i class="fa fa-trash-o"></i>
-        </button>
-      </span>
+
+    <div class="btn-group">
+      <a class="btn btn-default navbar-btn dropdown-toggle" data-toggle="dropdown" data-target="#">
+        <i class="fa fa-briefcase"></i>
+        <span class="caret"></span>
+      </a>
+      <ul class="dropdown-menu">
+        <li>
+          <a id="cut" href="javascript:;">
+            <i class="fa fa-fw fa-cut"></i> Cut
+          </a>
+        </li>
+        <li>
+          <a id="copy" href="javascript:;">
+            <i class="fa fa-fw fa-copy"></i> Copy
+          </a>
+        </li>
+        <li>
+          <a id="paste" href="javascript:;">
+            <i class="fa fa-fw fa-paste"></i> Paste at the end
+          </a>
+        </li>
+        <li>
+          <a id="delete" href="javascript:;">
+            <i class="fa fa-fw fa-times"></i> Delete
+          </a>
+        </li>
+        <li role="presentation" class="divider"></li>
+        <li>
+          <a id="clear" href="javascript:;">
+            <i class="fa fa-fw fa-trash-o"></i> Clear all
+          </a>
+        </li>
+      </ul>
+    </div>
 
     <div id="addons-menu" class="btn-group">
       <a class="btn btn-default navbar-btn dropdown-toggle" data-toggle="dropdown" href="#" title="More pieces">
