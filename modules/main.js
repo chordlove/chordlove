@@ -60,7 +60,7 @@
 require(
     [ 'jquery', 'plugins', 'share', 'appcache', 'plugins/title', 'plugins/chords', 'plugins/lyrics',
         'plugins/structure', 'plugins/addons', 'plugins/tools', 'storage' ],
-    function( $, plugins, share, appcache )
+    function( $, plugins, share, appcache, beats )
     {
       'use strict';
       $( function()
@@ -89,6 +89,17 @@ require(
               document.getElementById( this ).style.visibility = 'visible';
             } );
             plugins.init();
+            $( '#chordlove-navbar-icon' ).click( function()
+            {
+              $( '#help' ).modal();
+            } );
+            appcache.runOnceWhenOnline( function()
+            {
+              var script = document.createElement( 'script' );
+              script.type = 'text/javascript';
+              script.src = 'https://apis.google.com/js/client.js?onload=initGapi';
+              $( 'head' ).append( script );
+            } );
           }
           else
           {
@@ -100,17 +111,6 @@ require(
                         + window.location.hostname
                         + ' <i class="fa fa-external-link"></i></a>.</p></div>' );
           }
-          $( '#chordlove-navbar-icon' ).click( function()
-          {
-            $( '#help' ).modal();
-          } );
-          appcache.runOnceWhenOnline( function()
-          {
-            var script = document.createElement( 'script' );
-            script.type = 'text/javascript';
-            script.src = 'https://apis.google.com/js/client.js?onload=initGapi';
-            $( 'head' ).append( script );
-          } );
         } )();
       } );
     } );

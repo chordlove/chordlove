@@ -53,7 +53,6 @@ function Chords( $, functions, share, toolbar, resizer, beatsHandler )
 
   var $SINGLE_BARLINE = $( '<dd class="symbol item-barline"><img class="barline" src="http://cdn.chordlove.com/images/symbols/single-barline.svg" alt="|"></dd>' );
   var $PARENT = $( '#items' );
-  var $TIME_SIGNATURE = $( '#time-signature' );
   var $DD = $( '<dd class="item" />' );
   var $HANDLE = $( '<div class="handle"><i class="fa fa-arrows" title="move"></i><i class="fa fa-thumb-tack pin" title="select/unselect"></i></div>' );
   var $MENU = $( '<div class="btn-group chord-menu"><a class="btn dropdown-toggle" data-toggle="dropdown" href="#" title="More …"><i class="fa fa-cog"></i></a><ul class="dropdown-menu"></ul></div>' );
@@ -153,7 +152,7 @@ function Chords( $, functions, share, toolbar, resizer, beatsHandler )
       $PARENT.addClass( 'has-text' );
     }
     var beatsSum = 0;
-    $TIME_SIGNATURE.val( '' + deserializedData.timeSignature ).data( 'previous', deserializedData.timeSignature );
+    beatsHandler.setTimeSignature( deserializedData.timeSignature );
     $.each( chordItems, function()
     {
       createItem( {
@@ -257,7 +256,7 @@ function Chords( $, functions, share, toolbar, resizer, beatsHandler )
     var chords = {}, chordNo = 0;
     var chordValues = [];
     var chordItems = [];
-    var timeSignature = $TIME_SIGNATURE.val();
+    var timeSignature = beatsHandler.getTimeSignature();
     $PARENT.children( 'dd.item' ).each( function( index )
     {
       var chordData = getChordData( this );
@@ -285,7 +284,7 @@ function Chords( $, functions, share, toolbar, resizer, beatsHandler )
   function updateBarlines()
   {
     $PARENT.children( 'dd.item-barline' ).remove();
-    var timeSignature = $TIME_SIGNATURE.val();
+    var timeSignature = beatsHandler.getTimeSignature();
     var beatsSum = 0;
     $PARENT.children( 'dd.item' ).each( function( index )
     {

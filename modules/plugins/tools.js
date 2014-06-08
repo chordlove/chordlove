@@ -39,6 +39,7 @@ function Tools( $, toolbar, plugins )
 
   var tools = [
       new ToolInfo( 'transpose', 'init', 'fa-arrows-v', 'Transpose song …', true ),
+      new ToolInfo( 'beats', 'showDialog', 'fa-clock-o', 'Time signature …', true ),
       new ToolInfo( 'structure', 'setBarBreaks', 'fa-th', 'Organize bars …', true ),
       new ToolInfo( 'export', 'init', 'fa-download', 'Export songs …', window.Blob && window.URL
           && window.URL.createObjectURL ),

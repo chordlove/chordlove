@@ -33,7 +33,7 @@ function Beats( $, functions, share )
   'use strict';
   var MAX_BULLETS = 16;
   var $PARENT = $( '#items' );
-  var $TIME_SIGNATURE = $( '#time-signature' );
+  var $TIME_SIGNATURE = null;
   var $BEATS_WRAPPER = $( '<div class="btn-group duration">' );
   var $BEATS_LINK = $( '<a class="btn dropdown-toggle" data-toggle="dropdown" href="#"/>' );
   var $BEATS_LIST = $( '<ul class="dropdown-menu"/>' );
@@ -43,11 +43,9 @@ function Beats( $, functions, share )
   {
     BULLETS.push( BULLET_STRING.substr( 0, len ) );
   }
+  var currentTimeSignature = null;
 
-  $TIME_SIGNATURE.data( 'previous', parseInt( $TIME_SIGNATURE.val() ) ).change( function()
-  {
-    timeSignatureChanged();
-  } );
+  createTimeSignatureDialog();
 
   function timeSignatureChanged()
   {
@@ -62,15 +60,55 @@ function Beats( $, functions, share )
     }
   }
 
-  function createTimeSignatureDialog()
+  /**
+   * Get the current time signature.
+   * 
+   * @method
+   * @name module:plugins/beats.getTimeSignature
+   * @returns {string} The current time signature.
+   */
+  function getTimeSignature()
+  {
+    if ( $TIME_SIGNATURE !== null )
+    {
+      currentTimeSignature = $TIME_SIGNATURE.val();
+    }
+    return currentTimeSignature;
+  }
+
+  /**
+   * Set the current time signature.
+   * 
+   * @method
+   * @name module:plugins/beats.setTimeSignature
+   * @param {integer}
+   *          val The current time signature to set.
+   */
+  function setTimeSignature( val )
+  {
+    currentTimeSignature = '' + val;
+    createTimeSignatureDialog( function()
+    {
+      $TIME_SIGNATURE.val( currentTimeSignature ).data( 'previous', val );
+    } );
+  }
+
+  function showDialog()
   {
     var canTransform = canBeatsBeTransformed();
-    functions.dialog( function()
-    {
-      openTimeSignatureDialog( canTransform );
-    }, 'time-signature-form', 'time-signature', function()
+    openTimeSignatureDialog( canTransform );
+  }
+
+  function createTimeSignatureDialog( execute )
+  {
+    return functions.dialog( execute, 'time-signature-form', 'time-signature', function()
     {
       initializeTimeSignatureDialog();
+      $TIME_SIGNATURE = $( '#time-signature' );
+      $TIME_SIGNATURE.data( 'previous', parseInt( $TIME_SIGNATURE.val() ) ).change( function()
+      {
+        timeSignatureChanged();
+      } );
     } );
   }
 
@@ -143,7 +181,7 @@ function Beats( $, functions, share )
   function canBeatsBeTransformed()
   {
     var previous = $TIME_SIGNATURE.data( 'previous' );
-    var current = parseInt( $TIME_SIGNATURE.val() );
+    var current = parseInt( getTimeSignature() );
     var multiplier = current / previous;
     var canTransform = true;
     $PARENT.children( 'dd.item' ).each( function( index )
@@ -167,7 +205,7 @@ function Beats( $, functions, share )
 
   function createBeats( beats, wrapper )
   {
-    var defaultBeats = parseInt( $TIME_SIGNATURE.val() );
+    var defaultBeats = parseInt( getTimeSignature() );
     var num = defaultBeats;
     if ( beats !== undefined )
     {
@@ -207,7 +245,10 @@ function Beats( $, functions, share )
 
   return {
     'createBeats' : createBeats,
-    'getBeats' : getBeats
+    'getBeats' : getBeats,
+    'showDialog' : showDialog,
+    'getTimeSignature' : getTimeSignature,
+    'setTimeSignature' : setTimeSignature
   };
 }
 

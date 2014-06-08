@@ -24,7 +24,7 @@
  * @requires functions
  */
 
-function Structure( $, share, functions )
+function Structure( $, share, functions, beatsHandler )
 {
   'use strict';
   if ( Structure.prototype._instance )
@@ -40,7 +40,6 @@ function Structure( $, share, functions )
   var data = null;
 
   var $PARENT = $( '#items' );
-  var $TIME_SIGNATURE = $( '#time-signature' );
   var MENU_START_OF_LINE = '<i class="fa fa-fw fa-arrow-left"></i> Put on new line / back';
 
   var START_OF_LINE = 'start-of-line'; // duplicated in chords.js
@@ -209,7 +208,7 @@ function Structure( $, share, functions )
       var currentBreakBarNumber = $barBreakNumberSelect.val();
       if ( currentBreakBarNumber )
       {
-        var timeSignature = $TIME_SIGNATURE.val();
+        var timeSignature = beatsHandler.getTimeSignature();
         var beatsToBreakAfter = currentBreakBarNumber * timeSignature;
         var beatsSum = 0;
         for ( var i = 0; i < items.length; i++ )
@@ -259,18 +258,18 @@ function Structure( $, share, functions )
   };
 }
 
-define( 'plugins/structure', [ 'plugins', 'jquery', 'share', 'functions', 'plugins/chords' ], function( plugins, $,
-    share, functions, chords )
-{
-  'use strict';
-  var instance = new Structure( $, share, functions );
-  chords.registerChordMenuMember( instance.startOfLineMenu );
-  chords.addPostRenderer( instance.render );
-  share.addStructureChangeListener( instance.structureChanged );
-  plugins.register( {
-    'name' : 'structure',
-    'instance' : instance,
-    'render' : false,
-    'serialize' : true
-  } );
-} );
+define( 'plugins/structure', [ 'plugins', 'jquery', 'share', 'functions', 'plugins/chords', 'plugins/beats' ],
+    function( plugins, $, share, functions, chords, beats )
+    {
+      'use strict';
+      var instance = new Structure( $, share, functions, beats );
+      chords.registerChordMenuMember( instance.startOfLineMenu );
+      chords.addPostRenderer( instance.render );
+      share.addStructureChangeListener( instance.structureChanged );
+      plugins.register( {
+        'name' : 'structure',
+        'instance' : instance,
+        'render' : false,
+        'serialize' : true
+      } );
+    } );
