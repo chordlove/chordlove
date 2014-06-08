@@ -17,7 +17,7 @@
  */
 /**
  * Store hashes in local storage.
- * 
+ *
  * @module storage
  * @requires jquery
  * @requires functions
@@ -25,219 +25,181 @@
  * @requires plugins
  */
 
-function Storage( $, functions, share, plugins )
-{
+function Storage($, functions, share, plugins) {
   'use strict';
-  if ( Storage.prototype._instance )
-  {
+  if (Storage.prototype._instance) {
     return Storage.prototype._instance;
   }
   Storage.prototype._instance = this;
 
-  if ( !functions.hasLocalStorage() )
-  {
+  if (!functions.hasLocalStorage()) {
     return;
   }
 
-  $( '#save-load' ).removeClass( 'NIY' );
+  $('#save-load').removeClass('NIY');
 
   init();
 
-  function initSaveForm( form )
-  {
-    var $form = $( form );
-    var $save = $( '#save' );
-    var $saveOk = $( '#storage-save-ok' );
-    var $status = $( '#storage-save-status' );
-    var $help = $( '#storage-save-help' );
-    var $saveName = $( '#storage-save-name' );
+  function initSaveForm(form) {
+    var $form = $(form);
+    var $save = $('#save');
+    var $saveOk = $('#storage-save-ok');
+    var $status = $('#storage-save-status');
+    var $help = $('#storage-save-help');
+    var $saveName = $('#storage-save-name');
     var saveName = $saveName[0];
 
-    $saveName.keyup( function()
-    {
+    $saveName.keyup(function () {
       setSaveNameStatus();
-    } ).keypress( function( event )
-    {
-      if ( event.keyCode === 13 )
-      {
+    }).keypress(function (event) {
+      if (event.keyCode === 13) {
         event.preventDefault();
         $saveOk.click();
       }
-    } );
+    });
 
-    function setSaveNameStatus()
-    {
-      var value = $.trim( $saveName.val() );
-      $status.removeClass( 'error info' );
-      if ( value.length === 0 )
-      {
-        $status.addClass( 'error' );
-        $help.text( "The name can't be empty!" );
-        $saveOk.addClass( 'disabled' );
+    function setSaveNameStatus() {
+      var value = $.trim($saveName.val());
+      $status.removeClass('error info');
+      if (value.length === 0) {
+        $status.addClass('error');
+        $help.text("The name can't be empty!");
+        $saveOk.addClass('disabled');
       }
-      else if ( value in window.localStorage )
-      {
-        $status.addClass( 'info' );
-        $help.text( "The existing song will be overwritten." );
-        $saveOk.removeClass( 'disabled' );
+      else if (value in window.localStorage) {
+        $status.addClass('info');
+        $help.text("The existing song will be overwritten.");
+        $saveOk.removeClass('disabled');
       }
-      else
-      {
-        $help.text( '' );
-        $saveOk.removeClass( 'disabled' );
+      else {
+        $help.text('');
+        $saveOk.removeClass('disabled');
       }
     }
 
-    $save.click( function()
-    {
-      $saveName.val( $( '#title' ).val() );
-      $saveName.data( 'hash', window.location.hash );
+    $save.click(function () {
+      $saveName.val($('#title').val());
+      $saveName.data('hash', window.location.hash);
       setSaveNameStatus();
       $form.modal();
-    } );
+    });
 
-    $form.on( 'shown.bs.modal', function()
-    {
-      functions.setCaretPositionToBeginning( saveName );
-    } );
+    $form.on('shown.bs.modal', function () {
+      functions.setCaretPositionToBeginning(saveName);
+    });
 
-    $saveOk.click( function()
-    {
-      if ( $status.hasClass( 'error' ) )
-      {
+    $saveOk.click(function () {
+      if ($status.hasClass('error')) {
         return false;
       }
-      window.localStorage[$.trim( $saveName.val() )] = $saveName.data( 'hash' );
-      functions.alert( 'success', 'Save', '"' + $saveName.val() + '" has been saved.', 'fa fa-save' );
-    } );
+      window.localStorage[$.trim($saveName.val())] = $saveName.data('hash');
+      functions.alert('success', 'Save', '"' + $saveName.val() + '" has been saved.', 'fa fa-save');
+    });
   }
 
-  function initOpenDeleteForm( form )
-  {
-    var $OPTION = $( '<option/>' );
+  function initOpenDeleteForm(form) {
+    var $OPTION = $('<option/>');
 
-    var $deleteGroup = $( '#storage-delete-group' );
-    var $deleteConfirm = $( '#storage-delete-confirm' );
+    var $deleteGroup = $('#storage-delete-group');
+    var $deleteConfirm = $('#storage-delete-confirm');
     var deleteConfirm = $deleteConfirm[0];
-    var $deleteButton = $( '#storage-open-delete' );
-    var $openSelect = $( '#storage-open-select' );
+    var $deleteButton = $('#storage-open-delete');
+    var $openSelect = $('#storage-open-select');
     var openSelect = $openSelect[0];
-    var $okButton = $( '#storage-open-ok' );
-    var $openForm = $( form );
+    var $okButton = $('#storage-open-ok');
+    var $openForm = $(form);
 
-    $( '#open' ).click( function()
-    {
+    $('#open').click(function () {
       var items = [];
-      for ( var key in window.localStorage )
-      {
-        if ( key.indexOf( 'lscache-INJECT' ) !== 0 )
-        {
-          items.push( key );
+      for (var key in window.localStorage) {
+        if (key.indexOf('lscache-INJECT') !== 0) {
+          items.push(key);
         }
       }
       items.sort();
       $openSelect.empty();
-      for ( var i = 0; i < items.length; i++ )
-      {
-        $openSelect.append( $OPTION.clone().text( items[i] ) );
+      for (var i = 0; i < items.length; i++) {
+        $openSelect.append($OPTION.clone().text(items[i]));
       }
 
-      $openForm.modal().on( 'shown.bs.modal', function()
-      {
+      $openForm.modal().on('shown.bs.modal', function () {
         $openSelect.focus();
-        $openSelect.children( 'option:first' ).attr( 'selected', 'selected' );
+        $openSelect.children('option:first').attr('selected', 'selected');
         updateButtons();
-      } ).on( 'hidden.bs.modal', function()
-      {
+      }).on('hidden.bs.modal', function () {
         deleteConfirm.checked = false;
-      } );
+      });
 
-      $okButton.click( function()
-      {
-        if ( openSelect.selectedIndex === -1 )
-        {
+      $okButton.click(function () {
+        if (openSelect.selectedIndex === -1) {
           return;
         }
-        share.changed( true ); // this stores the current location in history
+        share.changed(true); // this stores the current location in history
         var selectedKey = $openSelect.val();
         var hash = window.localStorage[selectedKey];
         share.clear();
-        functions.alert( 'success', 'Open', '"' + selectedKey + '" has been opened.', 'fa-folder-open-o' );
+        functions.alert('success', 'Open', '"' + selectedKey + '" has been opened.', 'fa-folder-open-o');
         window.location.hash = hash;
-      } );
+      });
 
-      $deleteButton.click( function( event )
-      {
+      $deleteButton.click(function (event) {
         event.preventDefault();
         var selectedKey = $openSelect.val();
         delete window.localStorage[selectedKey];
         var selected = openSelect.selectedIndex;
-        if ( selected !== -1 )
-        {
-          openSelect.remove( selected );
+        if (selected !== -1) {
+          openSelect.remove(selected);
         }
         updateButtons();
-      } );
+      });
 
-      $deleteConfirm.change( updateButtons );
+      $deleteConfirm.change(updateButtons);
 
-      $openSelect.change( updateButtons ).keypress( function( event )
-      {
-        if ( event.keyCode === 13 )
-        {
+      $openSelect.change(updateButtons).keypress(function (event) {
+        if (event.keyCode === 13) {
           event.preventDefault();
           $okButton.click();
         }
-      } ).dblclick( function( event )
-      {
+      }).dblclick(function (event) {
         event.stopImmediatePropagation();
         $okButton.click();
-      } );
+      });
 
-      function updateButtons()
-      {
+      function updateButtons() {
         var somethingIsSelected = openSelect.selectedIndex !== -1;
         var doNotDelete = !deleteConfirm.checked;
-        $deleteButton.toggleClass( 'disabled', doNotDelete || !somethingIsSelected );
-        if ( doNotDelete || !somethingIsSelected )
-        {
-          $deleteButton.attr( 'disabled', 'disabled' );
+        $deleteButton.toggleClass('disabled', doNotDelete || !somethingIsSelected);
+        if (doNotDelete || !somethingIsSelected) {
+          $deleteButton.attr('disabled', 'disabled');
         }
-        else
-        {
-          $deleteButton.removeAttr( 'disabled' );
+        else {
+          $deleteButton.removeAttr('disabled');
         }
-        $deleteGroup.toggleClass( 'error', doNotDelete );
-        $okButton.toggleClass( 'disabled', !somethingIsSelected );
-        if ( somethingIsSelected )
-        {
-          $okButton.removeAttr( 'disabled' );
+        $deleteGroup.toggleClass('error', doNotDelete);
+        $okButton.toggleClass('disabled', !somethingIsSelected);
+        if (somethingIsSelected) {
+          $okButton.removeAttr('disabled');
         }
-        else
-        {
-          $okButton.attr( 'disabled', 'disabled' );
+        else {
+          $okButton.attr('disabled', 'disabled');
         }
       }
-    } );
+    });
   }
 
-  function init( func )
-  {
-    functions.dialog( func, 'storage-save-form', 'save', function( form )
-    {
-      initSaveForm( form );
-    } );
-    functions.dialog( func, 'storage-open-form', 'open', function( form )
-    {
-      initOpenDeleteForm( form );
-    } );
+  function init(func) {
+    functions.dialog(func, 'storage-save-form', 'save', function (form) {
+      initSaveForm(form);
+    });
+    functions.dialog(func, 'storage-open-form', 'open', function (form) {
+      initOpenDeleteForm(form);
+    });
   }
 
   return {};
 }
 
-define( 'storage', [ 'jquery', 'functions', 'share', 'plugins' ], function( $, functions, share, plugins )
-{
+define('storage', [ 'jquery', 'functions', 'share', 'plugins' ], function ($, functions, share, plugins) {
   'use strict';
-  return new Storage( $, functions, share, plugins );
-} );
+  return new Storage($, functions, share, plugins);
+});

@@ -18,7 +18,7 @@
 /**
  * Module to add addons to the song. Hooks into the {@link module:plugins/chords} module to get rendering executed and
  * adds its own copy/paste extractor as well.
- * 
+ *
  * @module plugins/addons
  * @requires jquery
  * @requires functions
@@ -26,60 +26,51 @@
  * @requires plugins
  */
 
-function Addons( $, toolbar, plugins )
-{
+function Addons($, toolbar, plugins) {
   'use strict';
-  if ( Addons.prototype._instance )
-  {
+  if (Addons.prototype._instance) {
     return Addons.prototype._instance;
   }
   Addons.prototype._instance = this;
 
   // var PLUGIN_ID = '05', DEFAULT_FORMAT = 0;
 
-  var addons = [ new AddonInfo( 'verses', 'fa-align-left', 'Add more verses' ),
-      new AddonInfo( 'guitarchords', 'fa-table', 'Show guitar chords' ),
-      new AddonInfo( 'embed', 'fa-link', 'Add content from link' ) ];
+  var addons = [ new AddonInfo('verses', 'fa-align-left', 'Add more verses'),
+    new AddonInfo('guitarchords', 'fa-table', 'Show guitar chords'),
+    new AddonInfo('embed', 'fa-link', 'Add content from link') ];
 
-  function AddonInfo( name, icon, text )
-  {
+  function AddonInfo(name, icon, text) {
     this.menuHtml = '<i class="fa fa-fw ' + icon + '"></i> ' + text;
-    this.func = function( event )
-    {
+    this.func = function (event) {
       event.preventDefault();
-      plugins.exec( name, function( instance )
-      {
+      plugins.exec(name, function (instance) {
         instance.load();
-      } );
+      });
     };
   }
 
-  function load()
-  {
-    for ( var i = 0; i < addons.length; i++ )
-    {
-      toolbar.registerAddonsMenuMember( function( $li, $a )
-      {
-        $a.html( addons[i].menuHtml ).click( addons[i].func );
-      } );
+  function load() {
+    for (var i = 0; i < addons.length; i++) {
+      toolbar.registerAddonsMenuMember(function ($li, $a) {
+        $a.html(addons[i].menuHtml).click(addons[i].func);
+      });
     }
   }
 
   return {
-    'load' : load
+    'load': load
   };
 }
 
-define( 'plugins/addons', [ 'plugins', 'jquery', 'toolbar', ], function( plugins, $, toolbar )
-{
+define('plugins/addons', [ 'plugins', 'jquery', 'toolbar', ], function (plugins, $, toolbar) {
   'use strict';
-  var instance = new Addons( $, toolbar, plugins );
-  plugins.register( {
-    'name' : 'addons',
-    'instance' : instance,
-    'render' : false,
-    'serialize' : false
-  } );
+  var instance = new Addons($, toolbar, plugins);
+  plugins.register({
+    'name': 'addons',
+    'instance': instance,
+    'render': false,
+    'serialize': false
+  });
   instance.load();
   return instance;
-} );
+});

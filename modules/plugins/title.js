@@ -17,7 +17,7 @@
  */
 /**
  * Manages the song title.
- * 
+ *
  * @module plugins/title
  * @requires jquery
  * @requires plugins
@@ -25,11 +25,9 @@
  * @requires functions
  */
 
-function Title( $, plugins, share, functions )
-{
+function Title($, plugins, share, functions) {
   'use strict';
-  if ( Title.prototype._instance )
-  {
+  if (Title.prototype._instance) {
     return Title.prototype._instance;
   }
   Title.prototype._instance = this;
@@ -45,102 +43,86 @@ function Title( $, plugins, share, functions )
    * @method
    * @name module:plugins/title.setData
    */
-  function setData( inputFormat, inputData )
-  {
+  function setData(inputFormat, inputData) {
     format = inputFormat;
-    data = functions.decode( inputData );
+    data = functions.decode(inputData);
   }
 
   /**
    * @method
    * @name module:plugins/title.render
    */
-  function render()
-  {
-    setPageTitle( data );
-    $( '#title' ).val( data );
+  function render() {
+    setPageTitle(data);
+    $('#title').val(data);
   }
 
   /**
    * @method
    * @name module:plugins/title.serialize
    */
-  function serialize()
-  {
+  function serialize() {
     var result = PLUGIN_ID + DEFAULT_FORMAT + getTitle();
-    if ( result.length < 4 )
-    {
+    if (result.length < 4) {
       result = '';
     }
     return result;
   }
 
-  function clear()
-  {
-    $( '#title' ).val( '' ).focus();
+  function clear() {
+    $('#title').val('').focus();
   }
 
-  function getTitle()
-  {
-    var val = $.trim( $( '#title' ).val() );
-    $( '#title' ).val( val );
-    return functions.encode( val );
+  function getTitle() {
+    var val = $.trim($('#title').val());
+    $('#title').val(val);
+    return functions.encode(val);
   }
 
-  $( '#title' ).keydown( function( event )
-  {
-    if ( event.which === 13 || event.which === 9 )
-    {
+  $('#title').keydown(function (event) {
+    if (event.which === 13 || event.which === 9) {
       event.preventDefault();
-      $( this ).blur();
-      setPageTitle( $( '#title' ).val() );
-      if ( event.which === 9 )
-      {
+      $(this).blur();
+      setPageTitle($('#title').val());
+      if (event.which === 9) {
         var backwards = 'shiftKey' in event && event.shiftKey === true;
-        if ( backwards )
-        {
-          $( '#help-btn' ).focus();
+        if (backwards) {
+          $('#help-btn').focus();
         }
-        else
-        {
-          $( '#items input' ).first().focus();
+        else {
+          $('#items input').first().focus();
         }
       }
     }
-  } ).change( function()
-  {
-    share.changedText( 'title' );
-  } );
+  }).change(function () {
+    share.changedText('title');
+  });
 
-  function setPageTitle( title )
-  {
-    if ( title )
-    {
+  function setPageTitle(title) {
+    if (title) {
       window.document.title = title + ' - ' + SITE_TITLE;
     }
-    else
-    {
+    else {
       window.document.title = SITE_TITLE;
     }
   }
 
   return {
-    'render' : render,
-    'serialize' : serialize,
-    'setData' : setData,
-    'clear' : clear
+    'render': render,
+    'serialize': serialize,
+    'setData': setData,
+    'clear': clear
   };
 }
 
-define( 'plugins/title', [ 'plugins', 'jquery', 'share', 'functions' ], function( plugins, $, share, functions )
-{
+define('plugins/title', [ 'plugins', 'jquery', 'share', 'functions' ], function (plugins, $, share, functions) {
   'use strict';
-  var instance = new Title( $, plugins, share, functions );
-  plugins.register( {
-    'name' : 'title',
-    'instance' : instance,
-    'render' : true,
-    'serialize' : true
-  } );
+  var instance = new Title($, plugins, share, functions);
+  plugins.register({
+    'name': 'title',
+    'instance': instance,
+    'render': true,
+    'serialize': true
+  });
   return instance;
-} );
+});

@@ -17,7 +17,7 @@
  */
 /**
  * Module to add guitar chords to a song. Hooks into the {@link module:plugins/chords} module to get rendering executed.
- * 
+ *
  * @module plugins/guitar-chords
  * @requires jquery
  * @requires chorddata
@@ -25,11 +25,9 @@
  * @requires functions
  */
 
-function GuitarChords( $, chorddata, share, functions )
-{
+function GuitarChords($, chorddata, share, functions) {
   'use strict';
-  if ( GuitarChords.prototype._instance )
-  {
+  if (GuitarChords.prototype._instance) {
     return GuitarChords.prototype._instance;
   }
   GuitarChords.prototype._instance = this;
@@ -38,27 +36,25 @@ function GuitarChords( $, chorddata, share, functions )
   var data = null;
   var format = DEFAULT_FORMAT;
 
-  var $PARENT = $( '#items' );
-  var $GUITAR_CHORDS = $( '<li id="guitarchords"/>' );
-  var $CHORD_WRAPPER = $( '<div class="guitarchord"/>' );
-  var $INNER_CHORD_WRAPPER = $( '<div class="guitarchord-inner"/>' );
-  var $NEXT_BTN = $( '<i class="fa fa-chevron-circle-right guitarchord-next"></i>' );
-  var $PREVIOUS_BTN = $( '<i class="fa fa-chevron-circle-left guitarchord-previous"></i>' );
-  var $CHORD_LABEL = $( '<p class="guitarchord"/>' );
+  var $PARENT = $('#items');
+  var $GUITAR_CHORDS = $('<li id="guitarchords"/>');
+  var $CHORD_WRAPPER = $('<div class="guitarchord"/>');
+  var $INNER_CHORD_WRAPPER = $('<div class="guitarchord-inner"/>');
+  var $NEXT_BTN = $('<i class="fa fa-chevron-circle-right guitarchord-next"></i>');
+  var $PREVIOUS_BTN = $('<i class="fa fa-chevron-circle-left guitarchord-previous"></i>');
+  var $CHORD_LABEL = $('<p class="guitarchord"/>');
 
   var chordsPluginInitialized = false;
   var previousSeen = undefined;
   var loaded = true;
 
-  $( '#addons-core' ).append( $GUITAR_CHORDS );
+  $('#addons-core').append($GUITAR_CHORDS);
 
-  share.addStructureChangeListener( changeListener );
-  share.addTextChangeListener( changeListener );
+  share.addStructureChangeListener(changeListener);
+  share.addTextChangeListener(changeListener);
 
-  function changeListener( event )
-  {
-    if ( event !== 'guitarchords/renderChord' && event !== 'chords/new' )
-    {
+  function changeListener(event) {
+    if (event !== 'guitarchords/renderChord' && event !== 'chords/new') {
       render();
     }
   }
@@ -67,23 +63,19 @@ function GuitarChords( $, chorddata, share, functions )
    * @method
    * @name module:plugins/guitarchords.setData
    */
-  function setData( inputFormat, inputData )
-  {
+  function setData(inputFormat, inputData) {
     format = inputFormat;
     data = inputData;
     previousSeen = undefined;
-    if ( chordsPluginInitialized )
-    {
+    if (chordsPluginInitialized) {
       render();
     }
   }
 
-  function renderGuitarChords()
-  {
+  function renderGuitarChords() {
     chordsPluginInitialized = true;
     loaded = true;
-    if ( data !== null )
-    {
+    if (data !== null) {
       render();
     }
   }
@@ -92,22 +84,17 @@ function GuitarChords( $, chorddata, share, functions )
    * @method
    * @name module:plugins/guitarchords.render
    */
-  function render()
-  {
-    if ( !loaded )
-    {
+  function render() {
+    if (!loaded) {
       return;
     }
     var chordNumbers = undefined;
-    if ( data !== null && data.length > 1 )
-    {
-      var ln = functions.getNumber( data.substr( 0, 2 ) );
-      if ( ln > 0 )
-      {
+    if (data !== null && data.length > 1) {
+      var ln = functions.getNumber(data.substr(0, 2));
+      if (ln > 0) {
         chordNumbers = [];
-        for ( var i = 0; i < ln; i++ )
-        {
-          chordNumbers.push( functions.getNumber( data.substr( i + 2, 1 ) ) );
+        for (var i = 0; i < ln; i++) {
+          chordNumbers.push(functions.getNumber(data.substr(i + 2, 1)));
         }
       }
       data = null; // only read data once
@@ -115,163 +102,133 @@ function GuitarChords( $, chorddata, share, functions )
     var seen = {};
     $GUITAR_CHORDS.empty();
     var chordNumberIndex = 0;
-    $PARENT.children( 'dd.item' ).each( function()
-    {
-      var chord = $( 'input.chord-text', this ).val();
-      if ( !( chord in seen ) )
-      {
-        if ( chordNumbers )
-        {
+    $PARENT.children('dd.item').each(function () {
+      var chord = $('input.chord-text', this).val();
+      if (!( chord in seen )) {
+        if (chordNumbers) {
           var currentChordNumber = chordNumbers[chordNumberIndex];
           chordNumberIndex++;
-          seen[chord] = prepareChord( chord, currentChordNumber );
+          seen[chord] = prepareChord(chord, currentChordNumber);
         }
-        else
-        {
-          seen[chord] = prepareChord( chord );
+        else {
+          seen[chord] = prepareChord(chord);
         }
       }
-    } );
+    });
     previousSeen = seen;
 
-    function prepareChord( chord, currentChordNumber )
-    {
+    function prepareChord(chord, currentChordNumber) {
       var result = true;
-      if ( chord.length )
-      {
-        var chordMemory = getChordMemory( chord, currentChordNumber );
-        if ( chordMemory && chordMemory !== true )
-        {
+      if (chord.length) {
+        var chordMemory = getChordMemory(chord, currentChordNumber);
+        if (chordMemory && chordMemory !== true) {
           result = chordMemory;
-          var $wrapper = $CHORD_WRAPPER.clone().mousedown( function( event )
-          {
+          var $wrapper = $CHORD_WRAPPER.clone().mousedown(function (event) {
             event.preventDefault();
-          } );
-          $CHORD_LABEL.clone().text( chord ).appendTo( $wrapper );
-          var $innerWrapper = $INNER_CHORD_WRAPPER.clone().appendTo( $wrapper );
+          });
+          $CHORD_LABEL.clone().text(chord).appendTo($wrapper);
+          var $innerWrapper = $INNER_CHORD_WRAPPER.clone().appendTo($wrapper);
           // make the wrapper visible here because of:
           // https://github.com/DmitryBaranovskiy/raphael/issues/491
-          $wrapper.appendTo( $GUITAR_CHORDS );
+          $wrapper.appendTo($GUITAR_CHORDS);
           seen[chord] = chordMemory;
-          renderChord( chordMemory, $innerWrapper, $wrapper );
+          renderChord(chordMemory, $innerWrapper, $wrapper);
         }
       }
       return result;
     }
 
-    function getChordMemory( chord, currentChordNumber )
-    {
+    function getChordMemory(chord, currentChordNumber) {
       var chordMemory = undefined;
-      if ( previousSeen && chord in previousSeen )
-      {
+      if (previousSeen && chord in previousSeen) {
         chordMemory = previousSeen[chord];
       }
-      else
-      {
-        var splitName = chorddata.splitChord( chord );
+      else {
+        var splitName = chorddata.splitChord(chord);
         var note = splitName.note;
         var chordName = splitName.name;
-        var chordRenderers = chorddata.get( chordName );
-        if ( chordRenderers.length > 0 )
-        {
+        var chordRenderers = chorddata.get(chordName);
+        if (chordRenderers.length > 0) {
           var noteRenderers = [];
           var currentIndex = 0;
-          for ( var rendererIndex = 0; rendererIndex < chordRenderers.length; rendererIndex++ )
-          {
-            var noteRenderer = chordRenderers[rendererIndex].getChordForNote( note );
-            noteRenderers.push( noteRenderer );
+          for (var rendererIndex = 0; rendererIndex < chordRenderers.length; rendererIndex++) {
+            var noteRenderer = chordRenderers[rendererIndex].getChordForNote(note);
+            noteRenderers.push(noteRenderer);
           }
-          noteRenderers.sort( compareChords );
-          if ( currentChordNumber !== undefined )
-          {
-            for ( rendererIndex = 0; rendererIndex < noteRenderers.length; rendererIndex++ )
-            {
+          noteRenderers.sort(compareChords);
+          if (currentChordNumber !== undefined) {
+            for (rendererIndex = 0; rendererIndex < noteRenderers.length; rendererIndex++) {
               var noteRenderer = noteRenderers[rendererIndex];
-              if ( noteRenderer.getChordNumber() === currentChordNumber )
-              {
+              if (noteRenderer.getChordNumber() === currentChordNumber) {
                 currentIndex = rendererIndex;
               }
             }
           }
-          chordMemory = new ChordMemory( noteRenderers, currentIndex );
+          chordMemory = new ChordMemory(noteRenderers, currentIndex);
         }
       }
       return chordMemory;
     }
 
-    function ChordMemory( renderers, currentIndex )
-    {
+    function ChordMemory(renderers, currentIndex) {
       this.renderers = renderers;
       this.currentIndex = currentIndex;
     }
 
-    function renderChord( chordMemory, $wrapper, $outerWrapper )
-    {
+    function renderChord(chordMemory, $wrapper, $outerWrapper) {
       var noteRenderers = chordMemory.renderers;
       var index = chordMemory.currentIndex;
-      var $previous = $PREVIOUS_BTN.clone().appendTo( $wrapper ).click( function()
-      {
-        if ( index === 0 )
-        {
+      var $previous = $PREVIOUS_BTN.clone().appendTo($wrapper).click(function () {
+        if (index === 0) {
           return;
         }
         index--;
         update();
-        share.changedText( 'guitarchords/renderChord' );
-      } );
-      var $next = $NEXT_BTN.clone().appendTo( $wrapper ).click( function()
-      {
-        if ( index === noteRenderers.length - 1 )
-        {
+        share.changedText('guitarchords/renderChord');
+      });
+      var $next = $NEXT_BTN.clone().appendTo($wrapper).click(function () {
+        if (index === noteRenderers.length - 1) {
           return;
         }
         index++;
         update();
-        share.changedText( 'guitarchords/renderChord' );
-      } );
+        share.changedText('guitarchords/renderChord');
+      });
 
-      var paper = Raphael( $wrapper[0], 110, 116 );
+      var paper = Raphael($wrapper[0], 110, 116);
       update();
 
-      function renderChordBox()
-      {
+      function renderChordBox() {
         paper.clear();
-        var chordbox = new ChordBox( paper, 25, 14, 80, 80 );
+        var chordbox = new ChordBox(paper, 25, 14, 80, 80);
         chordbox.num_frets = 6;
         var richChord = noteRenderers[index];
-        var tuning = richChord.render( chordbox );
+        var tuning = richChord.render(chordbox);
         chordbox.tuning = tuning;
         chordbox.draw();
       }
 
-      function muteIcons()
-      {
-        if ( index === 0 )
-        {
-          $previous.addClass( 'disabled' );
+      function muteIcons() {
+        if (index === 0) {
+          $previous.addClass('disabled');
         }
-        else
-        {
-          $previous.removeClass( 'disabled' );
+        else {
+          $previous.removeClass('disabled');
         }
-        if ( index === noteRenderers.length - 1 )
-        {
-          $next.addClass( 'disabled' );
+        if (index === noteRenderers.length - 1) {
+          $next.addClass('disabled');
         }
-        else
-        {
-          $next.removeClass( 'disabled' );
+        else {
+          $next.removeClass('disabled');
         }
       }
 
-      function updateChordNumber()
-      {
+      function updateChordNumber() {
         chordMemory.currentIndex = index;
-        $outerWrapper.data( 'chordNumber', noteRenderers[index].getChordNumber() );
+        $outerWrapper.data('chordNumber', noteRenderers[index].getChordNumber());
       }
 
-      function update()
-      {
+      function update() {
         renderChordBox();
         muteIcons();
         updateChordNumber();
@@ -279,8 +236,7 @@ function GuitarChords( $, chorddata, share, functions )
     }
   }
 
-  function compareChords( a, b )
-  {
+  function compareChords(a, b) {
     return a.rank() - b.rank();
   }
 
@@ -288,75 +244,65 @@ function GuitarChords( $, chorddata, share, functions )
    * @method
    * @name module:plugins/guitarchords.serialize
    */
-  function serialize()
-  {
-    if ( !loaded )
-    {
+  function serialize() {
+    if (!loaded) {
       return '';
     }
     var result = PLUGIN_ID + DEFAULT_FORMAT;
     var chords = '';
-    $( 'div.guitarchord' ).each( function()
-    {
-      var $wrapper = $( this );
-      chords += functions.getCharacters( $wrapper.data( 'chordNumber' ), 1 );
-    } );
-    result += functions.getCharacters( chords.length, 2 );
+    $('div.guitarchord').each(function () {
+      var $wrapper = $(this);
+      chords += functions.getCharacters($wrapper.data('chordNumber'), 1);
+    });
+    result += functions.getCharacters(chords.length, 2);
     result += chords;
     return result;
   }
 
-  function clear()
-  {
+  function clear() {
     $GUITAR_CHORDS.empty();
     data = null;
   }
 
-  function dbToVexChords( db )
-  {
+  function dbToVexChords(db) {
     var vex = [];
-    for ( var i = 0; i < db.length; i++ )
-    {
+    for (var i = 0; i < db.length; i++) {
       var fret = db[i];
-      vex.push( [ 6 - i, fret === -1 ? 'x' : fret ] );
+      vex.push([ 6 - i, fret === -1 ? 'x' : fret ]);
     }
     return vex;
   }
 
-  function load()
-  {
+  function load() {
     loaded = true;
     render();
     share.changed();
   }
 
-  function unload()
-  {
+  function unload() {
     loaded = false;
   }
 
   return {
-    'render' : render,
-    'serialize' : serialize,
-    'setData' : setData,
-    'clear' : clear,
-    'load' : load,
-    'unload' : unload,
-    'renderGuitarChords' : renderGuitarChords
+    'render': render,
+    'serialize': serialize,
+    'setData': setData,
+    'clear': clear,
+    'load': load,
+    'unload': unload,
+    'renderGuitarChords': renderGuitarChords
   };
 }
 
-define( 'plugins/guitarchords', [ 'plugins', 'jquery', 'chorddata', 'share', 'plugins/chords', 'functions' ], function(
-    plugins, $, chorddata, share, chords, functions )
-{
+define('plugins/guitarchords', [ 'plugins', 'jquery', 'chorddata', 'share', 'plugins/chords', 'functions' ], function (plugins, $, chorddata, share, chords, functions) {
   'use strict';
-  var instance = new GuitarChords( $, chorddata, share, functions );
-  chords.addPostRenderer( instance.renderGuitarChords );
-  plugins.register( {
-    'name' : 'guitarchords',
-    'instance' : instance,
-    'render' : false,
-    'serialize' : true
-  } );
+  var instance = new GuitarChords($, chorddata, share, functions);
+  chords.addPostRenderer(instance.renderGuitarChords);
+  plugins.register({
+    'name': 'guitarchords',
+    'instance': instance,
+    'render': false,
+    'serialize': true
+  });
   return instance;
-} );
+});

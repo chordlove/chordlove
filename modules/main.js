@@ -17,33 +17,27 @@
  */
 
 // shield from missing console.log().
-( function()
-{
-  try
-  {
-    if ( typeof window.console.log !== 'function' )
-    {
+(function () {
+  try {
+    if (typeof window.console.log !== 'function') {
       replaceConsole();
     }
   }
-  catch ( e )
-  {
+  catch (e) {
     replaceConsole();
   }
 
-  function replaceConsole()
-  {
+  function replaceConsole() {
     window.console = {};
-    window.console.log = function()
-    {
+    window.console.log = function () {
       // do nothing
     };
   }
-} )();
+})();
 
 /**
  * Main module to bootstrap the application. Loads core plugins which should always be present.
- * 
+ *
  * @module main
  * @requires jquery
  * @requires plugins
@@ -58,59 +52,50 @@
  * @requires storage
  */
 require(
-    [ 'jquery', 'plugins', 'share', 'appcache', 'plugins/title', 'plugins/chords', 'plugins/lyrics',
-        'plugins/structure', 'plugins/addons', 'plugins/tools', 'storage' ],
-    function( $, plugins, share, appcache, beats )
-    {
-      'use strict';
-      $( function()
-      {
-        $.ajaxSetup( {
-          cache : true
-        } );
+  [ 'jquery', 'plugins', 'share', 'appcache', 'plugins/title', 'plugins/chords', 'plugins/lyrics',
+    'plugins/structure', 'plugins/addons', 'plugins/tools', 'storage' ],
+  function ($, plugins, share, appcache, beats) {
+    'use strict';
+    $(function () {
+      $.ajaxSetup({
+        cache: true
+      });
 
-        $( '#items' ).sortable( {
-          'revert' : true,
-          'handle' : '.handle',
-          'stop' : function( event )
-          {
-            share.changedStructure( event );
-          }
-        } );
+      $('#items').sortable({
+        'revert': true,
+        'handle': '.handle',
+        'stop': function (event) {
+          share.changedStructure(event);
+        }
+      });
 
-        ( function()
-        {
-          if ( window.self === window.top )
-          {
-            $( '#intro' ).load( 'intro.html' );
-            $( '#spinner' ).remove();
-            $.each( [ 'navbar', 'title', 'footer' ], function()
-            {
-              document.getElementById( this ).style.visibility = 'visible';
-            } );
-            plugins.init();
-            $( '#chordlove-navbar-icon' ).click( function()
-            {
-              $( '#help' ).modal();
-            } );
-            appcache.runOnceWhenOnline( function()
-            {
-              var script = document.createElement( 'script' );
-              script.type = 'text/javascript';
-              script.src = 'https://apis.google.com/js/client.js?onload=initGapi';
-              $( 'head' ).append( script );
-            } );
-          }
-          else
-          {
-            $( 'body' )
-                .html(
-                    '<div id="framed" class="alert alert-error"><h4>The page can not be loaded!</h4><p>Use this link to open the page in a tab or new window: <a href=" '
-                        + window.location.href
-                        + '" target="_blank">'
-                        + window.location.hostname
-                        + ' <i class="fa fa-external-link"></i></a>.</p></div>' );
-          }
-        } )();
-      } );
-    } );
+      (function () {
+        if (window.self === window.top) {
+          $('#intro').load('intro.html');
+          $('#spinner').remove();
+          $.each([ 'navbar', 'title', 'footer' ], function () {
+            document.getElementById(this).style.visibility = 'visible';
+          });
+          plugins.init();
+          $('#chordlove-navbar-icon').click(function () {
+            $('#help').modal();
+          });
+          appcache.runOnceWhenOnline(function () {
+            var script = document.createElement('script');
+            script.type = 'text/javascript';
+            script.src = 'https://apis.google.com/js/client.js?onload=initGapi';
+            $('head').append(script);
+          });
+        }
+        else {
+          $('body')
+            .html(
+              '<div id="framed" class="alert alert-error"><h4>The page can not be loaded!</h4><p>Use this link to open the page in a tab or new window: <a href=" '
+              + window.location.href
+              + '" target="_blank">'
+              + window.location.hostname
+              + ' <i class="fa fa-external-link"></i></a>.</p></div>');
+        }
+      })();
+    });
+  });

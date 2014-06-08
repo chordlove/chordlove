@@ -17,23 +17,21 @@
  */
 /**
  * Transpose the song.
- * 
+ *
  * @module plugins/transpose
  * @requires jquery
  * @requires functions
  * @requires share
  */
 
-function Transpose( $, functions, chorddata, share )
-{
+function Transpose($, functions, chorddata, share) {
   'use strict';
-  if ( Transpose.prototype._instance )
-  {
+  if (Transpose.prototype._instance) {
     return Transpose.prototype._instance;
   }
   Transpose.prototype._instance = this;
 
-  var $PARENT = $( '#items' );
+  var $PARENT = $('#items');
   var $form = undefined;
   var $transposeShift = undefined;
 
@@ -43,69 +41,57 @@ function Transpose( $, functions, chorddata, share )
    * @method
    * @name module:plugins/transpose.setData
    */
-  function setData( inputFormat, inputData )
-  {
+  function setData(inputFormat, inputData) {
     // just act as a plugin
   }
 
-  function init()
-  {
-    functions.dialog( showForm, 'transpose-form', 'transpose', function( form )
-    {
-      $form = $( form );
-      $transposeShift = $( '#transpose-shift' );
-      $( '#transpose-ok' ).click( function()
-      {
-        var shift = parseInt( $transposeShift.val() );
-        if ( shift === 0 )
-        {
+  function init() {
+    functions.dialog(showForm, 'transpose-form', 'transpose', function (form) {
+      $form = $(form);
+      $transposeShift = $('#transpose-shift');
+      $('#transpose-ok').click(function () {
+        var shift = parseInt($transposeShift.val());
+        if (shift === 0) {
           return;
         }
-        var $chords = $PARENT.children( 'dd.item' ).children( 'div.chord' ).children( 'input.chord-text' );
-        if ( $chords.length === 0 )
-        {
+        var $chords = $PARENT.children('dd.item').children('div.chord').children('input.chord-text');
+        if ($chords.length === 0) {
           return;
         }
         var chords = [];
-        $chords.each( function( ix, input )
-        {
-          var $input = $( input );
+        $chords.each(function (ix, input) {
+          var $input = $(input);
           var currentChord = $input.val();
-          chords.push( currentChord );
-        } );
-        var transposed = chorddata.getTransposed( chords, shift );
-        $chords.each( function( ix, input )
-        {
-          $( input ).val( transposed[ix] );
-        } );
-        share.changedText( 'transpose' );
-      } );
-    } );
+          chords.push(currentChord);
+        });
+        var transposed = chorddata.getTransposed(chords, shift);
+        $chords.each(function (ix, input) {
+          $(input).val(transposed[ix]);
+        });
+        share.changedText('transpose');
+      });
+    });
   }
 
-  function showForm()
-  {
-    $form.modal( 'show' ).on( 'shown.bs.modal', function()
-    {
+  function showForm() {
+    $form.modal('show').on('shown.bs.modal', function () {
       $transposeShift.focus();
-    } );
+    });
   }
 
   return {
-    'setData' : setData,
-    'init' : init
+    'setData': setData,
+    'init': init
   };
 }
 
-define( 'plugins/transpose', [ 'plugins', 'jquery', 'functions', 'chorddata', 'share' ], function( plugins, $,
-    functions, chorddata, share )
-{
+define('plugins/transpose', [ 'plugins', 'jquery', 'functions', 'chorddata', 'share' ], function (plugins, $, functions, chorddata, share) {
   'use strict';
-  var instance = new Transpose( $, functions, chorddata, share );
-  plugins.register( {
-    'name' : 'transpose',
-    'instance' : instance,
-    'render' : false,
-    'serialize' : false
-  } );
-} );
+  var instance = new Transpose($, functions, chorddata, share);
+  plugins.register({
+    'name': 'transpose',
+    'instance': instance,
+    'render': false,
+    'serialize': false
+  });
+});

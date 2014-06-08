@@ -17,17 +17,15 @@
  */
 /**
  * Export all songs.
- * 
+ *
  * @module plugins/export
  * @requires jquery
  * @requires functions
  */
 
-function Export( $, functions )
-{
+function Export($, functions) {
   'use strict';
-  if ( Export.prototype._instance )
-  {
+  if (Export.prototype._instance) {
     return Export.prototype._instance;
   }
   Export.prototype._instance = this;
@@ -44,128 +42,106 @@ function Export( $, functions )
    * @method
    * @name module:plugins/export.setData
    */
-  function setData( inputFormat, inputData )
-  {
+  function setData(inputFormat, inputData) {
     // just act as a plugin
   }
 
-  function init()
-  {
-    functions.dialog( showForm, 'storage-export-form', 'export', function( form )
-    {
-      $form = $( form );
-      $link = $( '#storage-export-link' );
+  function init() {
+    functions.dialog(showForm, 'storage-export-form', 'export', function (form) {
+      $form = $(form);
+      $link = $('#storage-export-link');
       link = $link[0];
-      icon = $( '#storage-export-download-type' )[0];
+      icon = $('#storage-export-download-type')[0];
 
-      $link.click( function( event )
-      {
-        if ( link.href === '#' )
-        {
+      $link.click(function (event) {
+        if (link.href === '#') {
           // safety net
           event.preventDefault();
         }
-        else
-        {
-          $form.modal( 'hide' ).on( 'hidden.bs.modal', function()
-          {
-            $link.addClass( 'disabled' );
+        else {
+          $form.modal('hide').on('hidden.bs.modal', function () {
+            $link.addClass('disabled');
             icon.className = '';
-          } );
+          });
         }
-      } );
+      });
 
-      $( '#storage-export-backup' ).click( function( event )
-      {
-        createClick( event, 'songs.chordlove', 'text/plain', buildExportData, 'fa-suitcase' );
-      } );
+      $('#storage-export-backup').click(function (event) {
+        createClick(event, 'songs.chordlove', 'text/plain', buildExportData, 'fa-suitcase');
+      });
 
-      $( '#storage-export-markdown' ).click( function( event )
-      {
-        createClick( event, 'songs.md', 'text/plain', buildMarkdownData, 'fa-file-text' );
-      } );
-    } );
+      $('#storage-export-markdown').click(function (event) {
+        createClick(event, 'songs.md', 'text/plain', buildMarkdownData, 'fa-file-text');
+      });
+    });
   }
 
-  function createClick( event, filename, mime, generator, iconName )
-  {
+  function createClick(event, filename, mime, generator, iconName) {
     event.preventDefault();
-    if ( link.href !== '#' )
-    {
-      window.URL.revokeObjectURL( link.href );
+    if (link.href !== '#') {
+      window.URL.revokeObjectURL(link.href);
     }
-    if ( 'download' in link )
-    {
+    if ('download' in link) {
       link.download = filename;
       mimeType = mime;
     }
-    var blob = new window.Blob( generator(), {
-      'type' : mimeType
-    } );
-    var url = window.URL.createObjectURL( blob );
+    var blob = new window.Blob(generator(), {
+      'type': mimeType
+    });
+    var url = window.URL.createObjectURL(blob);
     link.href = url;
-    $link.removeClass( 'disabled' );
+    $link.removeClass('disabled');
     icon.className = 'fa ' + iconName;
   }
 
-  function showForm()
-  {
-    $form.modal( 'show' ).on( 'shown.bs.modal', function()
-    {
-      if ( link.href !== '#' )
-      {
-        window.URL.revokeObjectURL( link.href );
+  function showForm() {
+    $form.modal('show').on('shown.bs.modal', function () {
+      if (link.href !== '#') {
+        window.URL.revokeObjectURL(link.href);
       }
-    } );
+    });
   }
 
-  function buildExportData()
-  {
+  function buildExportData() {
     var strings = [];
-    for ( var key in window.localStorage )
-    {
-      if ( key.indexOf( 'lscache-INJECT' ) !== 0 )
-      {
-        strings.push( key );
-        strings.push( "\n" );
-        strings.push( window.localStorage[key] );
-        strings.push( "\n" );
+    for (var key in window.localStorage) {
+      if (key.indexOf('lscache-INJECT') !== 0) {
+        strings.push(key);
+        strings.push("\n");
+        strings.push(window.localStorage[key]);
+        strings.push("\n");
       }
     }
     return strings;
   }
 
-  function buildMarkdownData()
-  {
+  function buildMarkdownData() {
     var loc = window.location;
     var baseUrl = loc.protocol + '//' + loc.hostname + loc.pathname;
     var strings = [];
-    for ( var key in window.localStorage )
-    {
-      if ( key.indexOf( 'lscache-INJECT' ) !== 0 )
-      {
+    for (var key in window.localStorage) {
+      if (key.indexOf('lscache-INJECT') !== 0) {
         var line = '* [' + key + '](' + baseUrl + window.localStorage[key] + ')';
-        strings.push( line );
-        strings.push( "\n" );
+        strings.push(line);
+        strings.push("\n");
       }
     }
     return strings;
   }
 
   return {
-    'setData' : setData,
-    'init' : init
+    'setData': setData,
+    'init': init
   };
 }
 
-define( 'plugins/export', [ 'plugins', 'jquery', 'functions' ], function( plugins, $, functions )
-{
+define('plugins/export', [ 'plugins', 'jquery', 'functions' ], function (plugins, $, functions) {
   'use strict';
-  var instance = new Export( $, functions );
-  plugins.register( {
-    'name' : 'export',
-    'instance' : instance,
-    'render' : false,
-    'serialize' : false
-  } );
-} );
+  var instance = new Export($, functions);
+  plugins.register({
+    'name': 'export',
+    'instance': instance,
+    'render': false,
+    'serialize': false
+  });
+});

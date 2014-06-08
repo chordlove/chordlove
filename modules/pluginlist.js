@@ -17,42 +17,38 @@
  */
 /**
  * Maps plugin id:s to plugin names.
- * 
+ *
  * @module pluginlist
  */
-function PluginList()
-{
+function PluginList() {
   'use strict';
-  if ( PluginList.prototype._instance )
-  {
+  if (PluginList.prototype._instance) {
     return PluginList.prototype._instance;
   }
   PluginList.prototype._instance = this;
 
   var list = [ 'title', 'chords', 'lyrics', 'structure', 'verses', 'addons', 'tools', 'guitarchords', 'export',
-      'import', 'embed', 'transpose' ];
+    'import', 'embed', 'transpose' ];
 
   /**
    * Get plugin name from id.
-   * 
+   *
    * @method
    * @name module:pluginlist.idToName
    * @param {integer}
    *          id The id to map.
    * @returns {string} The corresponding plugin name.
    */
-  function idToName( id )
-  {
+  function idToName(id) {
     return list[id];
   }
 
   return {
-    'idToName' : idToName
+    'idToName': idToName
   };
 }
 
-define( 'pluginlist', [], function()
-{
+define('pluginlist', [], function () {
   'use strict';
   return new PluginList();
-} );
+});

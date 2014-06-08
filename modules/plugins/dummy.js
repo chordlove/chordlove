@@ -15,44 +15,38 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-function Dummy()
-{
+function Dummy() {
   'use strict';
-  if ( Dummy.prototype._instance )
-  {
+  if (Dummy.prototype._instance) {
     return Dummy.prototype._instance;
   }
   Dummy.prototype._instance = this;
 
-  function blah()
-  {
+  function blah() {
     return "new dummy text";
   }
 
-  function serialize()
-  {
+  function serialize() {
     return "0serialized-dummy";
   }
 
-  function setData( format, data )
-  {
-    console.log( "dummy data", format, data );
+  function setData(format, data) {
+    console.log("dummy data", format, data);
   }
 
   return {
-    "bleh" : blah,
-    "serialize" : serialize,
-    "setData" : setData
+    "bleh": blah,
+    "serialize": serialize,
+    "setData": setData
   };
 }
 
-define( "dummy", [ "plugins" ], function( plugins )
-{
+define("dummy", [ "plugins" ], function (plugins) {
   'use strict';
-  plugins.register( {
-    "name" : "dummy",
-    "instance" : new Dummy(),
-    "alywaysRun" : true,
-    "serialize" : true
-  } );
-} );
+  plugins.register({
+    "name": "dummy",
+    "instance": new Dummy(),
+    "alywaysRun": true,
+    "serialize": true
+  });
+});

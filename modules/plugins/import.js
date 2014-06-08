@@ -17,16 +17,14 @@
  */
 /**
  * Import all songs.
- * 
+ *
  * @module plugins/import
  * @requires jquery
  */
 
-function Import( $, functions )
-{
+function Import($, functions) {
   'use strict';
-  if ( Import.prototype._instance )
-  {
+  if (Import.prototype._instance) {
     return Import.prototype._instance;
   }
   Import.prototype._instance = this;
@@ -44,105 +42,86 @@ function Import( $, functions )
    * @method
    * @name module:plugins/import.setData
    */
-  function setData( inputFormat, inputData )
-  {
+  function setData(inputFormat, inputData) {
     // just act as a plugin
   }
 
-  function init()
-  {
-    functions.dialog( showForm, 'storage-import-form', 'import', function( form )
-    {
-      $form = $( form );
-      $file = $( '#import-file' ).change( function( event )
-      {
-        updateState( true );
-      } );
+  function init() {
+    functions.dialog(showForm, 'storage-import-form', 'import', function (form) {
+      $form = $(form);
+      $file = $('#import-file').change(function (event) {
+        updateState(true);
+      });
       file = $file[0];
-      $importButton = $( '#import-button' ).click( function()
-      {
-        if ( !importButton.disabled && currentResult.length )
-        {
+      $importButton = $('#import-button').click(function () {
+        if (!importButton.disabled && currentResult.length) {
           var success = true;
-          var strings = currentResult.split( "\n" );
+          var strings = currentResult.split("\n");
           var max = strings.length - 1;
-          for ( var i = 0; i < max; i += 2 )
-          {
+          for (var i = 0; i < max; i += 2) {
             var key = strings[i];
             var value = strings[i + 1];
-            if ( key.length && value.length )
-            {
+            if (key.length && value.length) {
               window.localStorage[key] = value;
             }
-            else
-            {
+            else {
               success = false;
               break;
             }
           }
-          if ( success )
-          {
-            functions.alert( 'success', 'Import', 'All songs have been imported.', 'fa-upload' );
+          if (success) {
+            functions.alert('success', 'Import', 'All songs have been imported.', 'fa-upload');
           }
-          else
-          {
-            functions.alert( 'warning', 'Import', 'Some songs may not have been imported.', 'fa-upload' );
+          else {
+            functions.alert('warning', 'Import', 'Some songs may not have been imported.', 'fa-upload');
           }
         }
-        else
-        {
-          functions.alert( 'error', 'Import', 'There were no songs to import.', 'fa-upload' );
+        else {
+          functions.alert('error', 'Import', 'There were no songs to import.', 'fa-upload');
         }
-      } );
+      });
       importButton = $importButton[0];
-    } );
+    });
   }
 
-  function showForm()
-  {
+  function showForm() {
     currentResult = undefined;
-    updateState( false );
-    $form.modal( 'show' );
+    updateState(false);
+    $form.modal('show');
   }
 
-  function updateState( checkFile )
-  {
-    if ( file.files.length )
-    {
-      if ( checkFile )
-      {
+  function updateState(checkFile) {
+    if (file.files.length) {
+      if (checkFile) {
         var f = file.files[0];
         var reader = new window.FileReader();
-        reader.addEventListener( 'load', function( event )
-        {
+        reader.addEventListener('load', function (event) {
           currentResult = reader.result;
           importButton.disabled = false;
-          $importButton.removeClass( 'disabled' );
-        } );
-        reader.readAsText( f );
+          $importButton.removeClass('disabled');
+        });
+        reader.readAsText(f);
       }
     }
-    else
-    {
+    else {
       importButton.disabled = true;
-      $importButton.addClass( 'disabled' );
+      $importButton.addClass('disabled');
     }
   }
 
   return {
-    'setData' : setData,
-    'init' : init
+    'setData': setData,
+    'init': init
   };
 }
 
-define( 'plugins/import', [ 'plugins', 'jquery', 'functions' ], function( plugins, $, functions )
-{
+define('plugins/import', [ 'plugins', 'jquery', 'functions' ], function (plugins, $, functions) {
   'use strict';
-  var instance = new Import( $, functions );
-  plugins.register( {
-    'name' : 'import',
-    'instance' : instance,
-    'render' : false,
-    'serialize' : false
-  } );
-} );
+  var instance = new Import($, functions);
+  plugins.register({
+    'name': 'import',
+    'instance': instance,
+    'render': false,
+    'serialize': false
+  });
+});

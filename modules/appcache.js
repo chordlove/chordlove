@@ -17,22 +17,19 @@
  */
 /**
  * Store files in browser appcache.
- * 
+ *
  * @module appcache
  * @requires jquery
  * @requires functions
  */
-function AppCache( $, functions )
-{
+function AppCache($, functions) {
   'use strict';
-  if ( AppCache.prototype._instance )
-  {
+  if (AppCache.prototype._instance) {
     return AppCache.prototype._instance;
   }
   AppCache.prototype._instance = this;
 
-  if ( !( 'applicationCache' in window ) )
-  {
+  if (!( 'applicationCache' in window )) {
     return exports;
   }
 
@@ -40,8 +37,8 @@ function AppCache( $, functions )
   var UPDATE_CHECK_INTERVAL = 864000; // 4h
 
   var appCache = window.applicationCache;
-  var $appCache = $( appCache );
-  var $window = $( window );
+  var $appCache = $(appCache);
+  var $window = $(window);
 
   var onlineEventListeners = [];
   var offlineEventListeners = [];
@@ -49,94 +46,75 @@ function AppCache( $, functions )
 
   init();
 
-  function init()
-  {
-    $appCache.bind( 'updateready', function()
-    {
+  function init() {
+    $appCache.bind('updateready', function () {
       swapCache();
-    } );
+    });
 
-    $window.bind( 'online', function()
-    {
-      for ( var i = 0; i < onlineEventListeners.length; i++ )
-      {
+    $window.bind('online', function () {
+      for (var i = 0; i < onlineEventListeners.length; i++) {
         onlineEventListeners[i]();
       }
-      while ( runOnceWhenOnlineListeners.length > 0 )
-      {
+      while (runOnceWhenOnlineListeners.length > 0) {
         runOnceWhenOnlineListeners.pop()();
       }
-    } );
+    });
 
-    $window.bind( 'offline', function()
-    {
-      for ( var i = 0; i < offlineEventListeners.length; i++ )
-      {
+    $window.bind('offline', function () {
+      for (var i = 0; i < offlineEventListeners.length; i++) {
         offlineEventListeners[i]();
       }
-    } );
+    });
 
-    registerOnlineEventListener( function()
-    {
+    registerOnlineEventListener(function () {
       // wait a bit after coming online, then check for updates
-      window.setTimeout( function()
-      {
-        if ( !window.navigator.onLine )
-        {
+      window.setTimeout(function () {
+        if (!window.navigator.onLine) {
           return;
         }
         appCache.update();
-      }, UPDATE_CHECK_DELAY );
-    } );
+      }, UPDATE_CHECK_DELAY);
+    });
 
-    window.setInterval( function()
-    {
+    window.setInterval(function () {
       appCache.update();
-    }, UPDATE_CHECK_INTERVAL );
+    }, UPDATE_CHECK_INTERVAL);
 
     // check update status on page load as well
-    if ( appCache.status === appCache.UPDATEREADY )
-    {
+    if (appCache.status === appCache.UPDATEREADY) {
       swapCache();
     }
   }
 
-  function isOnline()
-  {
+  function isOnline() {
     return 'onLine' in window.navigator ? window.navigator.onLine : true;
   }
 
-  function swapCache()
-  {
+  function swapCache() {
     appCache.swapCache();
     var $form = null;
-    functions.dialog( function()
-    {
-      $form.modal( 'show' );
-    }, 'appcache-form', 'appcache', function( form )
-    {
-      $form = $( form );
-      $( '#appcache-button' ).click( function()
-      {
+    functions.dialog(function () {
+      $form.modal('show');
+    }, 'appcache-form', 'appcache', function (form) {
+      $form = $(form);
+      $('#appcache-button').click(function () {
         window.location.reload();
-      } );
-    } );
+      });
+    });
   }
 
   /**
    * Register a listener to be executed when the browser goes online. The event will fire once at page load, if the
    * browser is online.
-   * 
+   *
    * @method
    * @name module:appcache.registerOnlineEventListener
    * @param {Function}
    *          listener Listener to execute when coming online.
    */
-  function registerOnlineEventListener( listener )
-  {
-    onlineEventListeners.push( listener );
-    if ( isOnline() )
-    {
+  function registerOnlineEventListener(listener) {
+    onlineEventListeners.push(listener);
+    if (isOnline()) {
       listener();
     }
   }
@@ -144,17 +122,15 @@ function AppCache( $, functions )
   /**
    * Register a listener to be executed when the browser goes offline. The event will fire once at page load, if the
    * browser is offline.
-   * 
+   *
    * @method
    * @name module:appcache.registerOfflineEventListener
    * @param {Function}
    *          listener Listener to execute when going offline.
    */
-  function registerOfflineEventListener( listener )
-  {
-    offlineEventListeners.push( listener );
-    if ( !isOnline() )
-    {
+  function registerOfflineEventListener(listener) {
+    offlineEventListeners.push(listener);
+    if (!isOnline()) {
       listener();
     }
   }
@@ -162,33 +138,29 @@ function AppCache( $, functions )
   /**
    * Register a listener to be executed when the browser comes online for the first time. The listener will be executed
    * right away if the browser is online. The listener will not be executed for any subsequent offline/online cycles.
-   * 
+   *
    * @method
    * @name module:appcache.runOnceWhenOnline
    * @param {Function}
    *          listener Listener to execute once when coming online.
    */
-  function runOnceWhenOnline( listener )
-  {
-    if ( isOnline() )
-    {
+  function runOnceWhenOnline(listener) {
+    if (isOnline()) {
       listener();
     }
-    else
-    {
-      runOnceWhenOnlineListeners.push( listener );
+    else {
+      runOnceWhenOnlineListeners.push(listener);
     }
   }
 
   return {
-    'registerOnlineEventListener' : registerOnlineEventListener,
-    'registerOfflineEventListener' : registerOfflineEventListener,
-    'runOnceWhenOnline' : runOnceWhenOnline
+    'registerOnlineEventListener': registerOnlineEventListener,
+    'registerOfflineEventListener': registerOfflineEventListener,
+    'runOnceWhenOnline': runOnceWhenOnline
   };
 }
 
-define( 'appcache', [ 'jquery', 'functions' ], function( jquery, functions )
-{
+define('appcache', [ 'jquery', 'functions' ], function (jquery, functions) {
   'use strict';
-  return new AppCache( jquery, functions );
-} );
+  return new AppCache(jquery, functions);
+});

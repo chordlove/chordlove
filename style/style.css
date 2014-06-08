@@ -16,7 +16,7 @@
  *along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 /* hide initially */
-#navbar,#title,#footer {
+#navbar, #title, #footer {
   visibility: hidden;
 }
 
@@ -77,9 +77,9 @@ h1 {
   margin-bottom: 10px;
 }
 
-h1 input[type="text"],input[type="text"].chord-text,input[type="text"].song-text,input[type="text"].label-text {
+h1 input[type="text"], input[type="text"].chord-text, input[type="text"].song-text, input[type="text"].label-text {
   font-family: 'DejaVuSerifBook', 'DejaVu Serif', 'DejaVu Sans', 'Lucida Sans Unicode',
-    'Arial Unicode MS', serif;
+  'Arial Unicode MS', serif;
   font-weight: 400;
   font-size: 1em;
   line-height: 1.3em;
@@ -92,10 +92,10 @@ h1 input[type="text"],input[type="text"].chord-text,input[type="text"].song-text
   color: #222222;
 }
 
-h1 input[type="text"],input[type="text"].label-text,#items>dt {
+h1 input[type="text"], input[type="text"].label-text, #items > dt {
   font-family: 'DejaVuSansCondensedBold', 'DejaVu Sans Condensed Bold', 'DejaVu Sans', 'Lucida Sans Unicode',
-    'Arial Unicode MS', sans-serif;
-    font-weight: bold;
+  'Arial Unicode MS', sans-serif;
+  font-weight: bold;
 }
 
 h1 input[type="text"] {
@@ -105,13 +105,13 @@ h1 input[type="text"] {
   color: #333333;
 }
 
-#help .modal-body,#share-form .modal-body {
+#help .modal-body, #share-form .modal-body {
   font-family: 'DejaVuSerifBook', 'DejaVu Serif', 'DejaVu Sans', 'Lucida Sans Unicode',
-    'Arial Unicode MS', serif;
+  'Arial Unicode MS', serif;
   font-weight: 400;
 }
 
-#items>dt {
+#items > dt {
   width: 0;
   float: left;
   position: relative;
@@ -120,12 +120,12 @@ h1 input[type="text"] {
   overflow-x: visible;
 }
 
-#items>dt > input {
+#items > dt > input {
   width: 300px;
   padding: 0;
 }
 
-input[type="text"].chord-text,input[type="text"].song-text {
+input[type="text"].chord-text, input[type="text"].song-text {
   font-size: 24px;
   padding: 6px 0 1px 0;
   line-height: 40px;
@@ -156,7 +156,7 @@ input[type="text"].song-text {
   margin-bottom: 1em;
 }
 
-#items dd.start-of-line, #items dt.start-of-line  {
+#items dd.start-of-line, #items dt.start-of-line {
   clear: left;
 }
 
@@ -185,20 +185,23 @@ body.edit-mode #items.has-text input[type="text"].empty-input.song-text {
 }
 
 /* from: http://stackoverflow.com/a/2610741 */
-::-webkit-input-placeholder { /* WebKit browsers */
+::-webkit-input-placeholder {
+  /* WebKit browsers */
   color: #bbbbbb;
 }
 
-:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+:-moz-placeholder {
+  /* Mozilla Firefox 4 to 18 */
   color: #bbbbbb;
 }
 
-::-moz-placeholder { /* Mozilla Firefox 19+ */
+::-moz-placeholder {
+  /* Mozilla Firefox 19+ */
   color: #bbbbbb;
 }
 
-h1 input[type="text"]:-ms-input-placeholder,input[type="text"].chord-text:-ms-input-placeholder,input[type="text"].song-text:-ms-input-placeholder
-  { /* Internet Explorer 10+ */
+h1 input[type="text"]:-ms-input-placeholder, input[type="text"].chord-text:-ms-input-placeholder, input[type="text"].song-text:-ms-input-placeholder {
+  /* Internet Explorer 10+ */
   color: #bbbbbb;
 }
 
@@ -214,17 +217,16 @@ div.duration a {
   height: 6px;
   font-size: 10px;
   font-family: 'DejaVuSerifBook', 'DejaVu Serif', 'DejaVu Sans', 'Lucida Sans Unicode',
-    'Arial Unicode MS', serif;
+  'Arial Unicode MS', serif;
   color: #333;
 }
 
-div.btn-group.duration>.btn,div.btn-group.duration>.dropdown-menu,div.btn-group.duration>.popover {
+div.btn-group.duration > .btn, div.btn-group.duration > .dropdown-menu, div.btn-group.duration > .popover {
   font-size: 10px;
   line-height: 6px;
 }
 
-div.btn-group.duration>.btn,div.btn-group.duration>.popover,div.duration.btn-group.open .btn.dropdown-toggle,div.btn-group.chord-menu>.btn,div.btn-group.chord-menu>.popover,div.chord-menu.btn-group.open .btn.dropdown-toggle
-  {
+div.btn-group.duration > .btn, div.btn-group.duration > .popover, div.duration.btn-group.open .btn.dropdown-toggle, div.btn-group.chord-menu > .btn, div.btn-group.chord-menu > .popover, div.chord-menu.btn-group.open .btn.dropdown-toggle {
   background: none;
   border: none;
   box-shadow: none;
@@ -234,7 +236,7 @@ div.duration .dropdown-menu {
   min-width: 50px;
 }
 
-div.duration ul>li>a {
+div.duration ul > li > a {
   padding-left: 8px;
   height: 12px;
 }
@@ -243,7 +245,7 @@ div.duration ul>li>a {
   width: 97%;
 }
 
-#help .modal-header,#share-form .modal-header {
+#help .modal-header, #share-form .modal-header {
   font-family: neuton-cursive, serif;
   font-weight: 400;
 }
@@ -256,12 +258,12 @@ div.duration ul>li>a {
   padding: 2px 4px;
 }
 
-#items,#addons,#addons-core {
+#items, #addons, #addons-core {
   padding-left: 0;
   clear: left;
 }
 
-#items>dd {
+#items > dd {
   width: 107px;
   height: 48px;
   float: left;
@@ -275,7 +277,7 @@ div.duration ul>li>a {
   background: #ffffff;
 }
 
-#addons>li,#addons-core>li {
+#addons > li, #addons-core > li {
   list-style-type: none;
   display: block;
   float: left;
@@ -283,11 +285,11 @@ div.duration ul>li>a {
   margin-top: 1.5em;
 }
 
-#items.has-text>dd {
+#items.has-text > dd {
   height: 68px;
 }
 
-#items>dd.symbol {
+#items > dd.symbol {
   width: 12px;
   border: none;
   padding: 3px 0 3px 0;
@@ -302,11 +304,11 @@ img.barline {
   height: 68px;
 }
 
-#items>dd.ui-selecting {
+#items > dd.ui-selecting {
   background: #FECA40;
 }
 
-#items>dd.ui-selected {
+#items > dd.ui-selected {
   background: #F39814;
 }
 
@@ -314,7 +316,7 @@ body dd div.handle {
   display: none;
 }
 
-body.edit-mode #items>dd div.handle {
+body.edit-mode #items > dd div.handle {
   background: #f8f8f8;
   position: absolute;
   left: 0;
@@ -340,13 +342,13 @@ div.chord-menu {
   padding: 0;
 }
 
-div.chord-menu>a {
+div.chord-menu > a {
   padding: 0 2px;
   font-size: 12px;
   color: #333;
 }
 
-#items div.chord-menu>ul>li>a {
+#items div.chord-menu > ul > li > a {
   padding: 3px;
 }
 
@@ -366,25 +368,25 @@ dd.ui-selected .handle .pin {
   color: #F39814;
 }
 
-#cpanel span.btn-group,#cpanel div.btn-group {
+#cpanel span.btn-group, #cpanel div.btn-group {
   display: none;
 }
 
-#cpanel span.always-visible,#cpanel div.always-visible {
+#cpanel span.always-visible, #cpanel div.always-visible {
   display: inline-block;
 }
 
-body.edit-mode #cpanel span.btn-group,body.edit-mode #cpanel div.btn-group {
+body.edit-mode #cpanel span.btn-group, body.edit-mode #cpanel div.btn-group {
   display: inline-block;
 }
 
-#verses-blocks>p {
+#verses-blocks > p {
   white-space: pre;
   float: left;
   padding-right: 40px;
   margin: 10px 0;
   font-family: 'DejaVuSerifBook', 'DejaVu Serif', 'DejaVu Sans', 'Lucida Sans Unicode',
-    'Arial Unicode MS', serif;
+  'Arial Unicode MS', serif;
 }
 
 label.disabled {
@@ -399,7 +401,7 @@ div.guitarchord {
 
 p.guitarchord {
   font-family: 'DejaVuSerifBook', 'DejaVu Serif', 'DejaVu Sans', 'Lucida Sans Unicode',
-    'Arial Unicode MS', serif;
+  'Arial Unicode MS', serif;
   font-size: 18px;
   text-align: center;
   position: relative;
@@ -408,10 +410,10 @@ p.guitarchord {
 }
 
 div.guitarchord-inner {
-  
+
 }
 
-i.guitarchord-next,i.guitarchord-previous {
+i.guitarchord-next, i.guitarchord-previous {
   visibility: hidden;
   position: absolute;
   top: 12px;
@@ -433,7 +435,7 @@ i.guitarchord-previous {
   left: 4px
 }
 
-body.edit-mode i.guitarchord-next,body.edit-mode i.guitarchord-previous {
+body.edit-mode i.guitarchord-next, body.edit-mode i.guitarchord-previous {
   visibility: visible;
 }
 
@@ -451,7 +453,7 @@ body.edit-mode i.guitarchord-next,body.edit-mode i.guitarchord-previous {
 @media print {
   #footer {
     font-family: 'DejaVuSerifBook', 'DejaVu Serif', 'DejaVu Sans', 'Lucida Sans Unicode',
-      'Arial Unicode MS', serif;
+    'Arial Unicode MS', serif;
     display: block;
     float: right;
     clear: both;
@@ -462,14 +464,16 @@ body.edit-mode i.guitarchord-next,body.edit-mode i.guitarchord-previous {
     padding-top: 2em;
     float: right;
   }
+
   #footer a[href]:after {
     content: "";
   }
-  .hide-in-print,.navbar,#items>dd div.handle,#cpanel span.btn-group,#cpanel div.btn-group {
+
+  .hide-in-print, .navbar, #items > dd div.handle, #cpanel span.btn-group, #cpanel div.btn-group {
     display: none !important;
   }
-  input[type="text"].empty-input,input[type="text"].empty-input.song-text,#items.has-text input[type="text"].empty-input.song-text,i.guitarchord-next,i.guitarchord-previous
-    {
+
+  input[type="text"].empty-input, input[type="text"].empty-input.song-text, #items.has-text input[type="text"].empty-input.song-text, i.guitarchord-next, i.guitarchord-previous {
     visibility: hidden !important;
   }
 }

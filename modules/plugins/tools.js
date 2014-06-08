@@ -18,7 +18,7 @@
 /**
  * Module to handle the tools menu. It contains a list of tools (including icon, menu text, plugin name and method to
  * execute), but not their code.
- * 
+ *
  * @module plugins/tools
  * @requires jquery
  * @requires functions
@@ -26,11 +26,9 @@
  * @requires plugins
  */
 
-function Tools( $, toolbar, plugins )
-{
+function Tools($, toolbar, plugins) {
   'use strict';
-  if ( Tools.prototype._instance )
-  {
+  if (Tools.prototype._instance) {
     return Tools.prototype._instance;
   }
   Tools.prototype._instance = this;
@@ -38,62 +36,53 @@ function Tools( $, toolbar, plugins )
   // var PLUGIN_ID = '06', DEFAULT_FORMAT = 0;
 
   var tools = [
-      new ToolInfo( 'lyrics', 'toggleLyrics', 'fa-align-left', 'Show/hide lyrics', true ),
-      new ToolInfo( 'beats', 'showDialog', 'fa-clock-o', 'Time signature …', true ),
-      new ToolInfo( 'structure', 'setBarBreaks', 'fa-th', 'Organize bars …', true ),
-      new ToolInfo( 'transpose', 'init', 'fa-arrows-v', 'Transpose song …', true ),
-      new ToolInfo( 'export', 'init', 'fa-download', 'Export songs …', window.Blob && window.URL
-          && window.URL.createObjectURL ),
-      new ToolInfo( 'import', 'init', 'fa-upload', 'Import songs …', window.FileReader ) ];
+    new ToolInfo('lyrics', 'toggleLyrics', 'fa-align-left', 'Show/hide lyrics', true),
+    new ToolInfo('beats', 'showDialog', 'fa-clock-o', 'Time signature …', true),
+    new ToolInfo('structure', 'setBarBreaks', 'fa-th', 'Organize bars …', true),
+    new ToolInfo('transpose', 'init', 'fa-arrows-v', 'Transpose song …', true),
+    new ToolInfo('export', 'init', 'fa-download', 'Export songs …', window.Blob && window.URL
+      && window.URL.createObjectURL),
+    new ToolInfo('import', 'init', 'fa-upload', 'Import songs …', window.FileReader) ];
 
-  function ToolInfo( name, method, icon, text, test )
-  {
+  function ToolInfo(name, method, icon, text, test) {
     this.test = test;
-    if ( !test )
-    {
+    if (!test) {
       return;
     }
     this.menuHtml = '<i class="fa fa-fw ' + icon + '"></i> ' + text;
-    this.func = function( event )
-    {
+    this.func = function (event) {
       event.preventDefault();
-      plugins.exec( name, function( instance )
-      {
+      plugins.exec(name, function (instance) {
         instance[method]();
-      } );
+      });
     };
   }
 
-  function load()
-  {
-    for ( var i = 0; i < tools.length; i++ )
-    {
-      if ( !tools[i].test )
-      {
+  function load() {
+    for (var i = 0; i < tools.length; i++) {
+      if (!tools[i].test) {
         continue;
       }
-      toolbar.registerToolsMenuMember( function( $li, $a )
-      {
-        $a.html( tools[i].menuHtml ).click( tools[i].func );
-      } );
+      toolbar.registerToolsMenuMember(function ($li, $a) {
+        $a.html(tools[i].menuHtml).click(tools[i].func);
+      });
     }
   }
 
   return {
-    'load' : load
+    'load': load
   };
 }
 
-define( 'plugins/tools', [ 'plugins', 'jquery', 'toolbar', ], function( plugins, $, toolbar )
-{
+define('plugins/tools', [ 'plugins', 'jquery', 'toolbar', ], function (plugins, $, toolbar) {
   'use strict';
-  var instance = new Tools( $, toolbar, plugins );
-  plugins.register( {
-    'name' : 'tools',
-    'instance' : instance,
-    'render' : false,
-    'serialize' : false
-  } );
+  var instance = new Tools($, toolbar, plugins);
+  plugins.register({
+    'name': 'tools',
+    'instance': instance,
+    'render': false,
+    'serialize': false
+  });
   instance.load();
   return instance;
-} );
+});

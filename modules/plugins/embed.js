@@ -18,18 +18,16 @@
 /**
  * Module to add embed to the song. Hooks into the {@link module:plugins/chords} module to get rendering executed and
  * adds its own copy/paste extractor as well.
- * 
+ *
  * @module plugins/embed
  * @requires jquery
  * @requires functions
  * @requires share
  */
 
-function Embed( $, functions, share )
-{
+function Embed($, functions, share) {
   'use strict';
-  if ( Embed.prototype._instance )
-  {
+  if (Embed.prototype._instance) {
     return Embed.prototype._instance;
   }
   Embed.prototype._instance = this;
@@ -39,7 +37,7 @@ function Embed( $, functions, share )
   var format = DEFAULT_FORMAT;
   var loaded = true;
 
-  var $ADDONS = $( '#addons' );
+  var $ADDONS = $('#addons');
 
   var $form = undefined;
   var $embedWrapper = undefined;
@@ -50,8 +48,7 @@ function Embed( $, functions, share )
    * @method
    * @name module:plugins/embed.setData
    */
-  function setData( inputFormat, inputData )
-  {
+  function setData(inputFormat, inputData) {
     format = inputFormat;
     data = inputData;
   }
@@ -60,10 +57,8 @@ function Embed( $, functions, share )
    * @method
    * @name module:plugins/embed.render
    */
-  function render()
-  {
-    if ( !loaded )
-    {
+  function render() {
+    if (!loaded) {
       return;
     }
     renderContent();
@@ -73,133 +68,113 @@ function Embed( $, functions, share )
    * @method
    * @name module:plugins/embed.serialize
    */
-  function serialize()
-  {
-    if ( !loaded )
-    {
+  function serialize() {
+    if (!loaded) {
       return '';
     }
-    var lines = $( '#embed-content' ).val().split( "\n" );
-    var serialized = PLUGIN_ID + DEFAULT_FORMAT + functions.writeStringArray( {
-      'items' : lines,
-      'countSize' : 1,
-      'itemLengthSize' : 2
-    } );
+    var lines = $('#embed-content').val().split("\n");
+    var serialized = PLUGIN_ID + DEFAULT_FORMAT + functions.writeStringArray({
+      'items': lines,
+      'countSize': 1,
+      'itemLengthSize': 2
+    });
     return serialized.length > 6 ? serialized : '';
   }
 
-  function init( func )
-  {
-    functions.dialog( func, 'embed', 'embed', function( form )
-    {
-      $form = $( form );
-      $embedWrapper = $( '<li id="embed"/>' );
-      $embed = $( '<div/>' ).appendTo( $embedWrapper );
-      $embedWrapper.appendTo( $ADDONS );
-      $links = $( '#embed-content' );
-      $( '#embed-ok' ).click( function()
-      {
+  function init(func) {
+    functions.dialog(func, 'embed', 'embed', function (form) {
+      $form = $(form);
+      $embedWrapper = $('<li id="embed"/>');
+      $embed = $('<div/>').appendTo($embedWrapper);
+      $embedWrapper.appendTo($ADDONS);
+      $links = $('#embed-content');
+      $('#embed-ok').click(function () {
         renderContent();
-        share.changedText( 'plugins/embed' );
-      } );
-    } );
+        share.changedText('plugins/embed');
+      });
+    });
   }
 
-  function showForm()
-  {
-    $form.modal().on( 'shown.bs.modal', function()
-    {
+  function showForm() {
+    $form.modal().on('shown.bs.modal', function () {
       $links.focus();
-    } );
+    });
   }
 
-  function load()
-  {
+  function load() {
     loaded = true;
-    init( showForm );
+    init(showForm);
   }
 
-  function unload()
-  {
+  function unload() {
     loaded = false;
   }
 
-  function parseInput( inputData )
-  {
-    return functions.readStringArray( {
-      'data' : inputData,
-      'countSize' : 1,
-      'itemLengthSize' : 2
-    } ).array;
+  function parseInput(inputData) {
+    return functions.readStringArray({
+      'data': inputData,
+      'countSize': 1,
+      'itemLengthSize': 2
+    }).array;
   }
 
-  function renderContent()
-  {
-    init( function()
-    {
+  function renderContent() {
+    init(function () {
       var lines = [];
-      if ( data )
-      {
-        lines = parseInput( data );
+      if (data) {
+        lines = parseInput(data);
         data = null;
-        $links.val( lines.join( '\n' ) );
+        $links.val(lines.join('\n'));
       }
-      else
-      {
-        lines = $links.val().split( '\n' );
+      else {
+        lines = $links.val().split('\n');
       }
       $embedWrapper.empty();
-      $embed = $( '<div/>' ).appendTo( $embedWrapper );
-      for ( var i = 0; i < lines.length; i++ )
-      {
-        var url = $.trim( lines[i] );
-        if ( url.length === 0 )
-        {
+      $embed = $('<div/>').appendTo($embedWrapper);
+      for (var i = 0; i < lines.length; i++) {
+        var url = $.trim(lines[i]);
+        if (url.length === 0) {
           continue;
         }
-        try
-        {
-          var $div = $( '<div/>' ).appendTo( $embed );
-          $div.oembed( url, {
-            includeHandle : false,
-            embedMethod : "append",
-            apikeys : {
-              soundcloud : '11ff8985d647e9561c7881d1e3b0baee'
+        try {
+          var $div = $('<div/>').appendTo($embed);
+          $div.oembed(url, {
+            includeHandle: false,
+            embedMethod: "append",
+            apikeys: {
+              soundcloud: '11ff8985d647e9561c7881d1e3b0baee'
             }
-          } );
+          });
         }
-        catch ( ex )
-        {
+        catch (ex) {
           // TODO: handle exception
         }
       }
-    } );
+    });
   }
 
-  function clear()
-  {
-    $links.val( '' );
+  function clear() {
+    $links.val('');
     $embed.empty();
   }
 
   return {
-    'render' : render,
-    'serialize' : serialize,
-    'setData' : setData,
-    'load' : load,
-    'clear' : clear
+    'render': render,
+    'serialize': serialize,
+    'setData': setData,
+    'load': load,
+    'clear': clear
   };
 }
 
-define( 'plugins/embed', [ 'plugins', 'jquery', 'functions', 'share' ], function( plugins, $, functions, share )
-{
+define('plugins/embed', [ 'plugins', 'jquery', 'functions', 'share' ], function (plugins, $, functions, share) {
   'use strict';
-  var instance = new Embed( $, functions, share );
-  plugins.register( {
-    'name' : 'embed',
-    'instance' : instance,
-    'render' : true,
-    'serialize' : true
-  } );
+  var instance = new Embed($, functions, share);
+  plugins.register({
+    'name': 'embed',
+    'instance': instance,
+    'render': true,
+    'serialize': true
+  });
   return instance;
-} );
+});

@@ -18,11 +18,10 @@
 
 /**
  * Wraps jQuery as a module manually.
- * 
+ *
  * @module jquery
  */
-define( 'jquery', [], function()
-{
+define('jquery', [], function () {
   'use strict';
   return window.jQuery.noConflict();
-} );
+});

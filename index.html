@@ -18,198 +18,182 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <html manifest="manifest.appcache">
 <head>
-<meta charset="UTF-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-<title>Chordlove.com</title>
-<script src="//ajax.googleapis.com/ajax/libs/webfont/1.5.3/webfont.js"></script>
-<script>
-  if ( !window.WebFont )
-  {
-    document.write( '<script src="http://cdn.chordlove.com/libs/webfont-1.5.3.js">\x3C/script>' );
-  }
-</script>
-<script>
-  'use strict';
-  window.ChordloveFontLoading = ( function()
-  {
-    var fonts = {};
-    var listeners = {};
-
-    function registerActiveFont( name )
-    {
-      fonts[name] = true;
-      checkListeners( name );
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Chordlove.com</title>
+  <script src="//ajax.googleapis.com/ajax/libs/webfont/1.5.3/webfont.js"></script>
+  <script>
+    if (!window.WebFont) {
+      document.write('<script src="http://cdn.chordlove.com/libs/webfont-1.5.3.js">\x3C/script>');
     }
+  </script>
+  <script>
+    'use strict';
+    window.ChordloveFontLoading = ( function () {
+      var fonts = {};
+      var listeners = {};
 
-    function registerInactiveFont( name )
-    {
-      fonts[name] = false;
-      checkListeners( name );
-    }
-
-    function addListener( name, listener )
-    {
-      if ( !( name in listeners ) )
-      {
-        listeners[name] = [];
+      function registerActiveFont(name) {
+        fonts[name] = true;
+        checkListeners(name);
       }
-      listeners[name].push( listener );
-      checkListeners( name );
-    }
 
-    function checkListeners( name )
-    {
-      if ( ( name in listeners ) && ( name in fonts ) )
-      {
-        var nameListeners = listeners[name];
-        for ( var i = 0; i < nameListeners.length; i++ )
-        {
-          var listener = nameListeners[i];
-          listener( fonts[name] );
+      function registerInactiveFont(name) {
+        fonts[name] = false;
+        checkListeners(name);
+      }
+
+      function addListener(name, listener) {
+        if (!( name in listeners )) {
+          listeners[name] = [];
+        }
+        listeners[name].push(listener);
+        checkListeners(name);
+      }
+
+      function checkListeners(name) {
+        if (( name in listeners ) && ( name in fonts )) {
+          var nameListeners = listeners[name];
+          for (var i = 0; i < nameListeners.length; i++) {
+            var listener = nameListeners[i];
+            listener(fonts[name]);
+          }
         }
       }
+
+      return {
+        'registerActiveFont': registerActiveFont,
+        'registerInactiveFont': registerInactiveFont,
+        'addListener': addListener
+      };
+    }() );
+
+    var fontCssLocation = 'http://cdn.chordlove.com/style/fonts-2014-06-06.3/fonts.css';
+    // check for chrome bug under windows in version < 37.
+    var ua = navigator.userAgent.toLowerCase();
+    if (ua.indexOf('chrome') > -1 && ua.indexOf('Win') !== -1) {
+      var ver = parseInt(window.navigator.appVersion.match(/Chrome\/(\d+)\./)[1], 10);
+      if (ver < 37) {
+        fontCssLocation = 'http://cdn.chordlove.com/style/fonts-2014-06-06.3/fonts-winchromefix.css';
+      }
     }
 
-    return {
-      'registerActiveFont' : registerActiveFont,
-      'registerInactiveFont' : registerInactiveFont,
-      'addListener' : addListener
-    };
-  }() );
-
-  var fontCssLocation = 'http://cdn.chordlove.com/style/fonts-2014-06-06.3/fonts.css';
-  // check for chrome bug under windows in version < 37.
-  var ua = navigator.userAgent.toLowerCase();
-  if ( ua.indexOf( 'chrome' ) > -1 && ua.indexOf( 'Win' ) !== -1 )
-  {
-    var ver = parseInt( window.navigator.appVersion.match( /Chrome\/(\d+)\./ )[1], 10 );
-    if ( ver < 37 )
+    WebFont.load({
+      custom: {
+        families: [ 'DejaVuSerifBook', 'DejaVuSansCondensedBold' ],
+        urls: [ fontCssLocation ]
+      },
+      fontactive: window.ChordloveFontLoading.registerActiveFont,
+      fontinactive: window.ChordloveFontLoading.registerInactiveFont
+    });
+  </script>
+  <!--[if lt IE 9]>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script>
+    if (!window.jQuery) {
+      document.write('<script src="http://code.jquery.com/jquery-1.11.1.min.js">\x3C/script>');
+    }
+  </script>
+  <![endif]-->
+  <!--[if gte IE 9]><!-->
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+  <script>
+    if (!window.jQuery) {
+      document.write('<script src="http://code.jquery.com/jquery-2.1.1.min.js">\x3C/script>');
+    }
+  </script>
+  <!--<![endif]-->
+  <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
+  <script>
+    if (!window.jQuery.ui) {
+      document.write('<script src="http://code.jquery.com/ui/1.10.4/jquery-ui.min.js">\x3C/script>');
+    }
+  </script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.2/raphael-min.js"></script>
+  <script>
+    if (!window.Raphael) {
+      document.write('<script src="//cdn.jsdelivr.net/raphael/2.1.2/raphael-min.js">\x3C/script>');
+    }
+  </script>
+  <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
+  <link href="style/style.css" rel="stylesheet">
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+  <script src="http://cdn.chordlove.com/libs/jquery.ba-hashchange-1.3.min.js"></script>
+  <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+  <script src="http://cdn.chordlove.com/libs/inject-0.6.1.min.js"></script>
+  <script>
+    if (!window.Inject) {
+      document.write('<script src="libs/inject-0.6.1.min.js">\x3C/script>');
+    }
+  </script>
+  <script>
+    Inject.setModuleRoot("modules");
+    if (window.location.hostname == "localhost") {
+      Inject.setExpires(0);
+    }
+    require.run("main");
+  </script>
+  <script src="http://cdn.chordlove.com/libs/vexchord-2013-08-24.min.js"></script>
+  <script>
+    function initGapi() {
+      window.gapi.client.setApiKey('AIzaSyDQHCBTiXVuvKz9EtqP7AamTpYqxWzWM-Q');
+    }
+  </script>
+  <script src="https://apis.google.com/js/client.js?onload=initGapi"></script>
+  <link rel="shortcut icon" href="favicon.ico"/>
+  <link rel="apple-touch-icon" sizes="144x144" href="apple-touch-icon-144x144.png"/>
+  <link rel="apple-touch-icon" sizes="114x114" href="apple-touch-icon-114x114.png"/>
+  <link rel="apple-touch-icon" sizes="72x72" href="apple-touch-icon-72x72.png"/>
+  <link rel="apple-touch-icon" sizes="57x57" href="apple-touch-icon-57x57.png"/>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <link href="http://cdn.chordlove.com/style/jquery.oembed-2013-09-01.css" rel="stylesheet">
+  <script src="http://cdn.chordlove.com/libs/jquery.oembed-2013-09-01.js"></script>
+  <!--
+  <script src="//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.0/fastclick.min.js"></script>
+  <script>
+    $( function()
     {
-      fontCssLocation = 'http://cdn.chordlove.com/style/fonts-2014-06-06.3/fonts-winchromefix.css';
-    }
-  }
-
-  WebFont.load( {
-    custom : {
-      families : [ 'DejaVuSerifBook', 'DejaVuSansCondensedBold' ],
-      urls : [ fontCssLocation ]
-    },
-    fontactive : window.ChordloveFontLoading.registerActiveFont,
-    fontinactive : window.ChordloveFontLoading.registerInactiveFont
-  } );
-</script>
-<!--[if lt IE 9]>
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-<script>
-  if ( !window.jQuery )
-  {
-    document.write( '<script src="http://code.jquery.com/jquery-1.11.1.min.js">\x3C/script>' );
-  }
-</script>
-<![endif]-->
-<!--[if gte IE 9]><!-->
-<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-<script>
-  if ( !window.jQuery )
-  {
-    document.write( '<script src="http://code.jquery.com/jquery-2.1.1.min.js">\x3C/script>' );
-  }
-</script>
-<!--<![endif]-->
-<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
-<script>
-  if ( !window.jQuery.ui )
-  {
-    document.write( '<script src="http://code.jquery.com/ui/1.10.4/jquery-ui.min.js">\x3C/script>' );
-  }
-</script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.2/raphael-min.js"></script>
-<script>
-  if ( !window.Raphael )
-  {
-    document.write( '<script src="//cdn.jsdelivr.net/raphael/2.1.2/raphael-min.js">\x3C/script>' );
-  }
-</script>
-<link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
-<link href="style/style.css" rel="stylesheet">
-<link href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
-<script src="http://cdn.chordlove.com/libs/jquery.ba-hashchange-1.3.min.js"></script>
-<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
-<script src="http://cdn.chordlove.com/libs/inject-0.6.1.min.js"></script>
-<script>
-  if ( !window.Inject )
-  {
-    document.write( '<script src="libs/inject-0.6.1.min.js">\x3C/script>' );
-  }
-</script>
-<script>
-  Inject.setModuleRoot( "modules" );
-  if ( window.location.hostname == "localhost" )
-  {
-    Inject.setExpires( 0 );
-  }
-  require.run( "main" );
-</script>
-<script src="http://cdn.chordlove.com/libs/vexchord-2013-08-24.min.js"></script>
-<script>
-  function initGapi()
-  {
-    window.gapi.client.setApiKey( 'AIzaSyDQHCBTiXVuvKz9EtqP7AamTpYqxWzWM-Q' );
-  }
-</script>
-<script src="https://apis.google.com/js/client.js?onload=initGapi"></script>
-<link rel="shortcut icon" href="favicon.ico" />
-<link rel="apple-touch-icon" sizes="144x144" href="apple-touch-icon-144x144.png" />
-<link rel="apple-touch-icon" sizes="114x114" href="apple-touch-icon-114x114.png" />
-<link rel="apple-touch-icon" sizes="72x72" href="apple-touch-icon-72x72.png" />
-<link rel="apple-touch-icon" sizes="57x57" href="apple-touch-icon-57x57.png" />
-<meta name="apple-mobile-web-app-capable" content="yes">
-<link href="http://cdn.chordlove.com/style/jquery.oembed-2013-09-01.css" rel="stylesheet">
-<script src="http://cdn.chordlove.com/libs/jquery.oembed-2013-09-01.js"></script>
-<!-- 
-<script src="//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.0/fastclick.min.js"></script>
-<script>
-  $( function()
-  {
-    if ( FastClick )
-    {
-      FastClick.attach( document.body );
-    }
-  } );
-</script>
- -->
+      if ( FastClick )
+      {
+        FastClick.attach( document.body );
+      }
+    } );
+  </script>
+   -->
 </head>
 <body>
-  <div id="spinner">
-    <img src="http://cdn.chordlove.com/images/loading.gif" alt="loading …">
-  </div>
-  <div id="help" class="modal fade" tabindex="-1">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-          <h3 class="chordlove-color-dark">
-            <img src="http://cdn.chordlove.com/images/icon-30.png" alt="" class="img-rounded-small" width="30"
-              height="30"> Chordlove
-          </h3>
+<div id="spinner">
+  <img src="http://cdn.chordlove.com/images/loading.gif" alt="loading …">
+</div>
+<div id="help" class="modal fade" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3 class="chordlove-color-dark">
+          <img src="http://cdn.chordlove.com/images/icon-30.png" alt="" class="img-rounded-small" width="30"
+               height="30"> Chordlove
+        </h3>
+      </div>
+      <div class="modal-body">
+        <p>Chordlove is a tool for sharing song chords and lyrics.</p>
+
+        <div id="intro">
+          <img src="http://cdn.chordlove.com/images/loading.gif" alt="loading …"
+               style="padding-left: 50%; margin-left: -33px;">
         </div>
-        <div class="modal-body">
-          <p>Chordlove is a tool for sharing song chords and lyrics.</p>
-          <div id="intro">
-            <img src="http://cdn.chordlove.com/images/loading.gif" alt="loading …"
-              style="padding-left: 50%; margin-left: -33px;">
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">Close</button>
-        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">Close</button>
       </div>
     </div>
   </div>
-  <div class="navbar navbar-fixed-top" id="navbar">
-    <img class="img-rounded" id="chordlove-navbar-icon" alt="" src="http://cdn.chordlove.com/images/icon-34.png"
-      width="34" height="34" title="About Chordlove">
-    <div id="cpanel" class="btn-toolbar">
+</div>
+<div class="navbar navbar-fixed-top" id="navbar">
+  <img class="img-rounded" id="chordlove-navbar-icon" alt="" src="http://cdn.chordlove.com/images/icon-34.png"
+       width="34" height="34" title="About Chordlove">
+
+  <div id="cpanel" class="btn-toolbar">
       <span class="btn-group always-visible">
         <button id="navigation-back" class="btn btn-default navbar-btn" title="Undo / Go back">
           <i class="fa fa-chevron-left"></i>
@@ -229,7 +213,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         </button>
       </span>
       <span id="sharpflat" class="btn-group NIY" data-toggle="buttons-radio">
-        <button type="button" title="Use flats" id="flat" class="btn btn-default navbar-btn active chord-font">♭</button>
+        <button type="button" title="Use flats" id="flat" class="btn btn-default navbar-btn active chord-font">♭
+        </button>
         <button type="button" title="Use sharps" id="sharp" class="btn btn-default navbar-btn chord-font">♯</button>
       </span>
       <span id="copypaste" class="btn-group">
@@ -251,22 +236,23 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
           <i class="fa fa-trash-o"></i>
         </button>
       </span>
-      <div id="addons-menu" class="btn-group">
-        <a class="btn btn-default navbar-btn dropdown-toggle" data-toggle="dropdown" href="#" title="More pieces">
-          <i class="fa fa-puzzle-piece"></i>
-          <span class="caret"></span>
-        </a>
-        <ul id="addons-list" class="dropdown-menu">
-        </ul>
-      </div>
-      <div id="tools-menu" class="btn-group">
-        <a class="btn btn-default navbar-btn dropdown-toggle" data-toggle="dropdown" href="#" title="Tools">
-          <i class="fa fa-wrench"></i>
-          <span class="caret"></span>
-        </a>
-        <ul id="tools-list" class="dropdown-menu">
-        </ul>
-      </div>
+
+    <div id="addons-menu" class="btn-group">
+      <a class="btn btn-default navbar-btn dropdown-toggle" data-toggle="dropdown" href="#" title="More pieces">
+        <i class="fa fa-puzzle-piece"></i>
+        <span class="caret"></span>
+      </a>
+      <ul id="addons-list" class="dropdown-menu">
+      </ul>
+    </div>
+    <div id="tools-menu" class="btn-group">
+      <a class="btn btn-default navbar-btn dropdown-toggle" data-toggle="dropdown" href="#" title="Tools">
+        <i class="fa fa-wrench"></i>
+        <span class="caret"></span>
+      </a>
+      <ul id="tools-list" class="dropdown-menu">
+      </ul>
+    </div>
       <span id="save-load" class="btn-group NIY">
         <button id="save" class="btn btn-default navbar-btn" title="Save">
           <i class="fa fa-save"></i>
@@ -275,62 +261,65 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
           <i class="fa fa-folder-open-o"></i>
         </button>
       </span>
-      <div class="btn-group always-visible">
-        <a id="share-dropdown" title="Share" class="btn btn-default navbar-btn dropdown-toggle disabled" data-toggle="dropdown"
-          data-target="#">
-          <i class="fa fa-share-square-o"></i>
-          <span class="caret"></span>
-        </a>
-        <ul class="dropdown-menu">
-          <li><a id="share-twitter" href="" target="_blank" data-toggle="tooltip" title="Tweet the song">
-              <i class="fa fa-fw fa-twitter-square"></i> Twitter
-            </a></li>
-          <li><a id="share-facebook" href="" target="_blank" data-toggle="tooltip" title="Share song on Facebook">
-              <i class="fa fa-fw fa-facebook-square"></i> Facebook
-            </a></li>
-          <li><a id="share-google-plus" href="" target="_blank" data-toggle="tooltip" title="Share song on Google+">
-              <i class="fa fa-fw fa-google-plus-square"></i> Google+
-            </a></li>
-          <li><a id="share-link" href="" title="Get a link to this song" data-toggle="tooltip">
-              <i class="fa fa-fw fa-link"></i> Link
-            </a></li>
-        </ul>
-      </div>
-      <div class="btn-group always-visible">
-        <a class="btn btn-default navbar-btn dropdown-toggle" data-toggle="dropdown" data-target="#">
-          <i class="fa fa-info-circle"></i>
-          <span class="caret"></span>
-        </a>
-        <ul class="dropdown-menu">
-          <li><a href="#help" id="help-btn" role="button" data-toggle="modal" title="About Chordlove">
-              <i class="fa fa-fw fa-info-circle"></i> Introduction
-            </a></li>
-          <li class="disabled"><a href="http://blog.chordlove.com/" target="_blank">
-              <i class="fa fa-fw fa-globe"></i> Blog
-            </a></li>
-          <li class="disabled"><a href="https://twitter.com/ChordloveApp" target="_blank">
-              <i class="fa fa-fw fa-twitter-square"></i> Twitter
-            </a></li>
-          <li class="disabled"><a href="https://github.com/chordlove/chordlove/issues" target="_blank">
-              <i class="fa fa-fw fa-ticket"></i> Issues
-            </a></li>
-          <li class="disabled"><a href="https://github.com/chordlove/chordlove" target="_blank">
-              <i class="fa fa-fw fa-code-fork"></i> Project
-            </a></li>
-        </ul>
-      </div>
+
+    <div class="btn-group always-visible">
+      <a id="share-dropdown" title="Share" class="btn btn-default navbar-btn dropdown-toggle disabled"
+         data-toggle="dropdown"
+         data-target="#">
+        <i class="fa fa-share-square-o"></i>
+        <span class="caret"></span>
+      </a>
+      <ul class="dropdown-menu">
+        <li><a id="share-twitter" href="" target="_blank" data-toggle="tooltip" title="Tweet the song">
+          <i class="fa fa-fw fa-twitter-square"></i> Twitter
+        </a></li>
+        <li><a id="share-facebook" href="" target="_blank" data-toggle="tooltip" title="Share song on Facebook">
+          <i class="fa fa-fw fa-facebook-square"></i> Facebook
+        </a></li>
+        <li><a id="share-google-plus" href="" target="_blank" data-toggle="tooltip"
+               title="Share song on Google+">
+          <i class="fa fa-fw fa-google-plus-square"></i> Google+
+        </a></li>
+        <li><a id="share-link" href="" title="Get a link to this song" data-toggle="tooltip">
+          <i class="fa fa-fw fa-link"></i> Link
+        </a></li>
+      </ul>
+    </div>
+    <div class="btn-group always-visible">
+      <a class="btn btn-default navbar-btn dropdown-toggle" data-toggle="dropdown" data-target="#">
+        <i class="fa fa-info-circle"></i>
+        <span class="caret"></span>
+      </a>
+      <ul class="dropdown-menu">
+        <li><a href="#help" id="help-btn" role="button" data-toggle="modal" title="About Chordlove">
+          <i class="fa fa-fw fa-info-circle"></i> Introduction
+        </a></li>
+        <li class="disabled"><a href="http://blog.chordlove.com/" target="_blank">
+          <i class="fa fa-fw fa-globe"></i> Blog
+        </a></li>
+        <li class="disabled"><a href="https://twitter.com/ChordloveApp" target="_blank">
+          <i class="fa fa-fw fa-twitter-square"></i> Twitter
+        </a></li>
+        <li class="disabled"><a href="https://github.com/chordlove/chordlove/issues" target="_blank">
+          <i class="fa fa-fw fa-ticket"></i> Issues
+        </a></li>
+        <li class="disabled"><a href="https://github.com/chordlove/chordlove" target="_blank">
+          <i class="fa fa-fw fa-code-fork"></i> Project
+        </a></li>
+      </ul>
     </div>
   </div>
-  <h1>
-    <input type="text" class="form-control" id="title" title="Add a title" placeholder="Song title …" />
-  </h1>
-  <dl id="items"></dl>
-  <ol id="addons-core"></ol>
-  <ol id="addons"></ol>
-  <div id="dialogs"></div>
-  <div id="footer">
-    <a href=".">chordlove.com</a>
-  </div>
-  <script src="http://cdn.chordlove.com/libs/ga.min.js"></script>
+</div>
+<h1>
+  <input type="text" class="form-control" id="title" title="Add a title" placeholder="Song title …"/>
+</h1>
+<dl id="items"></dl>
+<ol id="addons-core"></ol>
+<ol id="addons"></ol>
+<div id="dialogs"></div>
+<div id="footer">
+  <a href=".">chordlove.com</a>
+</div>
+<script src="http://cdn.chordlove.com/libs/ga.min.js"></script>
 </body>
 </html>

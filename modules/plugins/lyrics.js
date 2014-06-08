@@ -18,7 +18,7 @@
 /**
  * Module to add lyrics to the chord items. Hooks into the {@link module:plugins/chords} module to get rendering
  * executed and adds its own copy/paste extractor as well.
- * 
+ *
  * @module plugins/lyrics
  * @requires jquery
  * @requires functions
@@ -27,11 +27,9 @@
  * @requires plugins
  */
 
-function Lyrics( $, functions, share, resizer, plugins )
-{
+function Lyrics($, functions, share, resizer, plugins) {
   'use strict';
-  if ( Lyrics.prototype._instance )
-  {
+  if (Lyrics.prototype._instance) {
     return Lyrics.prototype._instance;
   }
   Lyrics.prototype._instance = this;
@@ -40,85 +38,70 @@ function Lyrics( $, functions, share, resizer, plugins )
   var data = null;
   var format = DEFAULT_FORMAT;
 
-  var $PARENT = $( '#items' );
-  var $VIEW_BUTTON = $( '#view-lyrics' );
-  var $TEXT_INPUT = $( '<input class="song-text resize-trigger empty-input" type="text" id="song-text" title="Add song text" placeholder="Text…" />' );
+  var $PARENT = $('#items');
+  var $VIEW_BUTTON = $('#view-lyrics');
+  var $TEXT_INPUT = $('<input class="song-text resize-trigger empty-input" type="text" id="song-text" title="Add song text" placeholder="Text…" />');
 
-  plugins.exec( 'chords', function( chords )
-  {
-    chords.registerContentExtractor( extract );
-  } );
+  plugins.exec('chords', function (chords) {
+    chords.registerContentExtractor(extract);
+  });
 
-  share.addStructureChangeListener( addTextInputs );
+  share.addStructureChangeListener(addTextInputs);
 
-  function visibleLyrics()
-  {
-    if ( $PARENT.hasClass( 'has-text' ) )
-    {
-      $PARENT.removeClass( 'has-text' );
-      $VIEW_BUTTON.removeClass( 'active' );
+  function visibleLyrics() {
+    if ($PARENT.hasClass('has-text')) {
+      $PARENT.removeClass('has-text');
+      $VIEW_BUTTON.removeClass('active');
     }
-    else
-    {
-      $PARENT.addClass( 'has-text' );
+    else {
+      $PARENT.addClass('has-text');
       addTextInputs();
-      $VIEW_BUTTON.addClass( 'active' );
+      $VIEW_BUTTON.addClass('active');
     }
   }
 
-  function getLyrics( item )
-  {
-    return $( 'input.song-text', item ).val();
+  function getLyrics(item) {
+    return $('input.song-text', item).val();
   }
 
-  function setLyrics( item, text )
-  {
-    var $element = getOrAddTextInput( item );
-    $element.val( text );
-    functions.emptyOrNot( $element, text );
+  function setLyrics(item, text) {
+    var $element = getOrAddTextInput(item);
+    $element.val(text);
+    functions.emptyOrNot($element, text);
   }
 
-  function extract( item )
-  {
-    var text = getLyrics( item );
-    return function( theItem )
-    {
-      if ( text !== undefined )
-      {
-        setLyrics( theItem, text );
+  function extract(item) {
+    var text = getLyrics(item);
+    return function (theItem) {
+      if (text !== undefined) {
+        setLyrics(theItem, text);
       }
     };
   }
 
-  function addTextInputs()
-  {
-    if ( !$PARENT.hasClass( 'has-text' ) )
-    {
+  function addTextInputs() {
+    if (!$PARENT.hasClass('has-text')) {
       return;
     }
-    $( 'dd.item', $PARENT ).each( function()
-    {
-      getOrAddTextInput( this );
-    } );
+    $('dd.item', $PARENT).each(function () {
+      getOrAddTextInput(this);
+    });
   }
 
-  function getOrAddTextInput( item )
-  {
-    var $wrapper = $( item );
-    var $chord = $wrapper.children( 'div.chord' ).first();
-    var $existing = $chord.children( 'input.song-text' );
-    if ( $existing.length )
-    {
+  function getOrAddTextInput(item) {
+    var $wrapper = $(item);
+    var $chord = $wrapper.children('div.chord').first();
+    var $existing = $chord.children('input.song-text');
+    if ($existing.length) {
       return $existing.first();
     }
     var $textInput = $TEXT_INPUT.clone();
-    $textInput.appendTo( $chord ).keydown( functions.handleInputKeyEvent ).blur( {
-      'item' : $wrapper
-    }, function( event )
-    {
-      share.changedText( event );
-    } ).bind( 'input', functions.handleInputChangeEvent );
-    resizer.prepareResize( $wrapper );
+    $textInput.appendTo($chord).keydown(functions.handleInputKeyEvent).blur({
+      'item': $wrapper
+    }, function (event) {
+      share.changedText(event);
+    }).bind('input', functions.handleInputChangeEvent);
+    resizer.prepareResize($wrapper);
     return $textInput;
   }
 
@@ -126,8 +109,7 @@ function Lyrics( $, functions, share, resizer, plugins )
    * @method
    * @name module:plugins/lyrics.setData
    */
-  function setData( inputFormat, inputData )
-  {
+  function setData(inputFormat, inputData) {
     format = inputFormat;
     data = inputData;
   }
@@ -136,77 +118,69 @@ function Lyrics( $, functions, share, resizer, plugins )
    * @method
    * @name module:plugins/lyrics.render
    */
-  function render()
-  {
-    if ( data === null )
-    {
+  function render() {
+    if (data === null) {
       return;
     }
-    var lyrics = functions.readStringArray( {
-      'data' : data,
-      'countSize' : 2
-    } ).array;
-    $PARENT.addClass( 'has-text' );
-    $VIEW_BUTTON.addClass( 'active' );
+    var lyrics = functions.readStringArray({
+      'data': data,
+      'countSize': 2
+    }).array;
+    $PARENT.addClass('has-text');
+    $VIEW_BUTTON.addClass('active');
     addTextInputs();
-    $PARENT.children( 'dd.item' ).each( function()
-    {
-      setLyrics( this, lyrics.shift() );
-    } );
+    $PARENT.children('dd.item').each(function () {
+      setLyrics(this, lyrics.shift());
+    });
   }
 
   /**
    * @method
    * @name module:plugins/lyrics.serialize
    */
-  function serialize()
-  {
+  function serialize() {
     var result = '';
     result += PLUGIN_ID + DEFAULT_FORMAT;
     var items = [];
-    $PARENT.children( 'dd.item' ).each( function()
-    {
-      items.push( getLyrics( this ) );
-    } );
-    result += functions.writeStringArray( {
-      'items' : items,
-      'countSize' : 2
-    } );
-    if ( result.length < 6 + items.length )
-    {
+    $PARENT.children('dd.item').each(function () {
+      items.push(getLyrics(this));
+    });
+    result += functions.writeStringArray({
+      'items': items,
+      'countSize': 2
+    });
+    if (result.length < 6 + items.length) {
       // all items have zero length
       result = '';
     }
     return result;
   }
 
-  function clear()
-  {
-    $PARENT.removeClass( 'has-text' );
-    $VIEW_BUTTON.removeClass( 'active' );
+  function clear() {
+    $PARENT.removeClass('has-text');
+    $VIEW_BUTTON.removeClass('active');
     data = null;
   }
 
   return {
-    'render' : render,
-    'serialize' : serialize,
-    'setData' : setData,
-    'clear' : clear,
-    'toggleLyrics' : visibleLyrics
+    'render': render,
+    'serialize': serialize,
+    'setData': setData,
+    'clear': clear,
+    'toggleLyrics': visibleLyrics
   };
 }
 
-define( 'plugins/lyrics', [ 'plugins', 'jquery', 'functions', 'share', 'resizer', 'plugins/chords' ],
-    function( plugins, $, functions, share, resizer, chords )
-    {
-      'use strict';
-      var instance = new Lyrics( $, functions, share, resizer, plugins );
-      chords.addPostRenderer( instance.render );
-      plugins.register( {
-        'name' : 'lyrics',
-        'instance' : instance,
-        'render' : false,
-        'serialize' : true
-      } );
-      return instance;
-    } );
+define('plugins/lyrics', [ 'plugins', 'jquery', 'functions', 'share', 'resizer', 'plugins/chords' ],
+  function (plugins, $, functions, share, resizer, chords) {
+    'use strict';
+    var instance = new Lyrics($, functions, share, resizer, plugins);
+    chords.addPostRenderer(instance.render);
+    plugins.register({
+      'name': 'lyrics',
+      'instance': instance,
+      'render': false,
+      'serialize': true
+    });
+    return instance;
+  });

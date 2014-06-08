@@ -2,7 +2,8 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" id="time-signature-close-header">&times;</button>
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                id="time-signature-close-header">&times;</button>
         <h3>
           <i class="fa fa-clock-o"></i> Change time signature
         </h3>
@@ -11,7 +12,7 @@
         <form>
           <fieldset>
             <select id="time-signature" class="form-control navbar-btn btn btn-default"
-              title="Time signature (beats per measure/bar)">
+                    title="Time signature (beats per measure/bar)">
               <option>1</option>
               <option>2</option>
               <option>3</option>
@@ -29,12 +30,15 @@
               <option>15</option>
               <option>16</option>
             </select> <label class="radio"> <input type="radio" name="time-signature-actions"
-              id="time-signature-actions-default" value="default" checked> Don't update the number of beats on
-              existing chords.
-            </label> <label class="radio" id="time-signature-actions-transform-label"> <input type="radio"
-              name="time-signature-actions" id="time-signature-actions-transform" value="transform">Update the
-              number of beats on existing chords to fit the new time signature.
-            </label>
+                                                   id="time-signature-actions-default" value="default" checked> Don't
+            update the number of beats on
+            existing chords.
+          </label> <label class="radio" id="time-signature-actions-transform-label"> <input type="radio"
+                                                                                            name="time-signature-actions"
+                                                                                            id="time-signature-actions-transform"
+                                                                                            value="transform">Update the
+            number of beats on existing chords to fit the new time signature.
+          </label>
           </fieldset>
         </form>
         <div class="alert alert-block alert-info" id="time-signature-alert">
