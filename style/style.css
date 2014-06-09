@@ -25,11 +25,15 @@ body {
 }
 
 #navbar {
-  width: 21em;
+  width: 27em;
   padding: 5px 0;
   margin: 0;
   background: rgba(255, 255, 255, 0.9);
   border-radius: 8px;
+}
+
+#navbar .dropdown-menu {
+  font-size: 16px;
 }
 
 body.edit-mode #navbar {
@@ -48,7 +52,7 @@ body.edit-mode #navbar {
 
 #cpanel {
   margin-bottom: 2px;
-  margin-left: 48px;
+  margin-left: 52px;
 }
 
 #time-signature {

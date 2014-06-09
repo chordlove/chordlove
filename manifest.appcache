@@ -10,15 +10,6 @@ apple-touch-icon-57x57.png
 apple-touch-icon-72x72.png
 favicon.ico
 forms/feedback/index.html
-images/icon-24.png
-images/icon-30.png
-images/icon-34.png
-images/icon-47.png
-images/icon-600.png
-images/icon-sources/commands
-images/icon-sources/icon-16.png
-images/icon-sources/icon-old.svg
-images/icon-sources/icon.svg
 images/loading.gif
 images/symbols/coda.svg
 images/symbols/double-barline.svg
@@ -65,8 +56,7 @@ modules/toolbar.js
 style/style.css
 
 #images
-http://cdn.chordlove.com/images/icon-30.png
-http://cdn.chordlove.com/images/icon-34.png
+http://cdn.chordlove.com/images/icon-43.svg
 http://cdn.chordlove.com/images/symbols/single-barline.svg
 http://cdn.chordlove.com/images/loading.gif
 

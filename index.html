@@ -171,7 +171,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
         <h3 class="chordlove-color-dark">
-          <img src="http://cdn.chordlove.com/images/icon-30.png" alt="" class="img-rounded-small" width="30"
+          <img src="http://cdn.chordlove.com/images/icon-43.svg" alt="" class="img-rounded-small" width="30"
                height="30"> Chordlove
         </h3>
       </div>
@@ -190,38 +190,39 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   </div>
 </div>
 <div class="navbar navbar-fixed-top" id="navbar">
-  <img class="img-rounded" id="chordlove-navbar-icon" alt="" src="http://cdn.chordlove.com/images/icon-34.png"
-       width="34" height="34" title="About Chordlove">
+  <img class="img-rounded" id="chordlove-navbar-icon" alt="" src="http://cdn.chordlove.com/images/icon-43.svg"
+       width="43" height="43" title="About Chordlove">
 
   <div id="cpanel" class="btn-toolbar">
       <span class="btn-group always-visible">
-        <button id="navigation-back" class="btn btn-default navbar-btn" title="Undo / Go back">
+        <button id="navigation-back" class="btn btn-default navbar-btn btn-lg" title="Undo / Go back">
           <i class="fa fa-chevron-left"></i>
         </button>
-        <button id="navigation-forward" class="btn btn-default navbar-btn" title="Redo / Go forward">
+        <button id="navigation-forward" class="btn btn-default navbar-btn btn-lg" title="Redo / Go forward">
           <i class="fa fa-chevron-right"></i>
         </button>
       </span>
       <span class="btn-group always-visible">
-        <button type="button" title="Edit mode" id="edit" class="btn btn-default navbar-btn">
-          <i class="fa fa-edit"></i>
+        <button type="button" title="Edit mode" id="edit" class="btn btn-default navbar-btn btn-lg">
+          <i class="fa fa-pencil"></i>
         </button>
       </span>
       <span class="btn-group">
-        <button id="add-chord" class="btn btn-default navbar-btn" title="Add chord">
+        <button id="add-chord" class="btn btn-default navbar-btn btn-lg" title="Add chord">
           <i class="fa fa-plus"></i>
         </button>
       </span>
       <span id="sharpflat" class="btn-group NIY" data-toggle="buttons-radio">
-        <button type="button" title="Use flats" id="flat" class="btn btn-default navbar-btn active chord-font">♭
+        <button type="button" title="Use flats" id="flat" class="btn btn-default navbar-btn active btn-lg chord-font">♭
         </button>
-        <button type="button" title="Use sharps" id="sharp" class="btn btn-default navbar-btn chord-font">♯</button>
+        <button type="button" title="Use sharps" id="sharp" class="btn btn-default navbar-btn btn-lg chord-font">♯
+        </button>
       </span>
 
     <div class="btn-group">
-      <a class="btn btn-default navbar-btn dropdown-toggle" data-toggle="dropdown" data-target="#">
+      <a class="btn btn-default btn-lg navbar-btn dropdown-toggle" data-toggle="dropdown" data-target="#">
         <i class="fa fa-briefcase"></i>
-        <span class="caret"></span>
+        <!-- <span class="caret"></span> -->
       </a>
       <ul class="dropdown-menu">
         <li>
@@ -254,36 +255,47 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     </div>
 
     <div id="addons-menu" class="btn-group">
-      <a class="btn btn-default navbar-btn dropdown-toggle" data-toggle="dropdown" href="#" title="More pieces">
+      <a class="btn btn-default btn-lg navbar-btn dropdown-toggle" data-toggle="dropdown" href="#" title="More pieces">
         <i class="fa fa-puzzle-piece"></i>
-        <span class="caret"></span>
+        <!-- <span class="caret"></span> -->
       </a>
       <ul id="addons-list" class="dropdown-menu">
       </ul>
     </div>
     <div id="tools-menu" class="btn-group">
-      <a class="btn btn-default navbar-btn dropdown-toggle" data-toggle="dropdown" href="#" title="Tools">
+      <a class="btn btn-default btn-lg navbar-btn dropdown-toggle" data-toggle="dropdown" href="#" title="Tools">
         <i class="fa fa-wrench"></i>
-        <span class="caret"></span>
+        <!-- <span class="caret"></span> -->
       </a>
       <ul id="tools-list" class="dropdown-menu">
       </ul>
     </div>
-      <span id="save-load" class="btn-group NIY">
-        <button id="save" class="btn btn-default navbar-btn" title="Save">
-          <i class="fa fa-save"></i>
-        </button>
-        <button id="open" class="btn btn-default navbar-btn" title="Open">
-          <i class="fa fa-folder-open-o"></i>
-        </button>
-      </span>
+
+    <div id="archive-menu" class="btn-group NIY">
+      <a class="btn btn-default btn-lg navbar-btn dropdown-toggle" data-toggle="dropdown" href="#" title="Archive">
+        <i class="fa fa-archive"></i>
+        <!-- <span class="caret"></span> -->
+      </a>
+      <ul class="dropdown-menu">
+        <li>
+          <a id="save" href="javascript:;">
+            <i class="fa fa-save"></i> Save
+          </a>
+        </li>
+        <li>
+          <a id="open" href="javascript:;">
+            <i class="fa fa-folder-open-o"></i> Open
+          </a>
+        </li>
+      </ul>
+    </div>
 
     <div class="btn-group always-visible">
-      <a id="share-dropdown" title="Share" class="btn btn-default navbar-btn dropdown-toggle disabled"
+      <a id="share-dropdown" title="Share" class="btn btn-default btn-lg navbar-btn dropdown-toggle disabled"
          data-toggle="dropdown"
          data-target="#">
         <i class="fa fa-share-square-o"></i>
-        <span class="caret"></span>
+        <!-- <span class="caret"></span> -->
       </a>
       <ul class="dropdown-menu">
         <li><a id="share-twitter" href="" target="_blank" data-toggle="tooltip" title="Tweet the song">
@@ -302,9 +314,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
       </ul>
     </div>
     <div class="btn-group always-visible">
-      <a class="btn btn-default navbar-btn dropdown-toggle" data-toggle="dropdown" data-target="#">
+      <a class="btn btn-default btn-lg navbar-btn dropdown-toggle" data-toggle="dropdown" data-target="#">
         <i class="fa fa-info-circle"></i>
-        <span class="caret"></span>
+        <!-- <span class="caret"></span> -->
       </a>
       <ul class="dropdown-menu">
         <li><a href="#help" id="help-btn" role="button" data-toggle="modal" title="About Chordlove">

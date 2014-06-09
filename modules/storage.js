@@ -36,7 +36,7 @@ function Storage($, functions, share, plugins) {
     return;
   }
 
-  $('#save-load').removeClass('NIY');
+  $('#archive-menu').removeClass('NIY');
 
   init();
 
