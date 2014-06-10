@@ -1,0 +1,39 @@
+<div id="storage-delete-form" class="modal fade" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3>
+          <i class="fa fa-times-circle"></i> Delete
+        </h3>
+      </div>
+      <div class="modal-body">
+        <div class="row-fluid">
+          <form>
+            <div class="span6">
+              <fieldset>
+                <label for="storage-delete-select">Select a song to delete:</label> <select
+                  id="storage-delete-select" class="form-control" autofocus required size="12"></select>
+              </fieldset>
+            </div>
+            <div class="span6">
+              <div class="control-group error" id="storage-delete-group">
+                <div class="controls">
+                  <label for="storage-open-delete">Delete a song.</label>
+                  <label class="checkbox"> <input type="checkbox" id="storage-delete-confirm">
+                    I know that a deleted
+                    song can't be brought back.
+                  </label>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-default" type="button" data-dismiss="modal">Close</button>
+        <button class="btn btn-danger" type="button" id="storage-delete">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>

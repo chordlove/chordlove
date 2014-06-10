@@ -21,6 +21,7 @@ libs/inject-0.6.1.min.js
 modules/appcache.js
 modules/chorddata.js
 modules/dialogs/appcache.html
+modules/dialogs/delete.html
 modules/dialogs/embed.html
 modules/dialogs/export.html
 modules/dialogs/import.html
