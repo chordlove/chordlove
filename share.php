@@ -1,10 +1,9 @@
 <?php
-header( 'Content-Type: text/html; charset=utf-8' );
 
 $found = FALSE;
 
 $uri = $_SERVER['REQUEST_URI'];
-if ( $uri && strlen($uri) > 5 )
+if ( $uri && strlen($uri) > 5 && strlen($uri) < 10000 )
 {
   $plugins = explode( '_', substr( $uri, 2 ) );
   foreach ( $plugins as $plugin )
@@ -16,6 +15,7 @@ if ( $uri && strlen($uri) > 5 )
       $replace = array( ' ', '\n', 'b', '#', '_', '~' );
       $output = str_replace( $search, $replace, $content );
       $hash = $_SERVER['QUERY_STRING'];
+      header( 'Content-Type: text/html; charset=utf-8' );
       echo <<<EOT
 <!DOCTYPE html>
 <html>
@@ -25,22 +25,22 @@ if ( $uri && strlen($uri) > 5 )
 
 <title>$output - Chordlove.com</title>
 
-<meta name=”description” content=”$output at Chordlove, the number one free online tool for sharing song chords and lyrics.”>
+<meta name=”description” content=”$output at Chordlove, the free online tool for sharing song chords and lyrics.”>
 
 <meta property="fb:app_id" content="170264763172639">
 <meta property=”og:type” content=”chordlove:chordlove_song”>
 <meta property=”og:title” content=”$output at Chordlove.com.”>
-<meta property=”og:image” content=”http://cdn.chordlove.com/images/icon-600.png”>
+<meta property=”og:image” content=”http://cdn.chordlove.com/images/icon-47.png”>
 <meta property="og:image:type" content="image/png">
-<meta property="og:image:width" content="600">
-<meta property="og:image:height" content="600">
-<meta property=”og:description” content=”$output at Chordlove.com, the number one free online tool for sharing song chords and lyrics.”>
+<meta property="og:image:width" content="47">
+<meta property="og:image:height" content="47">
+<meta property=”og:description” content=”$output at Chordlove.com, the free online tool for sharing song chords and lyrics.”>
 
 <meta name=”twitter:card” content=”summary”>
 <meta name="twitter:site" content="@ChordloveApp">
 <meta name="twitter:domain" content="chordlove.com">
 <meta name=”twitter:title” content=”$output - Chordlove.com”>
-<meta name=”twitter:description” content=”$output - Chordlove.com, the number one free online tool for sharing song chords and lyrics.”>
+<meta name=”twitter:description” content=”$output - Chordlove.com, the free online tool for sharing song chords and lyrics.”>
 <meta name=”twitter:image:src” content=”http://cdn.chordlove.com/images/icon-600.png”>
 
 <script>
@@ -54,7 +54,7 @@ if ( $uri && strlen($uri) > 5 )
   <div id="content">
     <p itemprop="description">
     <img itemprop="image" src="http://cdn.chordlove.com/images/icon-600.png" alt="" style="width:3.75em;height:3.75em;">
-    Chordlove.com, the number one free online tool for sharing song chords and lyrics.
+    Chordlove.com, the free online tool for sharing song chords and lyrics.
     </p>
   </div>
 </body>
@@ -68,7 +68,31 @@ EOT;
 
 if ( !$found )
 {
-  readfile('index.html');
+    header( 'Location: /', TRUE, 302 );
+    $host = $_SERVER["HTTP_HOST"];
+    echo <<<EOT
+<!DOCTYPE html>
+<html>
+<head>
+<meta content='text/html; charset=UTF-8' name='Content-Type'>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+<title>Chordlove.com</title>
+
+<script>
+  window.location.replace( '/' );
+</script>
+</head>
+<body>
+  <header>
+    <h1>Chordlove.com</h1>
+  </header>
+  <div>
+    <p>Please continue to <a href="/">$host</a>!</p>
+  </div>
+</body>
+</html>
+EOT;
 }
 
 ?>
