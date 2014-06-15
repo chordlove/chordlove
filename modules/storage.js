@@ -39,14 +39,6 @@ function Storage($, functions, share, plugins) {
   var $OPTION = $('<option/>');
   $('#archive-menu').removeClass('NIY');
 
-  // always visible in case something was already stored.
-  for (var key in window.localStorage) {
-    if (key.indexOf('lscache-INJECT') !== 0) {
-      $('#archive-menu').addClass('always-visible');
-      break;
-    }
-  }
-
   init();
 
   function initSaveForm(form) {
