@@ -118,13 +118,19 @@ function Export($, functions) {
   function buildMarkdownData() {
     var loc = window.location;
     var baseUrl = loc.protocol + '//' + loc.hostname + loc.pathname;
+    var keys = [];
     var strings = [];
     for (var key in window.localStorage) {
       if (key.indexOf('lscache-INJECT') !== 0) {
-        var line = '* [' + key + '](' + baseUrl + window.localStorage[key] + ')';
-        strings.push(line);
-        strings.push("\n");
+        keys.push(key);
       }
+    }
+    keys.sort(functions.localeComparer);
+    for (var i = 0; i < keys.length; i++) {
+      var currentKey = keys[i];
+      var line = '* [' + currentKey + '](' + baseUrl + window.localStorage[currentKey] + ')';
+      strings.push(line);
+      strings.push("\n");
     }
     return strings;
   }

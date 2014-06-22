@@ -475,6 +475,17 @@ function functions($) {
     }
   }
 
+  /**
+   * Compare two strings using the current locale.
+   *
+   * @param {string} a The first string to compare.
+   * @param {string} b The second string to compare.
+   * @returns {integer} A number indicating the sorting order of the strings.
+   */
+  function localeComparer (a, b) {
+    return a.localeCompare(b);
+  }
+
   return {
     'getNumber': getNumber,
     'getCharacters': getCharacters,
@@ -491,6 +502,7 @@ function functions($) {
     'printError': printError,
     'alert': alert,
     'hasLocalStorage': hasLocalStorage,
-    'setCaretPositionToBeginning': setCaretPositionToBeginning
+    'setCaretPositionToBeginning': setCaretPositionToBeginning,
+    'localeComparer': localeComparer
   };
 }

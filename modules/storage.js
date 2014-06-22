@@ -150,7 +150,7 @@ function Storage($, functions, share, plugins) {
         items.push(key);
       }
     }
-    items.sort();
+    items.sort(functions.localeComparer);
     $select.empty();
     for (var i = 0; i < items.length; i++) {
       $select.append($OPTION.clone().text(items[i]));
