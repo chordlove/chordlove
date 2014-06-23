@@ -22,6 +22,7 @@
  * @requires jquery
  * @requires share
  * @requires functions
+ * @requires plugins/beats
  */
 
 function Structure($, share, functions, beatsHandler) {
