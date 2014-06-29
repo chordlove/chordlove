@@ -39,13 +39,15 @@ function Structure($, share, functions, beatsHandler) {
   var data = null;
 
   var $PARENT = $('#items');
-  var MENU_START_OF_LINE = '<i class="fa fa-fw fa-arrow-left"></i> Put on new line / back';
+  var MENU_START_OF_LINE = '<i class="fa fa-fw fa-arrow-left"></i> Put on new line';
 
   var START_OF_LINE = 'start-of-line'; // duplicated in chords.js
   var INDIVIDUAL_BAR_BREAK = 'inidividual-bar-break';
 
   var MENU_LABEL = '<i class="fa fa-fw fa-tag"></i> Label';
   var $LABEL = $('<dt><input class="label-text form-control" type="text" title="Add a label" placeholder="Label…" /></dt>');
+
+  var MENU_LEFT_REPEAT_BAR = '<i class="symbol-icon left-repeat-bar-icon"></i> Left repeat bar before';
 
   var $form = undefined;
 
@@ -207,6 +209,22 @@ function Structure($, share, functions, beatsHandler) {
     });
   }
 
+  function leftRepeatBracketMenu($wrapper, $li, $a) {
+    $a.html(MENU_LEFT_REPEAT_BAR).click({
+      'li': $wrapper
+    }, function (event) {
+      event.preventDefault();
+      var $item = event.data.li;
+      if ($item.hasClass(START_OF_LINE) || $item.prev('dt.' + START_OF_LINE).length > 0) {
+        setStartOfLine($item, false, true);
+      }
+      else {
+        setStartOfLine($item, true, true);
+      }
+      share.changedStructure('plugins/structure/individualBreak');
+    });
+  }
+
   function setBarBreaks() {
     $form.modal('show');
   }
@@ -308,7 +326,8 @@ function Structure($, share, functions, beatsHandler) {
     'startOfLineMenu': startOfLineMenu,
     'setBarBreaks': setBarBreaks,
     'structureChanged': structureChanged,
-    'labelMenu': labelMenu
+    'labelMenu': labelMenu,
+    'leftRepeatBracketMenu': leftRepeatBracketMenu
   };
 }
 
@@ -318,6 +337,7 @@ define('plugins/structure', [ 'plugins', 'jquery', 'share', 'functions', 'plugin
     var instance = new Structure($, share, functions, beats);
     chords.registerChordMenuMember(instance.labelMenu);
     chords.registerChordMenuMember(instance.startOfLineMenu);
+    chords.registerChordMenuMember(instance.leftRepeatBracketMenu);
     chords.addPostRenderer(instance.render);
     share.addStructureChangeListener(instance.structureChanged);
     plugins.register({

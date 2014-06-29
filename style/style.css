@@ -443,6 +443,23 @@ body.edit-mode i.guitarchord-next, body.edit-mode i.guitarchord-previous {
   visibility: visible;
 }
 
+#structure-barbreak {
+  width: 8em;
+}
+
+i.symbol-icon {
+  display: inline-block;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center center;
+  width: 1.28571429em; /* like fa-fw */
+  height: 14px;
+}
+
+i.left-repeat-bar-icon {
+  background-image: url('http://cdn.chordlove.com/images/symbols/left-repeat-sign.svg');
+}
+
 #footer {
   display: none;
 }
