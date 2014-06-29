@@ -503,6 +503,7 @@ function functions($) {
     'alert': alert,
     'hasLocalStorage': hasLocalStorage,
     'setCaretPositionToBeginning': setCaretPositionToBeginning,
-    'localeComparer': localeComparer
+    'localeComparer': localeComparer,
+    'EncodingError': EncodingError
   };
 }

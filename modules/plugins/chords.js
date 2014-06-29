@@ -57,10 +57,8 @@ function Chords($, functions, share, toolbar, resizer, beatsHandler) {
   var $MENU_LI = $('<li />');
   var $MENU_A = $('<a href="#"/>');
   var MENU_PASTE_BEFORE = '<i class="fa fa-fw fa-paste"></i> Paste before';
-  var MENU_LABEL = '<i class="fa fa-fw fa-tag"></i> Label';
   var $INPUT = $('<input class="chord-text resize-trigger empty-input form-control" type="text" title="Add a chord" placeholder="Chord…" />');
   var $CHORD = $('<div class="chord"/>');
-  var $LABEL = $('<dt><input class="label-text form-control" type="text" title="Add a label" placeholder="Label…" /></dt>');
 
   var postRenderers = [];
   var initialPostRenderingPerformed = false;
@@ -73,7 +71,6 @@ function Chords($, functions, share, toolbar, resizer, beatsHandler) {
   registerContentExtractor(extract);
 
   registerChordMenuMember(pasteBeforeMenu);
-  registerChordMenuMember(labelMenu);
 
   var copyPaste = new CopyPaste({
     'getExtracts': getExtracts,
@@ -440,27 +437,6 @@ function Chords($, functions, share, toolbar, resizer, beatsHandler) {
     }, function (event) {
       event.preventDefault();
       copyPaste.pasteItems(event.data.dd);
-    });
-  }
-
-  function labelMenu($wrapper, $li, $a) {
-    $a.html(MENU_LABEL).click({
-      'dd': $wrapper.get(0)
-    }, function (event) {
-      event.preventDefault();
-      var $dd = $(event.data.dd);
-      var $dt = $dd.prev('dt').first();
-      if ($dt.length === 0) {
-        $dt = $LABEL.clone();
-        $dt.insertBefore($dd);
-        $dt.keydown(functions.handleInputKeyEvent);
-        if ($dd.hasClass(START_OF_LINE)) {
-          $dd.removeClass(START_OF_LINE);
-          $dt.addClass(START_OF_LINE);
-        }
-      }
-      var $input = $dt.children('input');
-      $input.focus();
     });
   }
 

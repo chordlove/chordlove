@@ -44,6 +44,9 @@ function Structure($, share, functions, beatsHandler) {
   var START_OF_LINE = 'start-of-line'; // duplicated in chords.js
   var INDIVIDUAL_BAR_BREAK = 'inidividual-bar-break';
 
+  var MENU_LABEL = '<i class="fa fa-fw fa-tag"></i> Label';
+  var $LABEL = $('<dt><input class="label-text form-control" type="text" title="Add a label" placeholder="Label…" /></dt>');
+
   var $form = undefined;
 
   var $barBreakNumberSelect = undefined;
@@ -88,28 +91,104 @@ function Structure($, share, functions, beatsHandler) {
     var currentBreakBarNumber = $barBreakNumberSelect.val();
     var timeSig = currentBreakBarNumber ? functions.getCharacters(currentBreakBarNumber, 1) : '0';
     var startOfLineItems = '';
-    $PARENT.children('dd.item').each(function (ix, li) {
-      if ($(li).data(INDIVIDUAL_BAR_BREAK)) {
+    var labelData = '';
+    var labelCount = 0;
+    $PARENT.children('dd.item').each(function (ix, dd) {
+      var $dd = $(dd);
+      if ($dd.data(INDIVIDUAL_BAR_BREAK)) {
         var item = functions.getCharacters(ix, 2);
         startOfLineItems += item;
       }
+      var $dt = $dd.prev('dt');
+      if ($dt.length > 0) {
+        var $labelInput = $dt.children('input.label-text');
+        if ($labelInput.length > 0) {
+          var labelText = functions.encode($($labelInput[0]).val());
+          labelData += functions.getCharacters(labelText.length + 2, 1);
+          labelData += functions.getCharacters(ix, 2);
+          labelData += labelText;
+          labelCount++;
+        }
+      }
     });
     var count = functions.getCharacters(startOfLineItems.length / 2, 1);
-    if (count === '0') {
-      count = '';
-    }
-    return timeSig + count + startOfLineItems;
+    labelData = functions.getCharacters(labelCount, 1) + labelData;
+    return timeSig + count + startOfLineItems + labelData;
   }
 
   function parseInput(input) {
     barBreakNumberSelect.value = functions.getNumber(input.charAt(0));
 
-    return functions.readChunkArray({
+    var startOfLineItems = functions.readChunkArray({
       'data': input,
       'currentPos': 1,
       'chunkSize': 2,
       'countSize': 1
     });
+    var labels = {'array':[]};
+    var currentPos = 2 + 2 * startOfLineItems.length;
+    if (input.length > currentPos + 4) {
+      labels = functions.readStringArray({
+        'data': input,
+        'currentPos': currentPos,
+        'countSize': 1,
+        'transformer': function (string) {
+          if (string.length < 3) {
+            throw new functions.EncodingError('Can not decode label data: "' + string + '".');
+          }
+          var position = functions.getNumber(string.substr(0, 2));
+          var text = string.substring(2);
+          return {'position': position, 'text': text};
+        }});
+    }
+    return {'startOfLineItems': startOfLineItems, 'labels': labels.array};
+  }
+
+  function labelMenu($wrapper, $li, $a) {
+    $a.html(MENU_LABEL).click({
+      'dd': $wrapper.get(0)
+    }, function (event) {
+      event.preventDefault();
+      var $dd = $(event.data.dd);
+      setLabel($dd);
+    });
+  }
+
+  function setLabel($dd, text) {
+    var $dt = $dd.prev('dt').first();
+    var created = false;
+    if ($dt.length === 0) {
+      $dt = $LABEL.clone();
+      $dt.insertBefore($dd);
+      $dt.keydown(functions.handleInputKeyEvent);
+      if ($dd.hasClass(START_OF_LINE)) {
+        $dd.removeClass(START_OF_LINE);
+        $dt.addClass(START_OF_LINE);
+      }
+      created = true;
+    }
+    var $input = $dt.children('input');
+    if (text) {
+      $input.val(text);
+    } else {
+      $input.focus();
+    }
+    if (created) {
+      $input.change(function () {
+        var val = $.trim($input.val());
+        if (val.length === 0) {
+          // remove the empty label
+          if ($dt.hasClass(START_OF_LINE)) {
+            $dt.removeClass(START_OF_LINE);
+            $dd.addClass(START_OF_LINE);
+          }
+          $dt.remove();
+          share.changedText('plugins/structure/label-remove-empty');
+        } else {
+          share.changedText('plugins/structure/label-added-or-updated');
+        }
+      });
+    }
   }
 
   function startOfLineMenu($wrapper, $li, $a) {
@@ -171,8 +250,11 @@ function Structure($, share, functions, beatsHandler) {
   function performRendering() {
     performOnForm(function () {
       var startOfLineItems = undefined;
+      var labels = undefined;
       if (data) {
-        startOfLineItems = parseInput(data);
+        var parsedData = parseInput(data);
+        startOfLineItems = parsedData.startOfLineItems;
+        labels = parsedData.labels;
         data = null;
       }
       var items = $PARENT.children('dd.item').toArray();
@@ -200,6 +282,14 @@ function Structure($, share, functions, beatsHandler) {
           setStartOfLine($item, true, true);
         });
       }
+      if (labels) {
+        $.each(labels, function () {
+          var position = this.position;
+          var text = this.text;
+          var $item = $(items[position]);
+          setLabel($item, text);
+        });
+      }
     });
   }
 
@@ -217,7 +307,8 @@ function Structure($, share, functions, beatsHandler) {
     'setData': setData,
     'startOfLineMenu': startOfLineMenu,
     'setBarBreaks': setBarBreaks,
-    'structureChanged': structureChanged
+    'structureChanged': structureChanged,
+    'labelMenu': labelMenu
   };
 }
 
@@ -225,6 +316,7 @@ define('plugins/structure', [ 'plugins', 'jquery', 'share', 'functions', 'plugin
   function (plugins, $, share, functions, chords, beats) {
     'use strict';
     var instance = new Structure($, share, functions, beats);
+    chords.registerChordMenuMember(instance.labelMenu);
     chords.registerChordMenuMember(instance.startOfLineMenu);
     chords.addPostRenderer(instance.render);
     share.addStructureChangeListener(instance.structureChanged);
