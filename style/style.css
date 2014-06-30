@@ -278,7 +278,7 @@ div.duration ul > li > a {
   position: relative;
   border: 1px solid #cccccc;
   border-radius: 4px;
-  background: #ffffff;
+  background-color: #ffffff;
 }
 
 #addons > li, #addons-core > li {
@@ -447,17 +447,32 @@ body.edit-mode i.guitarchord-next, body.edit-mode i.guitarchord-previous {
   width: 8em;
 }
 
-i.symbol-icon {
-  display: inline-block;
+i.symbol-icon, dd.symbol {
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center center;
+}
+
+i.symbol-icon {
+  display: inline-block;
   width: 1.28571429em; /* like fa-fw */
   height: 14px;
 }
 
-i.left-repeat-bar-icon {
+dd.symbol {
+  width: 1.28571429em; /* like fa-fw */
+}
+
+i.icon-barline, dd.icon-barline {
+  background-image: url('http://cdn.chordlove.com/images/symbols/single-barline.svg');
+}
+
+i.left-repeat-bar-icon, dd.left-repeat-bar-icon {
   background-image: url('http://cdn.chordlove.com/images/symbols/left-repeat-sign.svg');
+}
+
+i.right-repeat-bar-icon, dd.right-repeat-bar-icon {
+  background-image: url('http://cdn.chordlove.com/images/symbols/right-repeat-sign.svg');
 }
 
 #footer {

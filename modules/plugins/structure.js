@@ -48,6 +48,9 @@ function Structure($, share, functions, beatsHandler) {
   var $LABEL = $('<dt><input class="label-text form-control" type="text" title="Add a label" placeholder="Label…" /></dt>');
 
   var MENU_LEFT_REPEAT_BAR = '<i class="symbol-icon left-repeat-bar-icon"></i> Left repeat bar before';
+  var MENU_RIGHT_REPEAT_BAR = '<i class="symbol-icon right-repeat-bar-icon"></i> Right repeat bar after';
+
+  var SYMBOLS = ['icon-barline', 'left-repeat-bar-icon', 'right-repeat-bar-icon'];
 
   var $form = undefined;
 
@@ -127,7 +130,7 @@ function Structure($, share, functions, beatsHandler) {
       'chunkSize': 2,
       'countSize': 1
     });
-    var labels = {'array':[]};
+    var labels = {'array': []};
     var currentPos = 2 + 2 * startOfLineItems.length;
     if (input.length > currentPos + 4) {
       labels = functions.readStringArray({
@@ -209,20 +212,34 @@ function Structure($, share, functions, beatsHandler) {
     });
   }
 
-  function leftRepeatBracketMenu($wrapper, $li, $a) {
-    $a.html(MENU_LEFT_REPEAT_BAR).click({
-      'li': $wrapper
-    }, function (event) {
-      event.preventDefault();
-      var $item = event.data.li;
-      if ($item.hasClass(START_OF_LINE) || $item.prev('dt.' + START_OF_LINE).length > 0) {
-        setStartOfLine($item, false, true);
-      }
-      else {
-        setStartOfLine($item, true, true);
-      }
-      share.changedStructure('plugins/structure/individualBreak');
-    });
+  var leftRepeatBracketMenu = symbolMenu(MENU_LEFT_REPEAT_BAR, 'left-repeat-bar-icon', 'before');
+  var rightRepeatBracketMenu = symbolMenu(MENU_RIGHT_REPEAT_BAR, 'right-repeat-bar-icon', 'after');
+
+  function symbolMenu(menu, iconToKeep, beforeOrAfter) {
+    return function ($wrapper, $li, $a) {
+      $a.html(menu).click({
+        'li': $wrapper
+      }, function (event) {
+        event.preventDefault();
+        var $item = event.data.li;
+        var $symbol = undefined;
+        if (beforeOrAfter === 'before') {
+          $symbol = $item.prev('dd.symbol');
+        } else if (beforeOrAfter === 'after') {
+          $symbol = $item.next('dd.symbol');
+        } else {
+          // TODO generate error message
+        }
+        for (var i = 0; i < SYMBOLS.length; i++) {
+          var icon = SYMBOLS[i];
+          if (icon === iconToKeep) {
+            $symbol.addClass(iconToKeep);
+          } else {
+            $symbol.removeClass(icon);
+          }
+        }
+      });
+    };
   }
 
   function setBarBreaks() {
@@ -327,7 +344,8 @@ function Structure($, share, functions, beatsHandler) {
     'setBarBreaks': setBarBreaks,
     'structureChanged': structureChanged,
     'labelMenu': labelMenu,
-    'leftRepeatBracketMenu': leftRepeatBracketMenu
+    'leftRepeatBracketMenu': leftRepeatBracketMenu,
+    'rightRepeatBracketMenu': rightRepeatBracketMenu
   };
 }
 
@@ -338,6 +356,7 @@ define('plugins/structure', [ 'plugins', 'jquery', 'share', 'functions', 'plugin
     chords.registerChordMenuMember(instance.labelMenu);
     chords.registerChordMenuMember(instance.startOfLineMenu);
     chords.registerChordMenuMember(instance.leftRepeatBracketMenu);
+    chords.registerChordMenuMember(instance.rightRepeatBracketMenu);
     chords.addPostRenderer(instance.render);
     share.addStructureChangeListener(instance.structureChanged);
     plugins.register({

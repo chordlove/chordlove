@@ -49,7 +49,7 @@ function Chords($, functions, share, toolbar, resizer, beatsHandler) {
 
   var START_OF_LINE = 'start-of-line'; // duplicated in structure.js
 
-  var $SINGLE_BARLINE = $('<dd class="symbol item-barline"><img class="barline" src="http://cdn.chordlove.com/images/symbols/single-barline.svg" alt="|"></dd>');
+  var $SINGLE_BARLINE = $('<dd class="symbol icon-barline"/>');
   var $PARENT = $('#items');
   var $DD = $('<dd class="item" />');
   var $HANDLE = $('<div class="handle"><i class="fa fa-arrows" title="move"></i><i class="fa fa-thumb-tack pin" title="select/unselect"></i></div>');
@@ -139,6 +139,7 @@ function Chords($, functions, share, toolbar, resizer, beatsHandler) {
     }
     var beatsSum = 0;
     beatsHandler.setTimeSignature(deserializedData.timeSignature);
+    $SINGLE_BARLINE.clone().appendTo($PARENT);
     $.each(chordItems, function () {
       createItem({
         'chordData': this
@@ -252,7 +253,8 @@ function Chords($, functions, share, toolbar, resizer, beatsHandler) {
   }
 
   function updateBarlines() {
-    $PARENT.children('dd.item-barline').remove();
+    $PARENT.children('dd.symbol').remove();
+    $SINGLE_BARLINE.clone().prependTo($PARENT);
     var timeSignature = beatsHandler.getTimeSignatureAsInt();
     var beatsSum = 0;
     $PARENT.children('dd.item').each(function (index) {
