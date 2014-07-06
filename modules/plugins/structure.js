@@ -47,10 +47,14 @@ function Structure($, share, functions, beatsHandler) {
   var MENU_LABEL = '<i class="fa fa-fw fa-tag"></i> Label';
   var $LABEL = $('<dt><input class="label-text form-control" type="text" title="Add a label" placeholder="Label…" /></dt>');
 
+  var MENU_LEFT_SINGLE_BAR = '<i class="symbol-icon icon-barline"></i> Single bar before';
+  var MENU_LEFT_DOUBLE_BAR = '<i class="symbol-icon icon-double-barline"></i> Double bar before';
+  var MENU_RIGHT_SINGLE_BAR = '<i class="symbol-icon icon-barline"></i> Single bar after';
+  var MENU_RIGHT_DOUBLE_BAR = '<i class="symbol-icon icon-double-barline"></i> Double bar after';
   var MENU_LEFT_REPEAT_BAR = '<i class="symbol-icon left-repeat-bar-icon"></i> Left repeat bar before';
   var MENU_RIGHT_REPEAT_BAR = '<i class="symbol-icon right-repeat-bar-icon"></i> Right repeat bar after';
 
-  var SYMBOLS = ['icon-barline', 'left-repeat-bar-icon', 'right-repeat-bar-icon'];
+  var SYMBOLS = ['icon-double-barline', 'left-repeat-bar-icon', 'right-repeat-bar-icon'];
 
   var $form = undefined;
 
@@ -212,6 +216,10 @@ function Structure($, share, functions, beatsHandler) {
     });
   }
 
+  var leftSingleBarMenu = symbolMenu(MENU_LEFT_SINGLE_BAR, 'icon-barline', 'before');
+  var leftDoubleBarMenu = symbolMenu(MENU_LEFT_DOUBLE_BAR, 'icon-double-barline', 'before');
+  var rightSingleBarMenu = symbolMenu(MENU_RIGHT_SINGLE_BAR, 'icon-barline', 'after');
+  var rightDoubleBarMenu = symbolMenu(MENU_RIGHT_DOUBLE_BAR, 'icon-double-barline', 'after');
   var leftRepeatBracketMenu = symbolMenu(MENU_LEFT_REPEAT_BAR, 'left-repeat-bar-icon', 'before');
   var rightRepeatBracketMenu = symbolMenu(MENU_RIGHT_REPEAT_BAR, 'right-repeat-bar-icon', 'after');
 
@@ -345,7 +353,11 @@ function Structure($, share, functions, beatsHandler) {
     'structureChanged': structureChanged,
     'labelMenu': labelMenu,
     'leftRepeatBracketMenu': leftRepeatBracketMenu,
-    'rightRepeatBracketMenu': rightRepeatBracketMenu
+    'rightRepeatBracketMenu': rightRepeatBracketMenu,
+    'leftSingleBarMenu': leftSingleBarMenu,
+    'leftDoubleBarMenu': leftDoubleBarMenu,
+    'rightSingleBarMenu': rightSingleBarMenu,
+    'rightDoubleBarMenu': rightDoubleBarMenu
   };
 }
 
@@ -355,8 +367,12 @@ define('plugins/structure', [ 'plugins', 'jquery', 'share', 'functions', 'plugin
     var instance = new Structure($, share, functions, beats);
     chords.registerChordMenuMember(instance.labelMenu);
     chords.registerChordMenuMember(instance.startOfLineMenu);
+    chords.registerChordMenuMember(instance.leftSingleBarMenu);
+    chords.registerChordMenuMember(instance.leftDoubleBarMenu);
     chords.registerChordMenuMember(instance.leftRepeatBracketMenu);
     chords.registerChordMenuMember(instance.rightRepeatBracketMenu);
+    chords.registerChordMenuMember(instance.rightDoubleBarMenu);
+    chords.registerChordMenuMember(instance.rightSingleBarMenu);
     chords.addPostRenderer(instance.render);
     share.addStructureChangeListener(instance.structureChanged);
     plugins.register({

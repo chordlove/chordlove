@@ -467,11 +467,15 @@ i.icon-barline, dd.icon-barline {
   background-image: url('http://cdn.chordlove.com/images/symbols/single-barline.svg');
 }
 
-i.left-repeat-bar-icon, dd.left-repeat-bar-icon {
+i.icon-double-barline, dd.icon-barline.icon-double-barline {
+  background-image: url('http://cdn.chordlove.com/images/symbols/double-barline.svg');
+}
+
+i.left-repeat-bar-icon, dd.icon-barline.left-repeat-bar-icon {
   background-image: url('http://cdn.chordlove.com/images/symbols/left-repeat-sign.svg');
 }
 
-i.right-repeat-bar-icon, dd.right-repeat-bar-icon {
+i.right-repeat-bar-icon, dd.icon-barline.right-repeat-bar-icon {
   background-image: url('http://cdn.chordlove.com/images/symbols/right-repeat-sign.svg');
 }
 
