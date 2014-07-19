@@ -98,7 +98,7 @@ function Structure($, share, functions, beatsHandler) {
 
   function getStructure() {
     var currentBreakBarNumber = $barBreakNumberSelect.val();
-    var timeSig = currentBreakBarNumber ? functions.getCharacters(currentBreakBarNumber, 1) : '0';
+    var barBreakNUmber = currentBreakBarNumber ? functions.getCharacters(currentBreakBarNumber, 1) : '0';
     var startOfLineItems = '';
     var labelData = '';
     var labelCount = 0;
@@ -120,9 +120,9 @@ function Structure($, share, functions, beatsHandler) {
         }
       }
     });
-    var count = functions.getCharacters(startOfLineItems.length / 2, 1);
+    var startOfLineData = functions.getCharacters(startOfLineItems.length / 2, 1) + startOfLineItems;
     labelData = functions.getCharacters(labelCount, 1) + labelData;
-    return timeSig + count + startOfLineItems + labelData;
+    return barBreakNUmber + startOfLineData + labelData;
   }
 
   function parseInput(input) {
@@ -341,8 +341,26 @@ function Structure($, share, functions, beatsHandler) {
       && ( event === 'plugins/structure/breakbars' || event === 'plugins/structure/individualBreak' )) {
       return;
     }
+    //console.log('structure event: ', event);
     performRendering();
+    updateBarlines(event);
   }
+
+  var $SINGLE_BARLINE = $('<dd class="symbol icon-barline"/>');
+  function updateBarlines(event) {
+    $PARENT.children('dd.symbol').remove();
+    $SINGLE_BARLINE.clone().prependTo($PARENT);
+    var timeSignature = beatsHandler.getTimeSignatureAsInt();
+    var beatsSum = 0;
+    $PARENT.children('dd.item').each(function (index) {
+      beatsSum += beatsHandler.getBeats(this).length;
+      if (beatsSum % timeSignature === 0) {
+        $SINGLE_BARLINE.clone().insertAfter(this);
+      }
+    });
+  }
+
+
 
   return {
     'render': render,

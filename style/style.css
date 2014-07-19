@@ -20,8 +20,13 @@
   visibility: hidden;
 }
 
+html, body {
+  font-size: 100%;
+}
+
 body {
   padding: 8px;
+  font-family: 'PT Sans', 'Roboto', 'Droid Sans', 'DejaVu Sans', 'Lucida Sans Unicode', sans-serif;
 }
 
 #navbar {
@@ -38,6 +43,14 @@ body {
 
 body.edit-mode #navbar {
   width: 100%
+}
+
+.btn {
+  font-size: 1.25rem;
+}
+
+.form-control {
+  font-size: 1rem;
 }
 
 .navbar-btn {
@@ -96,7 +109,7 @@ h1 input[type="text"], input[type="text"].chord-text, input[type="text"].song-te
   color: #222222;
 }
 
-h1 input[type="text"], input[type="text"].label-text, #items > dt {
+h1 input[type="text"], h2, h3, h4, input[type="text"].label-text, #items > dt {
   font-family: 'DejaVuSansCondensedBold', 'DejaVu Sans Condensed Bold', 'DejaVu Sans', 'Lucida Sans Unicode',
   'Arial Unicode MS', sans-serif;
   font-weight: bold;
@@ -109,10 +122,8 @@ h1 input[type="text"] {
   color: #333333;
 }
 
-#help .modal-body, #share-form .modal-body {
-  font-family: 'DejaVuSerifBook', 'DejaVu Serif', 'DejaVu Sans', 'Lucida Sans Unicode',
-  'Arial Unicode MS', serif;
-  font-weight: 400;
+h2, h3, h4 {
+  color: #666;
 }
 
 #items > dt {
@@ -249,13 +260,8 @@ div.duration ul > li > a {
   width: 97%;
 }
 
-#help .modal-header, #share-form .modal-header {
-  font-family: neuton-cursive, serif;
-  font-weight: 400;
-}
-
 #help .modal-body {
-  font-size: 15px;
+  font-size: 1.125rem;
 }
 
 #help .modal-body td {

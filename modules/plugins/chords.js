@@ -79,8 +79,6 @@ function Chords($, functions, share, toolbar, resizer, beatsHandler) {
 
   functions.bindButton('#add-chord', createItem);
 
-  share.addStructureChangeListener(handleStructureChange);
-
   share.addTextChangeListener(function (event) {
     if (event !== undefined && typeof event === 'object' && 'data' in event && 'item' in event.data) {
       resizer.performResize($(event.data.item));
@@ -246,23 +244,6 @@ function Chords($, functions, share, toolbar, resizer, beatsHandler) {
       'chordItems': chordItems,
       'timeSignature': timeSignature
     };
-  }
-
-  function handleStructureChange(event) {
-    updateBarlines();
-  }
-
-  function updateBarlines() {
-    $PARENT.children('dd.symbol').remove();
-    $SINGLE_BARLINE.clone().prependTo($PARENT);
-    var timeSignature = beatsHandler.getTimeSignatureAsInt();
-    var beatsSum = 0;
-    $PARENT.children('dd.item').each(function (index) {
-      beatsSum += beatsHandler.getBeats(this).length;
-      if (beatsSum % timeSignature === 0) {
-        $SINGLE_BARLINE.clone().insertAfter(this);
-      }
-    });
   }
 
   /**
@@ -463,10 +444,6 @@ function Chords($, functions, share, toolbar, resizer, beatsHandler) {
     return inputContent;
   }
 
-  function checkAbsentKey(key) {
-    return key !== undefined && key == false;
-  }
-
   return {
     'render': render,
     'serialize': serialize,
@@ -524,7 +501,9 @@ function CopyPaste(chords, $, share, functions, resizer, $PARENT) {
     });
     $('dd.ui-selected', $PARENT).removeClass('ui-selected');
     share.changedStructure('chords/CopyPaste/paste');
-    $lastLi.find('input').blur();
+    if ($lastLi !== undefined) {
+      $lastLi.find('input').blur();
+    }
   }
 
   return {
