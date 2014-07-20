@@ -43,6 +43,8 @@ function Structure($, share, functions, beatsHandler) {
 
   var START_OF_LINE = 'start-of-line'; // duplicated in chords.js
   var INDIVIDUAL_BAR_BREAK = 'inidividual-bar-break';
+  var VOLTA_START = 'volta-start';
+
   var CHORD_INDEX = 'chord-item-index';
 
   var MENU_LABEL = '<i class="fa fa-fw fa-tag"></i> Label';
@@ -59,6 +61,8 @@ function Structure($, share, functions, beatsHandler) {
 
   // note: never remove, just add/change here -- the serializatin depends on the order.
   var SYMBOLS = ['icon-double-barline', 'left-repeat-bar-icon', 'right-repeat-bar-icon'];
+
+  var VOLTA_PATTERN = /^\d+\.?$/;
 
   var $form = undefined;
 
@@ -198,7 +202,7 @@ function Structure($, share, functions, beatsHandler) {
         for (var i = 0; i < symbolChunks.length; i++) {
           var chunk = symbolChunks[i];
           var symbol = functions.getNumber(chunk.charAt(0));
-          var index = functions.getNumber(chunk.substr(1,2));
+          var index = functions.getNumber(chunk.substr(1, 2));
           symbols.push({'symbol': symbol, 'index': index});
         }
         symbolData = {'first': firstSymbol, 'symbols': symbols};
@@ -233,6 +237,7 @@ function Structure($, share, functions, beatsHandler) {
     var $input = $dt.children('input');
     if (text) {
       $input.val(text);
+      handleVoltaBrackets($dt, text, $dd, $input);
     } else {
       $input.focus();
     }
@@ -248,9 +253,19 @@ function Structure($, share, functions, beatsHandler) {
           $dt.remove();
           share.changedText('plugins/structure/label-remove-empty');
         } else {
+          handleVoltaBrackets($dt, val, $dd, $input);
           share.changedText('plugins/structure/label-added-or-updated');
         }
       });
+    }
+  }
+
+  function handleVoltaBrackets($dt, val, $dd, $input) {
+    $input.width($dd.width() + 25);
+    if (VOLTA_PATTERN.test(val)) {
+      $dt.addClass(VOLTA_START);
+    } else {
+      $dt.removeClass(VOLTA_START);
     }
   }
 

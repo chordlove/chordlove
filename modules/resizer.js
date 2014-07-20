@@ -24,7 +24,7 @@
 
 define('resizer', [ 'jquery' ], function ($) {
   'use strict';
-  var MIN_WIDTH = 100;
+  var MIN_WIDTH = 80;
   var MAX_WIDTH = 1000;
   var WRAPPER_MARGIN = 7;
   var WRAPPER_EXTRA_PERCENTAGE = 1.03;

@@ -134,7 +134,8 @@ h2, h3, h4 {
   width: 0;
   float: left;
   position: relative;
-  top: -20px;
+  top: -21px;
+  left: -6px;
   overflow: visible;
   overflow-x: visible;
 }
@@ -142,6 +143,14 @@ h2, h3, h4 {
 #items > dt > input {
   width: 300px;
   padding: 0;
+  border-radius: 0;
+  color: #407b37;
+}
+
+#items > dt.volta-start > input {
+  border-left: 1px solid #222222;
+  border-top: 1px solid #222222;
+  padding-left: 0.25em;
 }
 
 input[type="text"].chord-text, input[type="text"].song-text {
@@ -283,11 +292,9 @@ div.duration ul > li > a {
   float: left;
   cursor: default;
   display: block;
-  padding: 2px 3px 2px 18px;
-  margin: 0 4px 24px 0;
+  padding: 2px 3px 2px 2px;
+  margin: 0 4px 32px 0;
   position: relative;
-  border: 1px solid #cccccc;
-  border-radius: 4px;
   background-color: #ffffff;
 }
 
@@ -308,6 +315,7 @@ div.duration ul > li > a {
   border: none;
   padding: 3px 0 3px 0;
   text-align: center;
+  margin-right: 0;
 }
 
 img.barline {
@@ -328,6 +336,12 @@ img.barline {
 
 body dd div.handle {
   display: none;
+}
+
+body.edit-mode #items > dd.item {
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  padding-left: 18px;
 }
 
 body.edit-mode #items > dd div.handle {

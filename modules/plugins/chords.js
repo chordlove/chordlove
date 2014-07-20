@@ -26,12 +26,11 @@
  * @requires jquery
  * @requires functions
  * @requires share
- * @requires toolbar
  * @requires resizer
  * @requires beats
  */
 
-function Chords($, functions, share, toolbar, resizer, beatsHandler) {
+function Chords($, functions, share, resizer, beatsHandler) {
   'use strict';
   if (Chords.prototype._instance) {
     return Chords.prototype._instance;
@@ -147,13 +146,13 @@ function Chords($, functions, share, toolbar, resizer, beatsHandler) {
         $SINGLE_BARLINE.clone().appendTo($PARENT);
       }
     });
+    $PARENT.children('dd.item').each(function () {
+      resizer.performResize($(this));
+    });
     $.each(postRenderers, function () {
       this(chords);
     });
     initialPostRenderingPerformed = true;
-    $PARENT.children('dd.item').each(function () {
-      resizer.performResize($(this));
-    });
   }
 
   function deserialize(input) {
@@ -511,10 +510,10 @@ function CopyPaste(chords, $, share, functions, resizer, $PARENT) {
   };
 }
 
-define('plugins/chords', [ 'plugins', 'jquery', 'functions', 'share', 'toolbar', 'resizer', 'plugins/beats' ],
-  function (plugins, $, functions, share, toolbar, resizer, beats) {
+define('plugins/chords', [ 'plugins', 'jquery', 'functions', 'share', 'resizer', 'plugins/beats' ],
+  function (plugins, $, functions, share, resizer, beats) {
     'use strict';
-    var instance = new Chords($, functions, share, toolbar, resizer, beats);
+    var instance = new Chords($, functions, share, resizer, beats);
     plugins.register({
       'name': 'chords',
       'instance': instance,
