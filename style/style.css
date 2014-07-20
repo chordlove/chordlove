@@ -38,7 +38,11 @@ body {
 }
 
 #navbar .dropdown-menu {
-  font-size: 16px;
+  font-size: 1rem;
+}
+
+.dropdown-menu>li>a {
+  line-height: 1.8;
 }
 
 body.edit-mode #navbar {

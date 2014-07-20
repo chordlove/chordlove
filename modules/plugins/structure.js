@@ -43,9 +43,12 @@ function Structure($, share, functions, beatsHandler) {
 
   var START_OF_LINE = 'start-of-line'; // duplicated in chords.js
   var INDIVIDUAL_BAR_BREAK = 'inidividual-bar-break';
+  var CHORD_INDEX = 'chord-item-index';
 
   var MENU_LABEL = '<i class="fa fa-fw fa-tag"></i> Label';
   var $LABEL = $('<dt><input class="label-text form-control" type="text" title="Add a label" placeholder="Label…" /></dt>');
+
+  var $SINGLE_BARLINE = $('<dd class="symbol icon-barline"/>');
 
   var MENU_LEFT_SINGLE_BAR = '<i class="symbol-icon icon-barline"></i> Single bar before';
   var MENU_LEFT_DOUBLE_BAR = '<i class="symbol-icon icon-double-barline"></i> Double bar before';
@@ -54,6 +57,7 @@ function Structure($, share, functions, beatsHandler) {
   var MENU_LEFT_REPEAT_BAR = '<i class="symbol-icon left-repeat-bar-icon"></i> Left repeat bar before';
   var MENU_RIGHT_REPEAT_BAR = '<i class="symbol-icon right-repeat-bar-icon"></i> Right repeat bar after';
 
+  // note: never remove, just add/change here -- the serializatin depends on the order.
   var SYMBOLS = ['icon-double-barline', 'left-repeat-bar-icon', 'right-repeat-bar-icon'];
 
   var $form = undefined;
@@ -104,6 +108,7 @@ function Structure($, share, functions, beatsHandler) {
     var labelCount = 0;
     $PARENT.children('dd.item').each(function (ix, dd) {
       var $dd = $(dd);
+      $dd.data(CHORD_INDEX, ix);
       if ($dd.data(INDIVIDUAL_BAR_BREAK)) {
         var item = functions.getCharacters(ix, 2);
         startOfLineItems += item;
@@ -122,7 +127,36 @@ function Structure($, share, functions, beatsHandler) {
     });
     var startOfLineData = functions.getCharacters(startOfLineItems.length / 2, 1) + startOfLineItems;
     labelData = functions.getCharacters(labelCount, 1) + labelData;
-    return barBreakNUmber + startOfLineData + labelData;
+
+    var firstSymbol = '0';
+    var symbols = '';
+    $PARENT.children('dd.symbol').each(function (ix, dd) {
+      var $dd = $(dd);
+      var symbol = getSymbol($dd);
+      if (symbol === 0) {
+        return true;
+      }
+      var symbolChar = functions.getCharacters(symbol, 1);
+      if (ix === 0) {
+        firstSymbol = symbolChar;
+      } else {
+        var $prev = $dd.prev('dd.item');
+        var index = $prev.data(CHORD_INDEX);
+        symbols += symbolChar + functions.getCharacters(index, 2);
+      }
+    });
+    var symbolData = firstSymbol + functions.getCharacters(symbols.length / 3, 1) + symbols;
+
+    return barBreakNUmber + startOfLineData + labelData + symbolData;
+  }
+
+  function getSymbol($dd) {
+    for (var i = 0; i < SYMBOLS.length; i++) {
+      if ($dd.hasClass(SYMBOLS[i])) {
+        return i + 1;
+      }
+    }
+    return 0;
   }
 
   function parseInput(input) {
@@ -135,6 +169,7 @@ function Structure($, share, functions, beatsHandler) {
       'countSize': 1
     });
     var labels = {'array': []};
+    var symbolData = {'first': 0, 'symbols': []};
     var currentPos = 2 + 2 * startOfLineItems.length;
     if (input.length > currentPos + 4) {
       labels = functions.readStringArray({
@@ -149,8 +184,27 @@ function Structure($, share, functions, beatsHandler) {
           var text = string.substring(2);
           return {'position': position, 'text': text};
         }});
+      currentPos = labels.position;
+      if (input.length > currentPos + 3) {
+        var firstSymbol = functions.getNumber(input.charAt(currentPos));
+        currentPos++;
+        var symbolChunks = functions.readChunkArray({
+          'data': input,
+          'currentPos': currentPos,
+          'chunkSize': 3,
+          'countSize': 1
+        });
+        var symbols = [];
+        for (var i = 0; i < symbolChunks.length; i++) {
+          var chunk = symbolChunks[i];
+          var symbol = functions.getNumber(chunk.charAt(0));
+          var index = functions.getNumber(chunk.substr(1,2));
+          symbols.push({'symbol': symbol, 'index': index});
+        }
+        symbolData = {'first': firstSymbol, 'symbols': symbols};
+      }
     }
-    return {'startOfLineItems': startOfLineItems, 'labels': labels.array};
+    return {'startOfLineItems': startOfLineItems, 'labels': labels.array, 'symbols': symbolData};
   }
 
   function labelMenu($wrapper, $li, $a) {
@@ -246,6 +300,7 @@ function Structure($, share, functions, beatsHandler) {
             $symbol.removeClass(icon);
           }
         }
+        share.changedStructure('plugins/structure/symbols');
       });
     };
   }
@@ -292,74 +347,95 @@ function Structure($, share, functions, beatsHandler) {
 
   function performRendering() {
     performOnForm(function () {
-      var startOfLineItems = undefined;
-      var labels = undefined;
-      if (data) {
-        var parsedData = parseInput(data);
-        startOfLineItems = parsedData.startOfLineItems;
-        labels = parsedData.labels;
-        data = null;
-      }
-      var items = $PARENT.children('dd.item').toArray();
-      var currentBreakBarNumber = $barBreakNumberSelect.val();
-      if (currentBreakBarNumber) {
-        var timeSignature = beatsHandler.getTimeSignatureAsInt();
-        var beatsToBreakAfter = currentBreakBarNumber * timeSignature;
-        var beatsSum = 0;
-        for (var i = 0; i < items.length; i++) {
-          var item = items[i];
-          var $item = $(item);
-          if (beatsSum !== 0 && ( beatsSum % beatsToBreakAfter === 0 ) || $item.data(INDIVIDUAL_BAR_BREAK)) {
-            setStartOfLine($item, true);
+        var startOfLineItems = undefined;
+        var labels = undefined;
+        var symbols = undefined;
+        if (data) {
+          var parsedData = parseInput(data);
+          startOfLineItems = parsedData.startOfLineItems;
+          labels = parsedData.labels;
+          symbols = parsedData.symbols;
+          data = null;
+        }
+        var items = $PARENT.children('dd.item').toArray();
+        if (items.length === 0) {
+          return;
+        }
+        var currentBreakBarNumber = $barBreakNumberSelect.val();
+        if (currentBreakBarNumber) {
+          var timeSignature = beatsHandler.getTimeSignatureAsInt();
+          var beatsToBreakAfter = currentBreakBarNumber * timeSignature;
+          var beatsSum = 0;
+          for (var i = 0; i < items.length; i++) {
+            var item = items[i];
+            var $item = $(item);
+            if (beatsSum !== 0 && ( beatsSum % beatsToBreakAfter === 0 ) || $item.data(INDIVIDUAL_BAR_BREAK)) {
+              setStartOfLine($item, true);
+            }
+            else {
+              setStartOfLine($item, false);
+            }
+            beatsSum += getBeats(item).length;
           }
-          else {
-            setStartOfLine($item, false);
+        }
+        if (startOfLineItems) {
+          $.each(startOfLineItems, function () {
+            var position = functions.getNumber(this);
+            var $item = $(items[position]);
+            setStartOfLine($item, true, true);
+          });
+        }
+        if (labels) {
+          $.each(labels, function () {
+            var position = this.position;
+            var text = this.text;
+            var $item = $(items[position]);
+            setLabel($item, text);
+          });
+        }
+        if (symbols) {
+          var first = symbols.first;
+          var symbolData = symbols.symbols;
+          if (first > 0) {
+            $(items[0]).prev('dd.symbol').addClass(SYMBOLS[first - 1]);
           }
-          beatsSum += getBeats(item).length;
+          for (var ix = 0; ix < symbolData.length; ix++) {
+            var symbol = symbolData[ix];
+            $(items[symbol.index]).next('dd.symbol').addClass(SYMBOLS[symbol.symbol - 1]);
+          }
         }
       }
-      if (startOfLineItems) {
-        $.each(startOfLineItems, function () {
-          var position = functions.getNumber(this);
-          var $item = $(items[position]);
-          setStartOfLine($item, true, true);
-        });
-      }
-      if (labels) {
-        $.each(labels, function () {
-          var position = this.position;
-          var text = this.text;
-          var $item = $(items[position]);
-          setLabel($item, text);
-        });
-      }
-    });
+    );
   }
 
   function structureChanged(event) {
     if (event && typeof event === 'string'
-      && ( event === 'plugins/structure/breakbars' || event === 'plugins/structure/individualBreak' )) {
+      && ( event === 'plugins/structure/breakbars' || event === 'plugins/structure/individualBreak' || event === 'plugins/structure/symbols')) {
       return;
     }
     //console.log('structure event: ', event);
     performRendering();
-    updateBarlines(event);
+    updateBarlines();
   }
 
-  var $SINGLE_BARLINE = $('<dd class="symbol icon-barline"/>');
-  function updateBarlines(event) {
-    $PARENT.children('dd.symbol').remove();
-    $SINGLE_BARLINE.clone().prependTo($PARENT);
+  function updateBarlines() {
     var timeSignature = beatsHandler.getTimeSignatureAsInt();
     var beatsSum = 0;
     $PARENT.children('dd.item').each(function (index) {
       beatsSum += beatsHandler.getBeats(this).length;
+      var $item = $(this);
+      var $symbol = $item.next('dd.symbol');
       if (beatsSum % timeSignature === 0) {
-        $SINGLE_BARLINE.clone().insertAfter(this);
+        // should have barline after
+        if ($symbol.length === 0) {
+          $SINGLE_BARLINE.clone().insertAfter(this);
+        }
+      } else {
+        // should not have barline after
+        $symbol.remove();
       }
     });
   }
-
 
 
   return {
