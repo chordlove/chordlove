@@ -73,6 +73,10 @@ function Export($, functions) {
       $('#storage-export-markdown').click(function (event) {
         createClick(event, 'songs.md', 'text/plain', buildMarkdownData, 'fa-file-text');
       });
+
+      $('#storage-export-asciidoc').click(function (event) {
+        createClick(event, 'songs.adoc', 'text/plain', buildAsciiDocData, 'fa-file-text');
+      });
     });
   }
 
@@ -107,15 +111,27 @@ function Export($, functions) {
     for (var key in window.localStorage) {
       if (key.indexOf('lscache-INJECT') !== 0) {
         strings.push(key);
-        strings.push("\n");
+        strings.push('\n');
         strings.push(window.localStorage[key]);
-        strings.push("\n");
+        strings.push('\n');
       }
     }
     return strings;
   }
 
   function buildMarkdownData() {
+    return buildTextData(function markdownLineFormatter( key, url) {
+      return '* [' + key + '](' + url + ')';
+    });
+  }
+
+  function buildAsciiDocData() {
+    return buildTextData(function asciiDocLineFormatter(key, url) {
+      return '* link:pass:[' + url + '][' + key + ']';
+    });
+  }
+
+  function buildTextData(lineFormatter) {
     var loc = window.location;
     var baseUrl = loc.protocol + '//' + loc.hostname + loc.pathname;
     var keys = [];
@@ -128,9 +144,9 @@ function Export($, functions) {
     keys.sort(functions.localeComparer);
     for (var i = 0; i < keys.length; i++) {
       var currentKey = keys[i];
-      var line = '* [' + currentKey + '](' + baseUrl + window.localStorage[currentKey] + ')';
+      var line = lineFormatter(currentKey, baseUrl + window.localStorage[currentKey]);
       strings.push(line);
-      strings.push("\n");
+      strings.push('\n');
     }
     return strings;
   }
