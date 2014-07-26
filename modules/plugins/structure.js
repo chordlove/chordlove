@@ -428,7 +428,6 @@ function Structure($, share, functions, beatsHandler) {
       && ( event === 'plugins/structure/breakbars' || event === 'plugins/structure/individualBreak' || event === 'plugins/structure/symbols')) {
       return;
     }
-    //console.log('structure event: ', event);
     performRendering();
     updateBarlines();
   }
@@ -440,6 +439,7 @@ function Structure($, share, functions, beatsHandler) {
       beatsSum += beatsHandler.getBeats(this).length;
       var $item = $(this);
       var $symbol = $item.next('dd.symbol');
+      $symbol.next('dd.symbol').remove();
       if (beatsSum % timeSignature === 0) {
         // should have barline after
         if ($symbol.length === 0) {

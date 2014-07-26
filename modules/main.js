@@ -65,7 +65,7 @@ require(
         'revert': true,
         'handle': '.handle',
         'stop': function (event) {
-          share.changedStructure(event);
+          share.changedStructure({'originalEvent' : event, 'event': 'itemsort'});
         }
       });
 
