@@ -56,11 +56,13 @@ function Structure($, share, functions, beatsHandler) {
   var MENU_LEFT_DOUBLE_BAR = '<i class="symbol-icon icon-double-barline"></i> Double bar before';
   var MENU_RIGHT_SINGLE_BAR = '<i class="symbol-icon icon-barline"></i> Single bar after';
   var MENU_RIGHT_DOUBLE_BAR = '<i class="symbol-icon icon-double-barline"></i> Double bar after';
-  var MENU_LEFT_REPEAT_BAR = '<i class="symbol-icon left-repeat-bar-icon"></i> Left repeat bar before';
-  var MENU_RIGHT_REPEAT_BAR = '<i class="symbol-icon right-repeat-bar-icon"></i> Right repeat bar after';
+  var MENU_LEFT_REPEAT_BAR = '<i class="symbol-icon left-repeat-bar-icon"></i> Begin repeat bar before';
+  var MENU_RIGHT_REPEAT_BAR = '<i class="symbol-icon right-repeat-bar-icon"></i> End repeat bar after';
+  var MENU_DOUBLE_REPEAT_BAR = '<i class="symbol-icon double-repeat-bar-icon"></i> Begin and end repeat bar before';
+  var MENU_FINAL_ENDING_BAR = '<i class="symbol-icon final-ending-icon"></i> Final ending after';
 
-  // note: never remove, just add/change here -- the serializatin depends on the order.
-  var SYMBOLS = ['icon-double-barline', 'left-repeat-bar-icon', 'right-repeat-bar-icon'];
+  // note: never remove, just add/change here -- the serialization depends on the order.
+  var SYMBOLS = ['icon-double-barline', 'left-repeat-bar-icon', 'right-repeat-bar-icon', 'double-repeat-bar-icon', 'final-ending-icon'];
 
   var VOLTA_PATTERN = /^\d+\.?$/;
 
@@ -287,10 +289,12 @@ function Structure($, share, functions, beatsHandler) {
 
   var leftSingleBarMenu = symbolMenu(MENU_LEFT_SINGLE_BAR, 'icon-barline', 'before');
   var leftDoubleBarMenu = symbolMenu(MENU_LEFT_DOUBLE_BAR, 'icon-double-barline', 'before');
+  var finalEndingMenu = symbolMenu(MENU_FINAL_ENDING_BAR, 'final-ending-icon', 'after');
   var rightSingleBarMenu = symbolMenu(MENU_RIGHT_SINGLE_BAR, 'icon-barline', 'after');
   var rightDoubleBarMenu = symbolMenu(MENU_RIGHT_DOUBLE_BAR, 'icon-double-barline', 'after');
   var leftRepeatBracketMenu = symbolMenu(MENU_LEFT_REPEAT_BAR, 'left-repeat-bar-icon', 'before');
   var rightRepeatBracketMenu = symbolMenu(MENU_RIGHT_REPEAT_BAR, 'right-repeat-bar-icon', 'after');
+  var doubleRepeatBracketMenu = symbolMenu(MENU_DOUBLE_REPEAT_BAR, 'double-repeat-bar-icon', 'before');
 
   function symbolMenu(menu, iconToKeep, beforeOrAfter) {
     return function ($wrapper, $li, $a) {
@@ -463,10 +467,12 @@ function Structure($, share, functions, beatsHandler) {
     'labelMenu': labelMenu,
     'leftRepeatBracketMenu': leftRepeatBracketMenu,
     'rightRepeatBracketMenu': rightRepeatBracketMenu,
+    'doubleRepeatBracketMenu': doubleRepeatBracketMenu,
     'leftSingleBarMenu': leftSingleBarMenu,
     'leftDoubleBarMenu': leftDoubleBarMenu,
     'rightSingleBarMenu': rightSingleBarMenu,
-    'rightDoubleBarMenu': rightDoubleBarMenu
+    'rightDoubleBarMenu': rightDoubleBarMenu,
+    'finalEndingMenu': finalEndingMenu
   };
 }
 
@@ -480,7 +486,9 @@ define('plugins/structure', [ 'plugins', 'jquery', 'share', 'functions', 'plugin
     chords.registerChordMenuMember(instance.leftDoubleBarMenu);
     chords.registerChordMenuMember(instance.leftRepeatBracketMenu);
     chords.registerChordMenuMember(instance.rightRepeatBracketMenu);
+    chords.registerChordMenuMember(instance.doubleRepeatBracketMenu);
     chords.registerChordMenuMember(instance.rightDoubleBarMenu);
+    chords.registerChordMenuMember(instance.finalEndingMenu);
     chords.registerChordMenuMember(instance.rightSingleBarMenu);
     chords.addPostRenderer(instance.render);
     share.addStructureChangeListener(instance.structureChanged);

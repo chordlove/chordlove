@@ -41,7 +41,7 @@ body {
   font-size: 1rem;
 }
 
-.dropdown-menu>li>a {
+.dropdown-menu > li > a {
   line-height: 1.8;
 }
 
@@ -310,14 +310,6 @@ div.duration ul > li > a {
   height: 68px;
 }
 
-#items > dd.symbol {
-  width: 12px;
-  border: none;
-  padding: 3px 0 3px 0;
-  text-align: center;
-  margin-right: 0;
-}
-
 img.barline {
   height: 48px;
 }
@@ -483,24 +475,49 @@ i.symbol-icon {
   height: 14px;
 }
 
-dd.symbol {
-  width: 1.28571429em; /* like fa-fw */
+#items > dd.symbol {
+  width: 24px;
+  border: none;
+  padding: 0;
+  text-align: center;
+  margin-right: 0;
+  background-size: contain;
 }
 
 i.icon-barline, dd.icon-barline {
-  background-image: url('http://cdn.chordlove.com/images/symbols/single-barline.svg');
+  background-image: url('http://cdn.chordlove.com/images/symbols/2014-07-27/single-barline-bravura-56.svg');
+}
+
+#items > dd.symbol.icon-barline.right-repeat-bar-icon, #Items > dd.icon-barline.left-repeat-bar-icon, #items > dd.icon-barline.final-ending-icon {
+  width: 32px;
+}
+
+#items > dd.icon-barline.double-repeat-bar-icon {
+  width: 42px;
+}
+
+dd.icon-barline.right-repeat-bar-icon, dd.icon-barline.double-repeat-bar-icon, dd.icon-barline.final-ending-icon {
+  /*background-size: 24px 48px;*/
 }
 
 i.icon-double-barline, dd.icon-barline.icon-double-barline {
-  background-image: url('http://cdn.chordlove.com/images/symbols/double-barline.svg');
+  background-image: url('http://cdn.chordlove.com/images/symbols/2014-07-27/double-barline-bravura.svg');
 }
 
 i.left-repeat-bar-icon, dd.icon-barline.left-repeat-bar-icon {
-  background-image: url('http://cdn.chordlove.com/images/symbols/left-repeat-sign.svg');
+  background-image: url('http://cdn.chordlove.com/images/symbols/2014-07-27/left-repeat-sign-bravura.svg');
 }
 
 i.right-repeat-bar-icon, dd.icon-barline.right-repeat-bar-icon {
-  background-image: url('http://cdn.chordlove.com/images/symbols/right-repeat-sign.svg');
+  background-image: url('http://cdn.chordlove.com/images/symbols/2014-07-27/right-repeat-sign-bravura.svg');
+}
+
+i.double-repeat-bar-icon, dd.icon-barline.double-repeat-bar-icon {
+  background-image: url('http://cdn.chordlove.com/images/symbols/2014-07-27/right-and-left-repeat-sign-bravura.svg');
+}
+
+i.final-ending-icon, dd.icon-barline.final-ending-icon {
+  background-image: url('http://cdn.chordlove.com/images/symbols/2014-07-27/final-barline-bravura.svg');
 }
 
 #footer {
