@@ -102,7 +102,7 @@ h1 input[type="text"], input[type="text"].chord-text, input[type="text"].song-te
   font-family: 'DejaVuSerifBook', 'DejaVu Serif', 'DejaVu Sans', 'Lucida Sans Unicode',
   'Arial Unicode MS', serif;
   font-weight: 400;
-  font-size: 1em;
+  font-size: 0.875rem;
   line-height: 1.3em;
   height: 1.3em;
   width: 99%;
@@ -134,23 +134,51 @@ h2, h3, h4 {
   width: 0;
   float: left;
   position: relative;
-  top: -21px;
+  top: -26px;
   left: -6px;
   overflow: visible;
   overflow-x: visible;
+  overflow-y: visible;
 }
 
 #items > dt > input {
   width: 300px;
+  height: 24px;
   padding: 0;
   border-radius: 0;
-  color: #407b37;
+  /*color: #407b37;*/
+}
+
+#items > dt.volta-start {
+  left: -12px;
 }
 
 #items > dt.volta-start > input {
   border-left: 1px solid #222222;
   border-top: 1px solid #222222;
   padding-left: 0.25em;
+}
+
+#items > dt.segno > input, #items > dt.coda > input {
+  color: transparent;
+}
+
+#items > dt.coda > input, #items > dt.al-coda > input {
+  background: url('http://cdn.chordlove.com/images/symbols/2014-07-27/coda-bravura.svg') 0 0 no-repeat;
+  background-size: contain;
+}
+
+#items > dt.al-coda > input {
+  padding-left: 26px;
+}
+
+#items > dt.segno > input {
+  background: url('http://cdn.chordlove.com/images/symbols/2014-07-27/segno-bravura.svg') 0 0 no-repeat;
+  background-size: contain;
+}
+
+#items > dt.dal-segno > input, #items > dt.da-capo > input, #items dt.fine > input {
+  text-align: right;
 }
 
 input[type="text"].chord-text, input[type="text"].song-text {

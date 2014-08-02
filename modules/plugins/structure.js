@@ -43,8 +43,6 @@ function Structure($, share, functions, beatsHandler) {
 
   var START_OF_LINE = 'start-of-line'; // duplicated in chords.js
   var INDIVIDUAL_BAR_BREAK = 'inidividual-bar-break';
-  var VOLTA_START = 'volta-start';
-
   var CHORD_INDEX = 'chord-item-index';
 
   var MENU_LABEL = '<i class="fa fa-fw fa-tag"></i> Label';
@@ -64,7 +62,15 @@ function Structure($, share, functions, beatsHandler) {
   // note: never remove, just add/change here -- the serialization depends on the order.
   var SYMBOLS = ['icon-double-barline', 'left-repeat-bar-icon', 'right-repeat-bar-icon', 'double-repeat-bar-icon', 'final-ending-icon'];
 
-  var VOLTA_PATTERN = /^\d+\.?$/;
+  var LABEL_PATTERNS = {
+    'volta-start': /^\d+\.?$/,
+    'coda': /^coda$/i,
+    'al-coda': /(^coda\s.+)|(.+\scoda$)/i,
+    'segno': /^segno$/i,
+    'dal-segno': /(dal(\s)+segno)|(D\.S\.)/i,
+    'da-capo': /(da(\s)+capo)|(D\.C\.)/i,
+    'fine': /^fine$/i
+  };
 
   var $form = undefined;
 
@@ -264,10 +270,12 @@ function Structure($, share, functions, beatsHandler) {
 
   function handleVoltaBrackets($dt, val, $dd, $input) {
     $input.width($dd.width() + 25);
-    if (VOLTA_PATTERN.test(val)) {
-      $dt.addClass(VOLTA_START);
-    } else {
-      $dt.removeClass(VOLTA_START);
+    for (var klass in LABEL_PATTERNS) {
+      if (LABEL_PATTERNS[klass].test(val)) {
+        $dt.addClass(klass);
+      } else {
+        $dt.removeClass(klass);
+      }
     }
   }
 

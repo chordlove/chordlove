@@ -300,6 +300,7 @@ function functions($) {
    */
   function handleInputKeyEvent(event) {
     var $target = $(event.target);
+    console.log($target.css('color'));
     if (event.which === 13 || event.which === 9) {
       event.preventDefault();
       $target.blur();
