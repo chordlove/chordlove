@@ -146,7 +146,6 @@ h2, h3, h4 {
   height: 24px;
   padding: 0;
   border-radius: 0;
-  /*color: #407b37;*/
 }
 
 #items > dt.volta-start {
@@ -161,6 +160,13 @@ h2, h3, h4 {
 
 #items > dt.segno > input, #items > dt.coda > input {
   color: transparent;
+}
+
+#items > dt > input.in-editing {
+  color: inherit !important;
+  background: none !important;
+  padding-left: 0 !important;
+  text-align: left !important;
 }
 
 #items > dt.coda > input, #items > dt.al-coda > input {

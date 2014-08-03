@@ -44,6 +44,7 @@ function Structure($, share, functions, beatsHandler) {
   var START_OF_LINE = 'start-of-line'; // duplicated in chords.js
   var INDIVIDUAL_BAR_BREAK = 'inidividual-bar-break';
   var CHORD_INDEX = 'chord-item-index';
+  var IN_EDITING = 'in-editing';
 
   var MENU_LABEL = '<i class="fa fa-fw fa-tag"></i> Label';
   var $LABEL = $('<dt><input class="label-text form-control" type="text" title="Add a label" placeholder="Label…" /></dt>');
@@ -250,7 +251,7 @@ function Structure($, share, functions, beatsHandler) {
       $input.focus();
     }
     if (created) {
-      $input.change(function () {
+      $input.change(function labelInputChange () {
         var val = $.trim($input.val());
         if (val.length === 0) {
           // remove the empty label
@@ -264,6 +265,10 @@ function Structure($, share, functions, beatsHandler) {
           handleVoltaBrackets($dt, val, $dd, $input);
           share.changedText('plugins/structure/label-added-or-updated');
         }
+      }).focus(function labelInputFocus() {
+        $input.addClass(IN_EDITING);
+      }).blur(function labelInputBlur() {
+        $input.removeClass(IN_EDITING);
       });
     }
   }
